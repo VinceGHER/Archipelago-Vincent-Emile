@@ -6,6 +6,7 @@ CXXFILES = project.cc city.cc node.cc error.cc tools.cc city.h node.h error.h to
 OFILES =  project.o city.o node.o error.o tools.o
 
 # Regles
+# création du ficher executable (commande: make)
 project: $(OFILES)
 	$(CXX) $(CXXFLAGS) $(OFILES) -o project
 project.o: $(CXXFILES)
@@ -17,5 +18,11 @@ node.o: node.cc error.cc tools.cc node.h error.h tools.h
 error.o: error.cc error.h
 	$(CXX) $(CXXFLAGS) -c $<
 tools.o: tools.cc tools.h
+	$(CXX) $(CXXFLAGS) -c $<
+
+# création du fichier de test (commande: make sequenceTest)
+sequenceTest: tools.o sequenceTest.o 
+	$(CXX) $(CXXFLAGS) tools.o sequenceTest.o -o sequenceTest && ./sequenceTest
+sequenceTest.o: sequenceTest.cc tools.cc tools.h
 	$(CXX) $(CXXFLAGS) -c $<
 	
