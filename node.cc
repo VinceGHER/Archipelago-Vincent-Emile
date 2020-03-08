@@ -37,6 +37,7 @@ bool Node::read(string line,Type type){
             nbp = stoi(test);
 
         } catch (const std::exception& e){
+            cout << "Problem with argument in file to create a node" << endl; 
             return false;
         }
         // if(not ()){ 
@@ -57,6 +58,7 @@ bool Node::read(string line,Type type){
             data >> test;
             UID2 = stoi(test);
         } catch (const std::exception& e){
+            cout << "Problem with argument in file to create a link" << endl; 
             return false;
         }
     // if (not (data >> UID1 >> UID2)) return false;
