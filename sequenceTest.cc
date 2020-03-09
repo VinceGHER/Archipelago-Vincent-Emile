@@ -31,8 +31,10 @@ int main(){
           if(not Node::read(lineTest,LOGEMENT)) cout << "error"<<endl;
           string lineTest3("  2  222 222   1000");
           if(not Node::read(lineTest3,LOGEMENT)) cout << "error"<<endl;
+          string lineTest4("  1  3000 222   1000");
+          if(not Node::read(lineTest3,LOGEMENT)) cout << "error"<<endl;
 
-          string lineTest2("  1  #2   1000   1000"); 
+          string lineTest2("1  2   1000   1000"); 
           if(not Node::read(lineTest2,LINK)) cout << "error"<<endl;
           Node::showNodeGroup();  
 

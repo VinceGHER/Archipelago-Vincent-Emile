@@ -18,18 +18,20 @@
         private:
             static bool addNode(Circle circle, unsigned int sizePopulation, 
                                 Type t, ID identifier);
+            Node(Circle& circle, unsigned int sizePopulation, 
+                Type t, ID identifier, bool& success);
+
             static bool addLink(ID UID1, ID UID2);
-           
-            static bool pickNodeIndex(ID UID, size_t& nIndex);
-            Node(Circle circle, unsigned int sizePopulation, 
-                Type t, ID identifier);
             bool checkIfNodeIsAlreadyLinked(Node nodeToCheck) const;
             bool checkLinksLimit() const;
+
+            static Node* pickNodeByUID(ID UID);
+
             Circle nodeCircle;
             unsigned int nbp;
             Type type;
             ID UID;
-            std::vector<unsigned int> links;
+            std::vector<ID> links;
 
 
     };
