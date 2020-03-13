@@ -8,7 +8,7 @@
     #include <string>
 	class City {
 		public:
-			void lecture(char * data);
+			static void lecture(char * data);
 		private:
 	};
 #endif
