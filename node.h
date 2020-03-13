@@ -4,35 +4,34 @@
 
 #ifndef NODE_H
 #define NODE_H
-    #include "tools.h"
     #include <vector>
     #include <string>
 
-    enum Type {LOGEMENT,TRANSPORT,PRODUCTION,LINK};
+    #include "tools.h"
+    enum Type {LOGEMENT,TRANSPORT,PRODUCTION,LINK}; //poser à l'assistant?
 
     class Node {
-        public:
-            static bool read(std::string line,int type);
-            static void showNodeGroup();
+    public:
+        static bool readLine(std::string line,int type);
+        static void showNodeGroup();
 
-        private:
-            static bool addNode(Circle circle, unsigned int sizePopulation, 
-                                int t, ID identifier);
-            Node(Circle& circle, unsigned int sizePopulation, 
-                int t, ID identifier, bool& success);
+    private:
+        static bool addNode(Circle circle, unsigned int sizePopulation, 
+                            int t, ID identifier);
+        Node(Circle& circle, unsigned int sizePopulation, 
+            int t, ID identifier, bool& success);
 
-            static bool addLink(ID UID1, ID UID2);
-            bool checkIfNodeIsAlreadyLinked(Node nodeToCheck) const;
-            bool checkLinksLimit() const;
+        static bool addLink(ID UID1, ID UID2);
+        bool checkIfNodeIsAlreadyLinked(Node nodeToCheck) const;
+        bool checkLinksLimit() const;
 
-            static Node* pickNodeByUID(ID UID);
+        static Node* pickNodeByUID(ID UID);
 
-            Circle nodeCircle;
-            unsigned int nbp;
-            int type;
-            ID UID;
-            std::vector<ID> links;
-
+        Circle nodeCircle;
+        unsigned int nbp;
+        int type;
+        ID UID;
+        std::vector<ID> links
 
     };
 #endif

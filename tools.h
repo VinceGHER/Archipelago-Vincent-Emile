@@ -4,6 +4,7 @@
 #ifndef TOOLS_H
 #define TOOLS_H
     typedef unsigned int ID;
+
     struct Pair {
         unsigned int pair1;
         unsigned int pair2;
@@ -28,6 +29,5 @@
 namespace tools {
     bool overlapBetweenCircles(Circle circle1, Circle circle2, double dist_min);
     bool overlapBetweenCircleSegment(Circle circle, Segment segment, double dist_min);
-    // Avoir à faire??? bool isOutOfZone(Circle circle, double dist_max);
 }
 #endif

@@ -2,31 +2,41 @@
 // made by Vincent GHEROLD !nd Emile CAILLOL
 // version 1.0
 
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <limits>
+#include <string>
+
 #include "city.h"
 #include "node.h"
 #include "error.h"
 #include "tools.h"
 
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <sstream>
-
 using namespace std;
 
-void City::lecture( char * data)
-{
-	string line;
-	int compteur(0);
+bool City::readFile(char* data) {
 	ifstream fichier(data);
-	 
-	for (int type (0); type <= 4; ++type){
-		cin >> compteur;
-		for (int compteur; compteur >=0; --compteur){
-			if(line[0]=='#') continue;
-			Node::read(line, type);
+	 	
+	if(!fichier.fail()) {
+		string line;
+		int type(-1);
+		int compteur(0);
+
+        while(getline(fichier >> ws,line)){	
+			if(line[0]=='#') continue; 
+
+			if (compteur == 0){
+				compteur = stoi(line);
+				++type;
+				continue;
+			}
+			if (compteur > 0){
+				if(not Node::readLine(line, type)) return false;
+				--compteur;
+			}
 		}
-	}
+		return true;
+
+	} else return false;
 }
-
-

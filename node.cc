@@ -2,70 +2,64 @@
 // made by Vincent GHEROLD and Emile CAILLOL
 // version 1.0
 
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <sstream>
+
 #include "node.h"
 #include "error.h"
 #include "tools.h"
 #include "constantes.h"
 
-#include <vector>
-
-#include <iostream>
-#include <cmath>
-#include <string>
-#include <sstream>
 using namespace std;
 
 namespace {
     std::vector<Node> nodeGroup;
 }
-bool Node::read(string line,int type){
+
+bool Node::readLine(string line,int type){
     istringstream data(line);
     if (type != LINK){
-        ID UID; Circle nodeCircle; unsigned int nbp; 
+        ID UID; 
+        Circle nodeCircle; 
+        unsigned int nbp; 
         try {
-            string test;
-            data >> test;
-            UID = stoi(test);
+            string dataToTest;
+            data >> dataToTest;
+            UID = stoi(dataToTest);
 
-            data >> test;
-            nodeCircle.center.x = stoi(test);
+            data >> dataToTest;
+            nodeCircle.center.x = stoi(dataToTest);
 
-            data >> test;
-            nodeCircle.center.y = stoi(test);
+            data >> dataToTest;
+            nodeCircle.center.y = stoi(dataToTest);
 
-            data >> test;
-            nbp = stoi(test);
+            data >> dataToTest;
+            nbp = stoi(dataToTest);
 
-        } catch (const std::exception& e){
-            cout << "Problem with argument in file to create a node" << endl; 
+        } catch (const std::exception& e){ 
             return false;
         }
-        // if(not ()){ 
-        //     cout << UID << " " <<
-        //     nodeCircle.center.x<< " " 
-        //     <<nodeCircle.center.y<< " " <<nbp<< " "<<endl;;
-        //     return false;
-        // }
         nodeCircle.radius = sqrt(nbp);
         return Node::addNode(nodeCircle,nbp,type,UID);
     } else {
         ID UID1,UID2;
         try {
-            string test;
-            data >> test;
-            UID1 = stoi(test);
+            string dataToTest;
+            data >> dataToTest;
+            UID1 = stoi(dataToTest);
     
-            data >> test;
-            UID2 = stoi(test);
-        } catch (const std::exception& e){
-            cout << "Problem with argument in file to create a link" << endl; 
+            data >> dataToTest;
+            UID2 = stoi(dataToTest);
+        } catch (const std::exception& e){ 
             return false;
         }
-    // if (not (data >> UID1 >> UID2)) return false;
         return Node::addLink(UID1,UID2);
     }
 }
-// ======= Create Node ========
+
 bool Node::addNode(Circle circle, unsigned int sizePopulation, 
                    int t,ID identifier){
                        
@@ -78,15 +72,14 @@ bool Node::addNode(Circle circle, unsigned int sizePopulation,
 }
 Node::Node(Circle& circle, unsigned int sizePopulation, int t, ID identifier, 
             bool& success){
-     // control check
-    //est ce qu'il faut faire vérification en dehors de la zone?
+     // Check validity of argument
     if (identifier == no_link) {
         cout<< error::reserved_uid() << endl;
         success = false; 
         return;
     }
     if (sizePopulation < min_capacity){
-        cout<<error:: too_little_capacity(sizePopulation) << endl;
+        cout<< error:: too_little_capacity(sizePopulation) << endl;
         success = false; 
         return;
     }
@@ -128,7 +121,7 @@ bool Node::addLink(ID UID1, ID UID2){
         if (    node.UID != UID1 
             and node.UID != UID2 
             and tools::overlapBetweenCircleSegment(node.nodeCircle,currentSegment, 
-                                               dist_min)){
+                                                   dist_min)){
             cout << error::node_link_superposition(node.UID)<< endl;
             return false;
         }

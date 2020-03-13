@@ -4,11 +4,12 @@
 
 #ifndef CITY_H
 #define CITY_H
+
 	#include "node.h"
-    #include <string>
+
 	class City {
-		public:
-			static void lecture(char * data);
-		private:
+	public:
+		static bool readFile(char * data);
+	private:
 	};
 #endif
