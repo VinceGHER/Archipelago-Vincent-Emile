@@ -14,7 +14,7 @@
 
 using namespace std;
 
-City::void lecture( char * data)
+void City::lecture( char * data)
 {
 	string line;
 	int compteur(0);
