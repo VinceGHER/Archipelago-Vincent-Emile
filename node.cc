@@ -18,7 +18,7 @@ using namespace std;
 namespace {
     std::vector<Node> nodeGroup;
 }
-bool Node::read(string line,Type type){
+bool Node::read(string line,int type){
     istringstream data(line);
     if (type != LINK){
         ID UID; Circle nodeCircle; unsigned int nbp; 
@@ -67,7 +67,7 @@ bool Node::read(string line,Type type){
 }
 // ======= Create Node ========
 bool Node::addNode(Circle circle, unsigned int sizePopulation, 
-                   Type t,ID identifier){
+                   int t,ID identifier){
                        
     bool success(false);
     Node currentNode(circle,sizePopulation,t,identifier,success);
@@ -76,7 +76,7 @@ bool Node::addNode(Circle circle, unsigned int sizePopulation,
 
     return success;
 }
-Node::Node(Circle& circle, unsigned int sizePopulation, Type t, ID identifier, 
+Node::Node(Circle& circle, unsigned int sizePopulation, int t, ID identifier, 
             bool& success){
      // control check
     //est ce qu'il faut faire vérification en dehors de la zone?

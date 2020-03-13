@@ -28,9 +28,9 @@ int main(){
           // Node::addNode(circle2,1000,TRANSPORT,2);
           // Node::addNode(circle3,1000,TRANSPORT,3);
           string lineTest("  1  10   1000   1000");
-          if(not Node::read(lineTest,LOGEMENT)) cout << "error"<<endl;
+          if(not Node::read(lineTest,0)) cout << "error"<<endl;
           string lineTest3("  2  222 222   1000");
-          if(not Node::read(lineTest3,LOGEMENT)) cout << "error"<<endl;
+          if(not Node::read(lineTest3,1)) cout << "error"<<endl;
           string lineTest4("  1  3000 222   1000");
           if(not Node::read(lineTest3,LOGEMENT)) cout << "error"<<endl;
 

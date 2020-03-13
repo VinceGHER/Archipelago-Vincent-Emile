@@ -12,14 +12,14 @@
 
     class Node {
         public:
-            static bool read(std::string line,Type type);
+            static bool read(std::string line,int type);
             static void showNodeGroup();
 
         private:
             static bool addNode(Circle circle, unsigned int sizePopulation, 
-                                Type t, ID identifier);
+                                int t, ID identifier);
             Node(Circle& circle, unsigned int sizePopulation, 
-                Type t, ID identifier, bool& success);
+                int t, ID identifier, bool& success);
 
             static bool addLink(ID UID1, ID UID2);
             bool checkIfNodeIsAlreadyLinked(Node nodeToCheck) const;
@@ -29,7 +29,7 @@
 
             Circle nodeCircle;
             unsigned int nbp;
-            Type type;
+            int type;
             ID UID;
             std::vector<ID> links;
 
