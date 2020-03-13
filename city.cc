@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void lecture( char * data)
+City::void lecture( char * data)
 {
 	string line;
 	int compteur(0);
@@ -22,7 +22,7 @@ void lecture( char * data)
 	 
 	for (int type (0); type <= 4; ++type){
 		cin >> compteur;
-		for (int compteur, compteur >=0; --compteur){
+		for (int compteur; compteur >=0; --compteur){
 			if(line[0]=='#') continue;
 			Node::read(line, type);
 		}
