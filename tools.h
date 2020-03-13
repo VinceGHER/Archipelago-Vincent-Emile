@@ -4,11 +4,7 @@
 #ifndef TOOLS_H
 #define TOOLS_H
     typedef unsigned int ID;
-
-    struct Pair {
-        unsigned int pair1;
-        unsigned int pair2;
-    };
+    
     struct Point {
         double x;
         double y;

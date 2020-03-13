@@ -31,7 +31,7 @@
         unsigned int nbp;
         int type;
         ID UID;
-        std::vector<ID> links
+        std::vector<ID> links;
 
     };
 #endif
