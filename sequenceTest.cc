@@ -24,7 +24,7 @@ int main(){
           Circle circle1 = {Point{-110,-110}, 5};
           Circle circle2 = {Point{2000, 2000}, 5}; 
           Circle circle3 = {Point{4000,0}, 5};
-          // Node::addNode(circle1,100000,LOGEMENT,0);
+          // Node::addNode(circle1,100000,HOUSING,0);
           // Node::addNode(circle2,1000,TRANSPORT,2);
           // Node::addNode(circle3,1000,TRANSPORT,3);
           string lineTest("  1  10   1000   1000");
@@ -32,7 +32,7 @@ int main(){
           string lineTest3("  2  222 222   1000");
           if(not Node::read(lineTest3,1)) cout << "error"<<endl;
           string lineTest4("  1  3000 222   1000");
-          if(not Node::read(lineTest3,LOGEMENT)) cout << "error"<<endl;
+          if(not Node::read(lineTest3,HOUSING)) cout << "error"<<endl;
 
           string lineTest2("1  2   1000   1000"); 
           if(not Node::read(lineTest2,LINK)) cout << "error"<<endl;

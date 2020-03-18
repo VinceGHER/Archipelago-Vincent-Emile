@@ -12,7 +12,6 @@ using namespace std;
 int main(int argc, char * argv[]){
 	if(argc == 2){
 		City::readFile(argv[1]);
-		Node::showNodeGroup();
 	}
 	return 0;
 }

@@ -8,24 +8,34 @@
     #include <string>
 
     #include "tools.h"
-    enum Type {LOGEMENT,TRANSPORT,PRODUCTION,LINK}; //poser à l'assistant?
+    enum Type {HOUSING,TRANSPORT,PRODUCTION,LINK};
+
+    class Node;
+    class NodeManager;
+
+    class NodeManager {
+    public:
+        bool readLine(std::string line,int type);
+        void showNodeGroup();
+    private:
+        bool addNode(Circle circle, unsigned int sizePopulation, 
+                            int t, ID identifier);
+        bool addLink(ID UID1, ID UID2);
+        Node* pickNodeByUID(ID UID);
+        std::vector<Node> nodeGroup;
+    };
 
     class Node {
     public:
-        static bool readLine(std::string line,int type);
-        static void showNodeGroup();
-
-    private:
-        static bool addNode(Circle circle, unsigned int sizePopulation, 
-                            int t, ID identifier);
+        ID getUID();
+        bool createLinkNode(Node& other, const std::vector<Node>& nodeGroup);
         Node(Circle& circle, unsigned int sizePopulation, 
-            int t, ID identifier, bool& success);
-
-        static bool addLink(ID UID1, ID UID2);
+             int t, ID identifier, bool& success, const std::vector<Node>& nodeGroup);
+        void showNode() const;
+    private:
+    
         bool checkIfNodeIsAlreadyLinked(Node nodeToCheck) const;
         bool checkLinksLimit() const;
-
-        static Node* pickNodeByUID(ID UID);
 
         Circle nodeCircle;
         unsigned int nbp;
@@ -34,4 +44,5 @@
         std::vector<ID> links;
 
     };
+   
 #endif

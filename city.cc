@@ -22,6 +22,7 @@ bool City::readFile(char* data) {
 		string line;
 		int type(-1);
 		int compteur(0);
+		NodeManager nodeManager;
 
         while(getline(fichier >> ws,line)){	
 			if(line[0]=='#') continue; 
@@ -32,10 +33,11 @@ bool City::readFile(char* data) {
 				continue;
 			}
 			if (compteur > 0){
-				if(not Node::readLine(line, type)) return false;
+				if(not nodeManager.readLine(line, type)) return false;
 				--compteur;
 			}
 		}
+		nodeManager.showNodeGroup();
 		return true;
 
 	} else return false;
