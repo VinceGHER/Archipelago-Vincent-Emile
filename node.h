@@ -27,10 +27,10 @@
 
     class Node {
     public:
-        ID getUID();
+        ID getUID() const;
         bool createLinkNode(Node& other, const std::vector<Node>& nodeGroup);
-        Node(Circle& circle, unsigned int sizePopulation, 
-             int t, ID identifier, bool& success, const std::vector<Node>& nodeGroup);
+        Node(Circle& circle, unsigned int sizePopulation, int t, ID identifier, 
+             bool& success, const std::vector<Node>& nodeGroup);
         void showNode() const;
     private:
     

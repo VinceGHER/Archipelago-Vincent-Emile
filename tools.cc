@@ -20,6 +20,7 @@ double distance(Vector vector){
 double scalarProduct(Vector v1, Vector v2){
     return v1.x*v2.x + v1.y*v2.y; 
 }
+
 // Function
 bool tools::overlapBetweenCircles(Circle circle1, Circle circle2, double dist_min){
     double totalradius( circle1.radius + circle2.radius );
@@ -27,7 +28,6 @@ bool tools::overlapBetweenCircles(Circle circle1, Circle circle2, double dist_mi
         return true;
     return false;
 };
- #include <iostream>
 bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment, 
                                         double dist_min){
     Vector segmentToCircle = {circle.center.x - segment.start.x, 
@@ -37,12 +37,13 @@ bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment,
                             
     double segmentLength (distance(segment.start,segment.end));
     double distScal (scalarProduct(segmentVector, segmentToCircle)/segmentLength);
-   
-    std::cout << "Distance: " << distScal << std::endl;
+
+    if (distScal < 0 or distScal > segmentLength) return false;
+
     double distTest ( sqrt( pow(distance(segmentToCircle),2) - pow(distScal,2) ) );
     double distCercleTest (distTest - circle.radius);
-     std::cout << "distCercleTest: " << distCercleTest << std::endl;
-    if (distScal > 0 and distCercleTest < dist_min) //return true;
-    
-    return false;
+
+    if (distCercleTest > dist_min) return false;
+
+    return true;
 };

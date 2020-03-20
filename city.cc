@@ -37,7 +37,7 @@ bool City::readFile(char* data) {
 				--compteur;
 			}
 		}
-		nodeManager.showNodeGroup();
+		cout << error::success() << endl;
 		return true;
 
 	} else return false;

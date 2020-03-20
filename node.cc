@@ -1,6 +1,6 @@
 // Module Node (implementation)
 // made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0
+// version 1.3
 
 #include <vector>
 #include <iostream>
@@ -24,10 +24,12 @@ bool NodeManager::readLine(string line,int type){
         Circle nodeCircle; 
         unsigned int nbp; 
         try {
+            //stoul() convert string to unsigned long
+            //stoi() convert string to int
             string dataToTest;
             data >> dataToTest;
-            UID = stoi(dataToTest);
-
+            UID = stoul(dataToTest);
+           
             data >> dataToTest;
             nodeCircle.center.x = stoi(dataToTest);
 
@@ -35,7 +37,7 @@ bool NodeManager::readLine(string line,int type){
             nodeCircle.center.y = stoi(dataToTest);
 
             data >> dataToTest;
-            nbp = stoi(dataToTest);
+            nbp = stoul(dataToTest);
 
         } catch (const std::exception& e){ 
             return false;
@@ -57,8 +59,8 @@ bool NodeManager::readLine(string line,int type){
         return NodeManager::addLink(UID1,UID2);
     }
 }
-bool NodeManager::addNode(Circle circle, unsigned int sizePopulation, 
-                   int t,ID identifier){
+bool NodeManager::addNode(Circle circle, unsigned int sizePopulation, int t,
+                          ID identifier){
                        
     bool success(false);
     Node currentNode(circle,sizePopulation,t,identifier,success, nodeGroup);
@@ -72,7 +74,6 @@ bool NodeManager::addLink(ID UID1, ID UID2){
     Node* pNode1(pickNodeByUID(UID1)); 
     Node* pNode2(pickNodeByUID(UID2));
     if (pNode1 == nullptr or pNode2 == nullptr) return false;
-    cout << "Nodemanganer" << pNode1->getUID() << " " << pNode2->getUID() << endl;
     if (pNode1->createLinkNode(*pNode2, nodeGroup)){
         return true;
     }
@@ -97,7 +98,7 @@ void NodeManager::showNodeGroup(){
 //========== Node Methods ==========
 Node::Node(Circle& circle, unsigned int sizePopulation, int t, ID identifier, 
             bool& success, const vector<Node>& nodeGroup){
-     // Check validity of argument
+     // Check validity of argument    
     if (identifier == no_link) {
         cout<< error::reserved_uid() << endl;
         success = false; 
@@ -133,14 +134,16 @@ Node::Node(Circle& circle, unsigned int sizePopulation, int t, ID identifier,
     return;
 }
 bool Node::createLinkNode(Node& other, const vector<Node>& nodeGroup){
-
+    if (UID == other.UID) {
+        cout << error::self_link_node(UID) << endl;
+        return false;
+    }
     Segment currentSegment = {nodeCircle.center, other.nodeCircle.center};
     for (auto& node:nodeGroup){
         if (    node.UID != UID 
             and node.UID != other.UID 
             and tools::overlapBetweenCircleSegment(node.nodeCircle,currentSegment, 
                                                    dist_min)){
-            cout << node.UID << " " << UID << endl;
             cout << error::node_link_superposition(node.UID)<< endl;
             return false;
         }
@@ -173,7 +176,7 @@ bool Node::checkLinksLimit() const{
     }
     return false;
 }
-ID Node::getUID(){
+ID Node::getUID() const{
     return UID;
 }
 void Node::showNode() const {
