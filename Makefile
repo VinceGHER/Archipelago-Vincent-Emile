@@ -1,5 +1,5 @@
 # Definitions de macros
-OUT = project
+OUT = projet
 CXX = g++
 CXXFLAGS = -g -Wall -std=c++11
 CXXFILES = projet.cc  gui.cc city.cc node.cc error.cc tools.cc graphic.cc city.h gui.h node.h error.h tools.h graphic.h constantes.h
