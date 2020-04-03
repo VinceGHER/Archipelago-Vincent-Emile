@@ -22,6 +22,7 @@ public:
     static void showNodeGroup();
     static Node* pickNodeByUID(ID UID);
     static void emptyNodeGroup();
+    static const std::vector<Node*>& getNodeGroup();
     static bool addNode(Circle circle, unsigned int sizePopulation, int type, 
                         ID identifier);
     static bool readLine(std::string line,int type);

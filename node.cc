@@ -202,6 +202,9 @@ void Node::emptyNodeGroup(){
 bool Node::checkLinksLimit() const {
     return false;
 }
+const vector<Node*>& Node::getNodeGroup(){
+    return nodeGroup;
+};
 //================= NodeHousing =================
 NodeHousing::NodeHousing(Circle& circle, unsigned int sizePopulation, ID identifier, 
                          bool& success)

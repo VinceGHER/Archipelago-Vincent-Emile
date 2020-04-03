@@ -37,7 +37,11 @@ bool City::readFile(char* data) {
 		}
 		Node::showNodeGroup();
 		cout << error::success() << endl;
+
+		Node::getNodeGroup()[0]->showNode();
+
 		Node::emptyNodeGroup();
+
 		return true;
 
 	} else return false;
