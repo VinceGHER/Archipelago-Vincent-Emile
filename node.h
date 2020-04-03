@@ -28,7 +28,7 @@ public:
     static bool readLine(std::string line,int type);
     static bool addLink(ID UID1, ID UID2);
 
-    ID getUID() const;
+    const ID getUID() const;
     bool createLinkNode(Node& other, const std::vector<Node>& nodeGroup);
     Node(Circle& circle, unsigned int sizePopulation, ID identifier, 
             bool& success);
