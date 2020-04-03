@@ -12,6 +12,7 @@ public:
 	static bool readFile(char * data);
 	double CriteriaENJ();
 	double CriteriaCI();
+
 private:
 };
 
