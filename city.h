@@ -5,11 +5,12 @@
 #ifndef CITY_H
 #define CITY_H
 
-	#include "node.h"
+#include "node.h"
 
-	class City {
-	public:
-		static bool readFile(char * data);
-	private:
-	};
+class City {
+public:
+	static bool readFile(char * data);
+private:
+};
+
 #endif
