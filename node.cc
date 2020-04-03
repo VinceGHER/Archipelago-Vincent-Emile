@@ -7,6 +7,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <memory>
 
 #include "node.h"
 #include "error.h"
@@ -15,9 +16,13 @@
 
 using namespace std;
 
+namespace {
+    vector<Node*> nodeGroup;
+};
+
 //========== NodeManager Methods ==========
 
-bool NodeManager::readLine(string line,int type){
+bool Node::readLine(string line,int type){
     istringstream data(line);
     if (type != LINK){
         ID UID; 
@@ -43,7 +48,7 @@ bool NodeManager::readLine(string line,int type){
             return false;
         }
         nodeCircle.radius = sqrt(nbp);
-        return NodeManager::addNode(nodeCircle,nbp,type,UID);
+        return Node::addNode(nodeCircle,nbp,type,UID);
     } else {
         ID UID1,UID2;
         try {
@@ -56,49 +61,80 @@ bool NodeManager::readLine(string line,int type){
         } catch (const std::exception& e){ 
             return false;
         }
-        return NodeManager::addLink(UID1,UID2);
+        return Node::addLink(UID1,UID2);
     }
 }
-bool NodeManager::addNode(Circle circle, unsigned int sizePopulation, int t,
+bool Node::addNode(Circle circle, unsigned int sizePopulation, int type,
                           ID identifier){
                        
     bool success(false);
-    Node currentNode(circle,sizePopulation,t,identifier,success, nodeGroup);
-
-    if (success) nodeGroup.push_back(currentNode);
+    Node* pNode(nullptr);
+    switch (type){
+    case 0:
+        pNode = new NodeHousing(circle,sizePopulation,identifier,success);
+        break;
+    case 1:
+        pNode = new NodeTransport(circle,sizePopulation,identifier,success);
+    case 2:
+        pNode = new NodeProduction(circle,sizePopulation,identifier,success);
+        break;
+    }
+    if (success and pNode != nullptr) nodeGroup.push_back(pNode);
 
     return success;
 }
-bool NodeManager::addLink(ID UID1, ID UID2){
+bool Node::addLink(ID UID1, ID UID2){
 
     Node* pNode1(pickNodeByUID(UID1)); 
     Node* pNode2(pickNodeByUID(UID2));
     if (pNode1 == nullptr or pNode2 == nullptr) return false;
-    if (pNode1->createLinkNode(*pNode2, nodeGroup)){
-        return true;
+
+    if (UID1 == UID2) {
+        cout << error::self_link_node(UID1) << endl;
+        return false;
     }
-    return false;
+    Segment currentSegment = {pNode1->nodeCircle.center, pNode2->nodeCircle.center};
+    for (auto& node:nodeGroup){
+        if (    node->UID != UID1
+            and node->UID != UID2
+            and tools::overlapBetweenCircleSegment(node->nodeCircle,currentSegment, 
+                                                   dist_min)){
+            cout << error::node_link_superposition(node->UID)<< endl;
+            return false;
+        }
+    }
+
+    if(pNode1->checkIfNodeIsAlreadyLinked(*pNode2)) return false;
+    if(pNode2->checkIfNodeIsAlreadyLinked(*pNode1)) return false;
+
+    if(pNode1->checkLinksLimit()) return false;
+    if(pNode2->checkLinksLimit()) return false;
+
+    pNode1->links.push_back(UID2);
+    pNode2->links.push_back(UID1);
+    return true;
+
 }
-Node* NodeManager::pickNodeByUID(ID UID){
+Node* Node::pickNodeByUID(ID UID){
     for (size_t i(0); i < nodeGroup.size(); ++i){
-        if (nodeGroup[i].getUID() == UID){
-            return &nodeGroup[i];
+        if ( nodeGroup[i]->UID == UID){
+            return nodeGroup[i];
         }
     }
     cout << error::link_vacuum(UID) << endl;
     return nullptr;
 }
-void NodeManager::showNodeGroup(){
+void Node::showNodeGroup(){
     cout << "--------- nodeGroup -----------" << endl;
-    for (auto node:nodeGroup){
-       node.showNode();
+    for (auto& node:nodeGroup){
+       node->showNode();
     }
 }
 
 //========== Node Methods ==========
-Node::Node(Circle& circle, unsigned int sizePopulation, int t, ID identifier, 
-            bool& success, const vector<Node>& nodeGroup){
-     // Check validity of argument    
+Node::Node(Circle& circle, unsigned int sizePopulation, ID identifier, 
+            bool& success){
+     // Check validity of argument
     if (identifier == no_link) {
         cout<< error::reserved_uid() << endl;
         success = false; 
@@ -115,51 +151,24 @@ Node::Node(Circle& circle, unsigned int sizePopulation, int t, ID identifier,
         return;
     }
     for (auto& node:nodeGroup){
-        if(node.UID == identifier){
+        if(node->UID == identifier){
             cout<<error::identical_uid(identifier) << endl;
             success = false;
             return;
         }
-        if(tools::overlapBetweenCircles(circle, node.nodeCircle, dist_min)){
-           cout<< error::node_node_superposition(identifier,node.UID) << endl;
+        if(tools::overlapBetweenCircles(circle, node->nodeCircle, dist_min)){
+           cout<< error::node_node_superposition(identifier,node->UID) << endl;
             success = false;
             return;
         }
     }
     nodeCircle = circle;
     nbp = sizePopulation;
-    type = t;
     UID = identifier;
     success = true;
     return;
 }
-bool Node::createLinkNode(Node& other, const vector<Node>& nodeGroup){
-    if (UID == other.UID) {
-        cout << error::self_link_node(UID) << endl;
-        return false;
-    }
-    Segment currentSegment = {nodeCircle.center, other.nodeCircle.center};
-    for (auto& node:nodeGroup){
-        if (    node.UID != UID 
-            and node.UID != other.UID 
-            and tools::overlapBetweenCircleSegment(node.nodeCircle,currentSegment, 
-                                                   dist_min)){
-            cout << error::node_link_superposition(node.UID)<< endl;
-            return false;
-        }
-    }
 
-    if(checkIfNodeIsAlreadyLinked(other)) return false;
-    if(other.checkIfNodeIsAlreadyLinked(*this)) return false;
-
-    if(checkLinksLimit()) return false;
-    if(other.checkLinksLimit()) return false;
-
-    links.push_back(other.UID);
-    other.links.push_back(UID);
-    return true;
-
-}
 bool Node::checkIfNodeIsAlreadyLinked(Node nodeToCheck) const{
     for (size_t i(0); i < links.size(); ++i){
         if (links[i] == nodeToCheck.UID){
@@ -169,13 +178,7 @@ bool Node::checkIfNodeIsAlreadyLinked(Node nodeToCheck) const{
     }
     return false;
 }
-bool Node::checkLinksLimit() const{
-     if (links.size() >= max_link and type == HOUSING){
-        cout << error::max_link(UID) << endl;
-        return true;
-    }
-    return false;
-}
+
 ID Node::getUID() const{
     return UID;
 }
@@ -184,10 +187,62 @@ void Node::showNode() const {
     cout << "CenterX: " << nodeCircle.center.x << " " 
             << "CenterY: " << nodeCircle.center.y << " "
             << "Radius: " << nodeCircle.radius << endl;
-    cout <<"Type: " << type << endl;
     cout << "Links: (" << links.size()<< ")" <<  endl;
     for (auto link:links){
         cout << "   link: " << UID<< " <-> "<<link << endl;
     }
+}
+
+void Node::emptyNodeGroup(){
+    for (auto& node:nodeGroup){
+       delete node;
+    }
+    nodeGroup.clear();
+}
+bool Node::checkLinksLimit() const {
+    return false;
+}
+//================= NodeHousing =================
+NodeHousing::NodeHousing(Circle& circle, unsigned int sizePopulation, ID identifier, 
+                         bool& success)
+:Node(circle,sizePopulation,identifier,success){};
+
+void NodeHousing::showNode() const {
+    this->Node::showNode();
+    cout << "Type: Housing" << endl;
     cout << "--------------------" << endl;
+}
+
+bool NodeHousing::checkLinksLimit() const {
+    if (this->links.size() >= max_link){
+        cout << error::max_link(UID) << endl;
+        return true;
+    }
+    return false;
+}
+//================= NodeTransport =================
+NodeTransport::NodeTransport(Circle& circle, unsigned int sizePopulation, 
+                             ID identifier, bool& success)
+:Node(circle,sizePopulation,identifier,success){};
+
+void NodeTransport::showNode() const {
+    this->Node::showNode();
+    cout << "Type: Transport" << endl;
+    cout << "--------------------" << endl;
+
+}
+bool NodeTransport::checkLinksLimit() const {
+    return false;
+}
+//================= NodeProduction =================
+NodeProduction::NodeProduction(Circle& circle, unsigned int sizePopulation, 
+                               ID identifier, bool& success)
+:Node(circle,sizePopulation,identifier,success){};
+void NodeProduction::showNode() const {
+    this->Node::showNode();
+    cout << "Type: Production" << endl;
+    cout << "--------------------" << endl;
+}
+bool NodeProduction::checkLinksLimit() const {
+    return false;
 }
