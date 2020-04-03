@@ -42,3 +42,27 @@ bool City::readFile(char* data) {
 
 	} else return false;
 }
+
+double CriteriaENJ(){
+	vector<double> liste{1,2,3,4};
+	
+	if (liste.empty()) return 0;
+	double a(0);
+	double b(0);
+	for (unsigned int i(0); i< liste.size(); ++i){
+		a += liste[i];
+		if (liste[1]== 0)
+			b += liste[i];
+		else
+			b -= liste[i];
+	}
+	return b/a;
+}
+
+double CriteriaCI(){
+	vector<double> liste{1,2,3,4};
+	vector<vector<int>> liens{{1,2},{1,4},{3,2}};
+	
+	//for (unsigned int i(0); i< liens.size(); ++i){
+	return 0;
+}
