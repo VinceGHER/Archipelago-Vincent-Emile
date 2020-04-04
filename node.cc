@@ -179,7 +179,7 @@ bool Node::checkIfNodeIsAlreadyLinked(Node nodeToCheck) const{
     return false;
 }
 
-ID Node::getUID() const{
+const ID Node::getUID() const{
     return UID;
 }
 void Node::showNode() const {
