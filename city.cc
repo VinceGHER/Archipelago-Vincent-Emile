@@ -1,5 +1,5 @@
 // Module City (implementation)
-// made by Vincent GHEROLD !nd Emile CAILLOL
+// made by Vincent GHEROLD and Emile CAILLOL
 // version 1.0
 
 #include <iostream>
@@ -48,17 +48,21 @@ bool City::readFile(char* data) {
 }
 
 double CriteriaENJ(){
-	vector<double> liste{1,2,3,4};
+	
+	
+	vector<Node*> liste = Node::getNodeGroup();
 	
 	if (liste.empty()) return 0;
+	
 	double a(0);
 	double b(0);
 	for (unsigned int i(0); i< liste.size(); ++i){
-		a += liste[i];
-		if (liste[1]== 0)
-			b += liste[i];
-		else
-			b -= liste[i];
+		cout << liste[i] << endl;
+		//~ a += ;
+		//~ if (liste[i] == 0)
+			//~ b += liste[i][1];
+		//~ else
+			//~ b -= liste[i][1];
 	}
 	return b/a;
 }
