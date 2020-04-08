@@ -1,5 +1,5 @@
 // Module City (implementation)
-// made by Vincent GHEROLD !nd Emile CAILLOL
+// made by Vincent GHEROLD and Emile CAILLOL
 // version 1.0
 
 #include <iostream>
