@@ -35,10 +35,10 @@ bool City::readFile(char* data) {
 				--compteur;
 			}
 		}
-		Node::showNodeGroup();
+	//	Node::showNodeGroup();
 		cout << error::success() << endl;
 
-		Node::getNodeGroup()[0]->showNode();
+	//	Node::getNodeGroup()[0]->showNode();
 
 		Node::emptyNodeGroup();
 
