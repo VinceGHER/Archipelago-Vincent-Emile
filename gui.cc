@@ -2,34 +2,33 @@
 // made by Vincent GHEROLD and Emile CAILLOL
 // version 1.0 
 
+#include <iostream>
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 #include <gtkmm.h>
+
 #include "gui.h"
 
-HelloWorld::HelloWorld(): m_button("Hello World")   // creates a new button with label "Hello World".
+using namespace std;
+
+Gui::Gui(){
+	auto app = Gtk::Application::create();
+	m_Box_Top(Gtk::ORIENTATION_VERTICAL);
+	m_Box_General(Gtk::ORIENTATION_VERTICAL);
+	
+	m_Button_Exit("Hello");
+	m_Button_New("Bonjour");
+	m_Button_Open("Monsieur");
+	m_Button_Save("Madame");
+}
+	
+void Gui::on_button_clicked()
 {
-  // Sets the border width of the window.
-  set_border_width(10);
-
-  // When the button receives the "clicked" signal, it will call the
-  // on_button_clicked() method defined below.
-  m_button.signal_clicked().connect(sigc::mem_fun(*this,
-              &HelloWorld::on_button_clicked));
-
-  // This packs the button into the Window (a container).
-  add(m_button);
-
-  // The final step is to display this newly created widget...
-  m_button.show();
+	cout << "Hello World" << endl;
 }
 
-HelloWorld::~HelloWorld()
+Gui::~Gui()
 {
 }
 
-void HelloWorld::on_button_clicked()
-{
-  //~ std::cout << "Hello World" << std::endl;
-}
-
+return app->run();
