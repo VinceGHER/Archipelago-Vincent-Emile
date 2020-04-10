@@ -14,7 +14,7 @@ using namespace std;
 int main(int argc, char * argv[]){
 
 	if(argc == 2) City::readFile(argv[1]);
-	virtual Gui::~Gui();
+	//~ virtual Gui::~Gui();
 	
 	return 0;
 }

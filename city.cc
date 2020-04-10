@@ -50,7 +50,10 @@ bool City::readFile(char* data) {
 double City::CriteriaENJ(){
 	
 	
-	vector<Node*> liste = Node::getNodeGroup();
+	vector<double> liste = {};
+	//~ for (int(i); i < 5; ++i){
+		//~ liste.push_back(Node::getNodeGroup());
+	//~ }
 	
 	if (liste.empty()) return 0;
 	
