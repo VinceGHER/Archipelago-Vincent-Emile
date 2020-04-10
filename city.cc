@@ -47,7 +47,7 @@ bool City::readFile(char* data) {
 	} else return false;
 }
 
-double CriteriaENJ(){
+double City::CriteriaENJ(){
 	
 	
 	vector<Node*> liste = Node::getNodeGroup();
@@ -67,7 +67,7 @@ double CriteriaENJ(){
 	return b/a;
 }
 
-double CriteriaCI(){
+double City::CriteriaCI(){
 	vector<double> liste{1,2,3,4};
 	vector<vector<int>> liens{{1,2},{1,4},{3,2}};
 	

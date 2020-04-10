@@ -6,12 +6,14 @@
 #include <vector>
 
 #include "city.h"
+#include "gui.h"
 
 using namespace std;
 
 int main(int argc, char * argv[]){
 
-	if(argc == 2) City::readFile(argv[1]);
+	//~ if(argc == 2) City::readFile(argv[1]);
+	if(argc == 2) HelloWorld;
 	
 	return 0;
 }
