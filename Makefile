@@ -35,8 +35,8 @@ clean:
 
 
 # création du fichier de test (commande: make sequenceTest)
-sequenceTest: sequenceTest.o city.o node.o error.o tools.o
-	$(CXX) $(CXXFLAGS) sequenceTest.o city.o node.o error.o tools.o -o sequenceTest && ./sequenceTest
-sequenceTest.o: sequenceTest.cc node.cc city.cc  error.cc tools.cc city.h node.h error.h tools.h
-	$(CXX) $(CXXFLAGS) -c $<
+sequenceTest: sequenceTest.o city.o node.o error.o tools.o graphic.o gui.o
+	$(CXX) $(CXXFLAGS) $(LINKING) sequenceTest.o city.o node.o error.o tools.o graphic.o gui.o -o $@ $(LDLIBS) && ./sequenceTest
+sequenceTest.o: sequenceTest.cc node.cc city.cc  error.cc gui.cc graphic.cc tools.cc city.h node.h error.h tools.h gui.h graphic.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 	
