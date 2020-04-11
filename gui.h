@@ -5,21 +5,25 @@
 #ifndef GUI_H
 #define GUI_H
 
-//~ #include <gtkmm.h>
+#include <iostream>
+#include <gtkmm.h>
 
-class HelloWorld : public Gtk::Window
+class Gui : public Gtk::Window
 {
 
 public:
-  HelloWorld();
-  virtual ~HelloWorld();
+	Gui();
+	virtual ~Gui();
 
 protected:
-  //Signal handlers:
-  void on_button_clicked();
-
-  //Member widgets:
-  Gtk::Button m_button;
+	void on_button_clicked();
+	
+	Gtk::Box m_Box_Top, m_Box_General;
+	
+	Gtk::Button m_Button_Exit;
+	Gtk::Button m_Button_New;
+	Gtk::Button m_Button_Open;
+	Gtk::Button m_Button_Save;
 };
 
 #endif // GTKMM_EXAMPLE_HELLOWORLD_H
