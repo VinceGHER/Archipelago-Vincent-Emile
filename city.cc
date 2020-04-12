@@ -36,11 +36,11 @@ bool City::readFile(char* data) {
 			}
 		}
 	//	Node::showNodeGroup();
-		cout << error::success() << endl;
+	//	cout << error::success() << endl;
 
 	//	Node::getNodeGroup()[0]->showNode();
 
-		Node::emptyNodeGroup();
+		//Node::emptyNodeGroup();
 
 		return true;
 
@@ -76,4 +76,10 @@ double City::CriteriaCI(){
 	
 	//for (unsigned int i(0); i< liens.size(); ++i){
 	return 0;
+}
+
+
+void City::updateDraw(){
+	Node::drawLinks();
+	Node::drawNodeGroup();
 }

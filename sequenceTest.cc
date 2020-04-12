@@ -5,6 +5,7 @@
 #include "city.h"
 
 #include "graphic.h"
+#include "gui.h"
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 
@@ -60,21 +61,25 @@ int main(int argc, char** argv){
     //  City::readFile("./fichiersTest/error/e10.txt");
     //  cout << "----------------------" << endl;
 
-    Frame wd = {-10,10,-10,10};
+
+    if(argc == 2) City::readFile(argv[1]);
+
+    Frame wd = {-1000,1000,-1000,1000};
     wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
 
     wd.height = 720;
     wd.width = wd.height*wd.ratio;
-    auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
+    int argc1 (1);
+    auto app = Gtk::Application::create(argc1, argv, "org.gtkmm.example");
 
     Gtk::Window win;
     win.set_title("DrawingArea");
     win.set_default_size(wd.width, wd.height);
 
-    Graphic area;
-    area.setFrame(wd);
+    MyArea area(wd);
     win.add(area);
     area.show();
+
     return app->run(win);
 
 };

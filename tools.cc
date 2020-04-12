@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "tools.h"
+#include "graphic.h"
 
 // Private Function
 double distance(Point point1, Point point2);
@@ -49,3 +50,14 @@ bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment,
 
     return true;
 };
+
+bool tools::drawCircle(Circle circle){
+    return graphic::drawCircle(circle.center.x,circle.center.y,circle.radius);
+}
+bool tools::drawSegment(Segment segment){
+    return graphic::drawSegment(segment.start.x,segment.start.y,segment.end.x,
+                                segment.end.y);
+}
+bool tools::setColor(Color color){
+    return graphic::setColor(color);
+}

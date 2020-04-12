@@ -6,17 +6,11 @@
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 #include <gtkmm.h>
+
 #include "gui.h"
+#include "graphic_gui.h"
+#include "city.h"
 using namespace std;
-
-HelloWorld::HelloWorld(): m_button("Hello World")   // creates a new button with label "Hello World".
-{
-  // Sets the border width of the window.
-  set_border_width(10);
-
-
-
-
 
 Gui::Gui(){
 	//~ auto app = Gtk::Application::create();
@@ -39,3 +33,22 @@ Gui::~Gui()
 }
 
 //~ return app->run();
+
+
+//============= Class MyArea ===========
+MyArea::MyArea(Frame x){
+	graphic_gui::setFrame(x);
+}
+
+MyArea::~MyArea(){}
+
+bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
+  Gtk::Allocation allocation = get_allocation();
+  const int width = allocation.get_width();
+  const int height = allocation.get_height();
+
+  graphic_gui::graphic_set_context(cr);
+  graphic_gui::updateFrameSize(width,height);
+  City::updateDraw();
+  return true;
+}

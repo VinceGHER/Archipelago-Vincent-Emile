@@ -19,6 +19,8 @@ class NodeProduction;
 
 class Node {
 public:
+    static void drawLinks();
+    static void drawNodeGroup();
     static void showNodeGroup();
     static Node* pickNodeByUID(ID UID);
     static void emptyNodeGroup();
@@ -33,6 +35,7 @@ public:
     Node(Circle& circle, unsigned int sizePopulation, ID identifier, 
             bool& success);
     virtual void showNode() const;
+    virtual void drawNode() const;
     virtual ~Node(){}
 protected:
 
@@ -53,6 +56,7 @@ public:
     virtual void showNode() const override;
     virtual ~NodeHousing(){}
     virtual bool checkLinksLimit() const override;
+    virtual void drawNode() const override;
 };
 
 class NodeTransport: public Node {
@@ -62,6 +66,7 @@ public:
     virtual void showNode() const override;
     virtual ~NodeTransport(){}
     virtual bool checkLinksLimit() const override;
+    virtual void drawNode() const override;
 };
 
 class NodeProduction: public Node {
@@ -71,6 +76,7 @@ public:
     virtual void showNode() const override;
     virtual ~NodeProduction(){}
     virtual bool checkLinksLimit() const override;
+    virtual void drawNode() const override;
 
 };
    

@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <gtkmm.h>
+#include <gtkmm/drawingarea.h>
+#include "graphic_gui.h"
 
 class Gui : public Gtk::Window
 {
@@ -25,5 +27,16 @@ protected:
 	Gtk::Button m_Button_Open;
 	Gtk::Button m_Button_Save;
 };
+
+class MyArea : public Gtk::DrawingArea {
+public:
+  MyArea(Frame x);
+  virtual ~MyArea();
+
+protected:
+  //Override default signal handler:
+  bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
+};
+
 
 #endif // GTKMM_EXAMPLE_HELLOWORLD_H

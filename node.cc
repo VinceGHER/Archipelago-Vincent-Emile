@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include <memory>
+#include <algorithm>
 
 #include "node.h"
 #include "error.h"
@@ -192,7 +193,9 @@ void Node::showNode() const {
         cout << "   link: " << UID<< " <-> "<<link << endl;
     }
 }
-
+void Node::drawNode() const {
+    cout << "dessin" << endl;
+}
 void Node::emptyNodeGroup(){
     for (auto& node:nodeGroup){
        delete node;
@@ -205,6 +208,25 @@ bool Node::checkLinksLimit() const {
 const vector<Node*>& Node::getNodeGroup(){
     return nodeGroup;
 };
+void Node::drawNodeGroup(){
+    for (auto& node:nodeGroup){
+       node->drawNode();
+    }
+}
+void Node::drawLinks(){
+    vector<ID> linkCreated;
+    for (auto& node:nodeGroup){
+        for (auto& link:node->links){
+            if (not (std::find(linkCreated.begin(), linkCreated.end(), link) != linkCreated.end()) ){
+                Point start( node->nodeCircle.center);
+                Point end( pickNodeByUID(link)->nodeCircle.center);
+                tools::drawSegment(Segment{start,end});
+                linkCreated.push_back(link);
+            }
+        }
+    }
+}
+
 //================= NodeHousing =================
 NodeHousing::NodeHousing(Circle& circle, unsigned int sizePopulation, ID identifier, 
                          bool& success)
@@ -223,6 +245,10 @@ bool NodeHousing::checkLinksLimit() const {
     }
     return false;
 }
+void NodeHousing::drawNode() const {
+    
+    tools::drawCircle(nodeCircle);
+}
 //================= NodeTransport =================
 NodeTransport::NodeTransport(Circle& circle, unsigned int sizePopulation, 
                              ID identifier, bool& success)
@@ -237,6 +263,10 @@ void NodeTransport::showNode() const {
 bool NodeTransport::checkLinksLimit() const {
     return false;
 }
+void NodeTransport::drawNode() const {
+  
+    tools::drawCircle(nodeCircle);
+}
 //================= NodeProduction =================
 NodeProduction::NodeProduction(Circle& circle, unsigned int sizePopulation, 
                                ID identifier, bool& success)
@@ -248,4 +278,8 @@ void NodeProduction::showNode() const {
 }
 bool NodeProduction::checkLinksLimit() const {
     return false;
+}
+void NodeProduction::drawNode() const {
+  
+    tools::drawCircle(nodeCircle);
 }

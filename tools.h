@@ -4,6 +4,8 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#include "graphic.h"
+
 typedef unsigned int ID;
 
 struct Point {
@@ -24,8 +26,12 @@ struct Segment {
     Point end; 
 };
 namespace tools {
-bool overlapBetweenCircles(Circle circle1, Circle circle2, double dist_min);
-bool overlapBetweenCircleSegment(Circle circle, Segment segment, double dist_min);
+    bool overlapBetweenCircles(Circle circle1, Circle circle2, double dist_min);
+    bool overlapBetweenCircleSegment(Circle circle, Segment segment, double dist_min);
+
+    bool drawCircle(Circle circle);
+    bool drawSegment(Segment segment);
+    bool setColor(Color color);
 }
 
 #endif
