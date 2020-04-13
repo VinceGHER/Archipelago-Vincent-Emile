@@ -32,9 +32,12 @@ public:
 
     virtual bool checkLinksLimit() const = 0;
     virtual void showNode() const;
+
+    //save functions
     virtual Type getType() const = 0;
     std::ostream& saveNode(std::ostream& fichier) const;
     void getVectorLink(std::vector<std::array<ID,2>> & linkCreated) const;
+    
     //draw functions
     virtual void drawNode() const;
     void drawLink(std::vector<ID>& linkCreated);

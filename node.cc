@@ -83,6 +83,8 @@ void Node::showNode() const {
         cout << "   link: " << UID<< " <-> "<<link->UID << endl;
     }
 }
+
+// === Save functions ===
 ostream& Node::saveNode(ostream& fichier) const{
     return fichier << "\t" 
                    << UID << " "
@@ -107,6 +109,7 @@ void Node::getVectorLink(vector<array<ID,2>>& linkCreated) const{
         }
     }
 }
+
 // === Draw functions ===
 void Node::drawNode() const{
     tools::drawCircle(nodeCircle);
@@ -201,6 +204,8 @@ void NodeHousing::drawNode() const {
 Type NodeHousing::getType() const {
     return HOUSING;
 }
+
+
 //================= NodeTransport =================
 NodeTransport::NodeTransport(string line,int type, bool& success,vector<Node*>& nodeGroup)
 :Node(line,type,success,nodeGroup){}
@@ -226,6 +231,8 @@ void NodeTransport::drawNode() const {
 Type NodeTransport::getType() const {
     return TRANSPORT;
 }
+
+
 //================= NodeProduction =================
 NodeProduction::NodeProduction(string line,int type, bool& success,vector<Node*>& nodeGroup)
 :Node(line,type,success,nodeGroup){}
