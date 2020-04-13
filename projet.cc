@@ -10,6 +10,9 @@
 #include "gui.h"
 
 using namespace std;
+ 
+
+	#include "constantes.h"
 
 int main(int argc, char * argv[]){
 
@@ -18,10 +21,10 @@ int main(int argc, char * argv[]){
 	int argcFake (1);
 	auto app = Gtk::Application::create(argcFake, argv, "org.gtkmm.example");
 
-	Frame wd = {-2000,2000,-2000,2000};
+	Frame wd = {-1000,1000,-1000,1000};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
 
-	wd.height = 720;
+	wd.height = default_drawing_size;
 	wd.width = wd.height*wd.ratio;
 
 	Gtk::Window win;

@@ -7,7 +7,6 @@
 #include <cmath>
 #include <string>
 #include <sstream>
-#include <memory>
 #include <algorithm>
 
 
@@ -20,7 +19,7 @@ using namespace std;
 
 //========== Node Methods ==========
 
-Node::Node(string line,int type,bool& success,vector<Node*>& nodeGroup){
+Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
     istringstream data(line);
     ID UID; 
     Circle nodeCircle; 
@@ -84,7 +83,30 @@ void Node::showNode() const {
         cout << "   link: " << UID<< " <-> "<<link->UID << endl;
     }
 }
+ostream& Node::saveNode(ostream& fichier) const{
+    return fichier << "\t" 
+                   << UID << " "
+                   << nodeCircle.center.x << " "
+                   << nodeCircle.center.y << " "
+                   << nbp << endl;
+} 
+void Node::getVectorLink(vector<array<ID,2>>& linkCreated) const{
 
+    for (auto& link:links){
+
+        array<ID,2> link1 = {UID,link->UID};
+        array<ID,2> link2 = {link->UID,UID};
+
+        //test if link1 or link2 already exists
+        if (not (std::find(linkCreated.begin(), linkCreated.end(), link1)
+            != linkCreated.end())
+         && not (std::find(linkCreated.begin(), linkCreated.end(), link2)
+            != linkCreated.end()) ){
+
+            linkCreated.push_back(link1);
+        }
+    }
+}
 // === Draw functions ===
 void Node::drawNode() const{
     tools::drawCircle(nodeCircle);
@@ -106,7 +128,7 @@ void Node::drawLink(vector<ID>& linkCreated) {
 
 // === Verification method ===
 bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
-                               ID identifier,vector<Node*>& nodeGroup){
+                               ID identifier, const vector<Node*>& nodeGroup){
      // Check validity of argument
     if (identifier == no_link) {
         cout<< error::reserved_uid() << endl; 
@@ -176,8 +198,9 @@ bool NodeHousing::checkLinksLimit() const {
 void NodeHousing::drawNode() const {
    Node::drawNode();
 }
-
-
+Type NodeHousing::getType() const {
+    return HOUSING;
+}
 //================= NodeTransport =================
 NodeTransport::NodeTransport(string line,int type, bool& success,vector<Node*>& nodeGroup)
 :Node(line,type,success,nodeGroup){}
@@ -192,9 +215,17 @@ bool NodeTransport::checkLinksLimit() const {
 }
 void NodeTransport::drawNode() const {
     Node::drawNode();
+    for (double angle(0); angle < 2*M_PI; angle+=M_PI/4.){
+        Point pointOnCircle {nodeCircle.center.x + cos(angle)*nodeCircle.radius,
+                             nodeCircle.center.y + sin(angle)*nodeCircle.radius};
+        Segment segment {nodeCircle.center , pointOnCircle};
+        tools::drawSegment(segment);
+    }
+
 }
-
-
+Type NodeTransport::getType() const {
+    return TRANSPORT;
+}
 //================= NodeProduction =================
 NodeProduction::NodeProduction(string line,int type, bool& success,vector<Node*>& nodeGroup)
 :Node(line,type,success,nodeGroup){}
@@ -209,4 +240,20 @@ bool NodeProduction::checkLinksLimit() const {
 }
 void NodeProduction::drawNode() const {
     Node::drawNode();
+    double diameter( nodeCircle.radius*2);
+    Point topLeftCorner {nodeCircle.center.x - (0.75*diameter)/2. ,
+                         nodeCircle.center.y + (diameter/16.) };
+    Point topRightCorner {nodeCircle.center.x + (0.75*diameter)/2.,
+                          nodeCircle.center.y + (diameter/16.) };
+    Point bottomLeftCorner {nodeCircle.center.x - (0.75*diameter)/2.,
+                          nodeCircle.center.y - (diameter/16.) };
+    Point bottomRightCorner {nodeCircle.center.x + (0.75*diameter)/2.,
+                          nodeCircle.center.y - (diameter/16.) };
+    tools::drawSegment(Segment{topLeftCorner,topRightCorner});
+    tools::drawSegment(Segment{topRightCorner,bottomRightCorner});
+    tools::drawSegment(Segment{bottomRightCorner,bottomLeftCorner});
+    tools::drawSegment(Segment{bottomLeftCorner,topLeftCorner});
+}
+Type NodeProduction::getType() const {
+    return PRODUCTION;
 }

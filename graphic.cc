@@ -28,6 +28,18 @@ int ConvertY(double coord, double height){
     double prefactor = height / ( current.ymax - current.ymin ); 
     return ( current.ymax - coord ) * prefactor;	
 }
+
+
+//===== External Function ====
+
+//function for gui module
+void graphic_gui::graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr){
+    pCr = &cr;
+}
+void graphic_gui::setFrame(Frame x){
+    initial = x;
+    current = x;
+}
 void graphic_gui::updateFrameSize(int width, int height){
     
     double newFactor( (double)width/height);
@@ -59,19 +71,6 @@ void graphic_gui::updateFrameSize(int width, int height){
 }
 
 
-//===== External Function ====
-
-//function for gui module
-void graphic_gui::graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr){
-    pCr = &cr;
-}
-void graphic_gui::setFrame(Frame x){
-    initial = x;
-    current = x;
-}
-
-
-
 //Function for tools module
 bool graphic::setColor(Color color) {
     if (pCr == nullptr) return false;
@@ -88,10 +87,10 @@ bool graphic::setColor(Color color) {
         green = 1;
         blue = 0;
         break;
-    case BLUE:
+    case BLACK:
         red = 0;
         green = 0;
-        blue = 1;
+        blue = 0;
         break;
     }
 

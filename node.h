@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
+#include <array>
 
 #include "tools.h"
 
@@ -20,7 +22,7 @@ class NodeProduction;
 class Node {
 public:
 
-    Node(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
+    Node(std::string line,int type,bool& success,const std::vector<Node*>& nodeGroup);
     virtual ~Node(){}
 
     static bool readLink(std::string line,ID& UID1,ID& UID2);
@@ -30,14 +32,16 @@ public:
 
     virtual bool checkLinksLimit() const = 0;
     virtual void showNode() const;
-
+    virtual Type getType() const = 0;
+    std::ostream& saveNode(std::ostream& fichier) const;
+    void getVectorLink(std::vector<std::array<ID,2>> & linkCreated) const;
     //draw functions
     virtual void drawNode() const;
     void drawLink(std::vector<ID>& linkCreated);
 
     //verification function
     bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
-                             ID identifier,std::vector<Node*>& nodeGroup);
+                             ID identifier,const std::vector<Node*>& nodeGroup);
     bool checkCollisionNodeLink(Node* pNode1,Node* pNode2);
     bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
 
@@ -45,7 +49,6 @@ public:
 protected:
     Circle nodeCircle;
     unsigned int nbp;
-    int type;
     ID UID;
     std::vector<Node*> links;
 
@@ -57,6 +60,7 @@ public:
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
     virtual void drawNode() const override;
+    virtual Type getType() const override;
 };
 
 class NodeTransport: public Node {
@@ -66,6 +70,7 @@ public:
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
     virtual void drawNode() const override;
+    virtual Type getType() const override;
 };
 
 class NodeProduction: public Node {
@@ -75,6 +80,7 @@ public:
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
     virtual void drawNode() const override;
+    virtual Type getType() const override;
 
 };
    

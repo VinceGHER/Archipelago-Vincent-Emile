@@ -14,6 +14,7 @@ class City {
 public:
 	static bool readFile(char * data);
 	static void updateDraw();
+	static bool save(std::string nom);
 
 private:
 	bool addNode(std::string line,int type);
@@ -21,6 +22,7 @@ private:
 	Node* pickNodeByUID(ID UID) const;
 	void showNodeGroup() const;
 	void emptyNodeGroup();
+	std::vector<Node*> getType(Type type);
 
 	double CriteriaENJ();
 	double CriteriaCI();
