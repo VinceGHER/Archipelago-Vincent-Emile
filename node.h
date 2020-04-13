@@ -8,8 +8,8 @@
 #include <vector>
 #include <string>
 
-
 #include "tools.h"
+
 enum Type {HOUSING,TRANSPORT,PRODUCTION,LINK};
 
 class Node;
@@ -19,62 +19,60 @@ class NodeProduction;
 
 class Node {
 public:
-    static void drawLinks();
-    static void drawNodeGroup();
-    static void showNodeGroup();
-    static Node* pickNodeByUID(ID UID);
-    static void emptyNodeGroup();
-    static const std::vector<Node*>& getNodeGroup();
-    static bool addNode(Circle circle, unsigned int sizePopulation, int type, 
-                        ID identifier);
-    static bool readLine(std::string line,int type);
-    static bool addLink(ID UID1, ID UID2);
+
+    Node(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
+    virtual ~Node(){}
+
+    static bool readLink(std::string line,ID& UID1,ID& UID2);
+    bool addLink(Node* nodeToLink);
 
     const ID getUID() const;
-    bool createLinkNode(Node& other, const std::vector<Node>& nodeGroup);
-    Node(Circle& circle, unsigned int sizePopulation, ID identifier, 
-            bool& success);
+
+    virtual bool checkLinksLimit() const = 0;
     virtual void showNode() const;
+
+    //draw functions
     virtual void drawNode() const;
-    virtual ~Node(){}
+    void drawLink(std::vector<ID>& linkCreated);
+
+    //verification function
+    bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
+                             ID identifier,std::vector<Node*>& nodeGroup);
+    bool checkCollisionNodeLink(Node* pNode1,Node* pNode2);
+    bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
+
+    
 protected:
-
-    bool checkIfNodeIsAlreadyLinked(Node nodeToCheck) const;
-    virtual bool checkLinksLimit() const;
-
     Circle nodeCircle;
     unsigned int nbp;
     int type;
     ID UID;
-    std::vector<ID> links;
+    std::vector<Node*> links;
 
 };
 class NodeHousing: public Node {
 public:
-    NodeHousing(Circle& circle, unsigned int sizePopulation, ID identifier, 
-                bool& success);
-    virtual void showNode() const override;
+    NodeHousing(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
     virtual ~NodeHousing(){}
+    virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
     virtual void drawNode() const override;
 };
 
 class NodeTransport: public Node {
 public:
-    NodeTransport(Circle& circle, unsigned int sizePopulation, ID identifier, 
-                  bool& success);
-    virtual void showNode() const override;
+    NodeTransport(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
     virtual ~NodeTransport(){}
+    virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
     virtual void drawNode() const override;
 };
 
 class NodeProduction: public Node {
 public:
-    NodeProduction(Circle& circle, unsigned int sizePopulation, ID identifier, 
-                  bool& success);
-    virtual void showNode() const override;
+    NodeProduction(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
     virtual ~NodeProduction(){}
+    virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
     virtual void drawNode() const override;
 

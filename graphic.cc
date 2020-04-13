@@ -9,7 +9,6 @@
 //debug
 using namespace std;
 
-
 namespace {
     Frame initial;
     Frame current; 
@@ -54,12 +53,15 @@ void graphic_gui::updateFrameSize(int width, int height){
         current.ymax = mid + 0.5*(initial.ratio/newFactor)*delta ;
         current.ymin = mid - 0.5*(initial.ratio/newFactor)*delta ;		  	  
     }
+    //Update width and height
     current.width = width;
     current.height = height;
 }
 
 
-//External Function
+//===== External Function ====
+
+//function for gui module
 void graphic_gui::graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr){
     pCr = &cr;
 }
@@ -68,6 +70,9 @@ void graphic_gui::setFrame(Frame x){
     current = x;
 }
 
+
+
+//Function for tools module
 bool graphic::setColor(Color color) {
     if (pCr == nullptr) return false;
     double red(0),green(0),blue(0);
