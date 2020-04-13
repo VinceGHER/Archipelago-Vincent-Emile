@@ -36,7 +36,7 @@ public:
     //save functions
     virtual Type getType() const = 0;
     std::ostream& saveNode(std::ostream& fichier) const;
-    void getVectorLink(std::vector<std::array<ID,2>> & linkCreated) const;
+    void getVectorLink(std::vector<std::array<ID,2>>& linkCreated) const;
     
     //draw functions
     virtual void drawNode() const;
@@ -58,7 +58,8 @@ protected:
 };
 class NodeHousing: public Node {
 public:
-    NodeHousing(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
+    NodeHousing(std::string line,int type,bool& success,
+                const std::vector<Node*>& nodeGroup);
     virtual ~NodeHousing(){}
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
@@ -68,7 +69,8 @@ public:
 
 class NodeTransport: public Node {
 public:
-    NodeTransport(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
+    NodeTransport(std::string line,int type,bool& success,
+                  const std::vector<Node*>& nodeGroup);
     virtual ~NodeTransport(){}
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
@@ -78,7 +80,8 @@ public:
 
 class NodeProduction: public Node {
 public:
-    NodeProduction(std::string line,int type,bool& success,std::vector<Node*>& nodeGroup);
+    NodeProduction(std::string line,int type,bool& success,
+                   const std::vector<Node*>& nodeGroup);
     virtual ~NodeProduction(){}
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;

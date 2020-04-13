@@ -183,7 +183,8 @@ bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
 
 
 //================= NodeHousing =================
-NodeHousing::NodeHousing(string line,int type, bool& success,vector<Node*>& nodeGroup)
+NodeHousing::NodeHousing(string line,int type, bool& success,
+                         const vector<Node*>& nodeGroup)
 :Node(line,type,success,nodeGroup){}
 
 void NodeHousing::showNode() const {
@@ -207,7 +208,8 @@ Type NodeHousing::getType() const {
 
 
 //================= NodeTransport =================
-NodeTransport::NodeTransport(string line,int type, bool& success,vector<Node*>& nodeGroup)
+NodeTransport::NodeTransport(string line,int type, bool& success,
+                             const vector<Node*>& nodeGroup)
 :Node(line,type,success,nodeGroup){}
 
 void NodeTransport::showNode() const {
@@ -234,7 +236,8 @@ Type NodeTransport::getType() const {
 
 
 //================= NodeProduction =================
-NodeProduction::NodeProduction(string line,int type, bool& success,vector<Node*>& nodeGroup)
+NodeProduction::NodeProduction(string line,int type, bool& success,
+                               const vector<Node*>& nodeGroup)
 :Node(line,type,success,nodeGroup){}
 
 void NodeProduction::showNode() const {
