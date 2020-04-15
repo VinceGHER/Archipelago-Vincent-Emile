@@ -139,30 +139,26 @@ void City::emptyNodeGroup(){
 }
 
 
-// === Critere ===
-double City::CriteriaENJ(){
+// === Criteres ===
+double City::criteriaENJ(){
+	cout << "criteriaENJ :" << endl;
+	if (nodeGroup.empty()) return 0;
 	
-	
-	vector<double> liste = {};
-	//~ for (int(i); i < 5; ++i){
-		//~ liste.push_back(Node::getNodeGroup());
-	//~ }
-	
-	if (liste.empty()) return 0;
 	
 	double a(0);
 	double b(0);
-	for (unsigned int i(0); i< liste.size(); ++i){
-		cout << liste[i] << endl;
-		//~ a += ;
-		//~ if (liste[i] == 0)
-			//~ b += liste[i][1];
+	for (unsigned int i(0); i< nodeGroup.size(); ++i){
+		cout << nodeGroup[i] << endl;
+		//~ a += nodeGroup[i][1];
+		//~ if (nodeGroup[i] == 0)
+			//~ b += nodeGroup[i][1];
 		//~ else
-			//~ b -= liste[i][1];
+			//~ b -= nodeGroup[i][1];
 	}
 	return b/a;
 }
-double City::CriteriaCI(){
+
+double City::criteriaCI(){
 	vector<double> liste{1,2,3,4};
 	vector<vector<int>> liens{{1,2},{1,4},{3,2}};
 	

@@ -8,11 +8,11 @@
 #include <iostream>
 #include <gtkmm.h>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/button.h>
 #include "graphic_gui.h"
 
-class Gui : public Gtk::Window
-{
 
+class Gui : public Gtk::Window{
 public:
 	Gui();
 	virtual ~Gui();
@@ -20,12 +20,16 @@ public:
 protected:
 	void on_button_clicked();
 	
-	Gtk::Box m_Box_Top, m_Box_General;
+	Gtk:: Box m_Box, m_Box_General;
 	
 	Gtk::Button m_Button_Exit;
 	Gtk::Button m_Button_New;
 	Gtk::Button m_Button_Open;
 	Gtk::Button m_Button_Save;
+	//~ MyArea m_Area;
+	
+private:
+	void draw();
 };
 
 class MyArea : public Gtk::DrawingArea {

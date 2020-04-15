@@ -24,8 +24,8 @@ private:
 	void emptyNodeGroup();
 	std::vector<Node*> getType(Type type);
 
-	double CriteriaENJ();
-	double CriteriaCI();
+	double criteriaENJ();
+	double criteriaCI();
 
 	std::vector<Node*> nodeGroup;
 };
