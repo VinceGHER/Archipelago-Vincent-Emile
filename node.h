@@ -28,13 +28,15 @@ public:
     static bool readLink(std::string line,ID& UID1,ID& UID2);
     bool addLink(Node* nodeToLink);
 
-    const ID getUID() const;
-
     virtual bool checkLinksLimit() const = 0;
     virtual void showNode() const;
 
-    //save functions
+    //Getter
+    const ID getUID() const;  
     virtual Type getType() const = 0;
+    double getNbp() const;
+
+    //save functions
     std::ostream& saveNode(std::ostream& fichier) const;
     void getVectorLink(std::vector<std::array<ID,2>>& linkCreated) const;
     

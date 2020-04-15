@@ -19,31 +19,12 @@ int main(int argc, char * argv[]){
 	if(argc == 2) City::readFile(argv[1]);
 	/// temporaire ce qui suit
 	int argcFake (1);
-	auto app_gui = Gtk::Application::create(argc, argv, "org.gtkmm.example_gui");
+	auto app_gui = Gtk::Application::create(argcFake, argv, "org.gtkmm.example_gui");
 
 	Gui eventWindow;
-	eventWindow.set_default_size(300, 200);
-	eventWindow.set_resizable(false);
+	eventWindow.set_default_size(900, 900);
+	//eventWindow.set_resizable(false);
 
    return app_gui->run(eventWindow);
-
-	//int argcFake (1);
-	auto app = Gtk::Application::create(argcFake, argv, "org.gtkmm.example");
-
-	Frame wd = {-1000,1000,-1000,1000};
-	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
-
-	wd.height = default_drawing_size;
-	wd.width = wd.height*wd.ratio;
-
-	Gtk::Window win;
-	win.set_title("DrawingArea");
-	win.set_default_size(wd.width, wd.height);
-
-	MyArea area(wd);
-	win.add(area);
-	area.show();
 	
-	return app->run(win);
-
 }

@@ -147,9 +147,9 @@ double City::criteriaENJ(){
 	
 	double a(0);
 	double b(0);
-	for (unsigned int i(0); i< nodeGroup.size(); ++i){
+	for (size_t i(0); i < nodeGroup.size(); ++i){
 		cout << nodeGroup[i] << endl;
-		//~ a += nodeGroup[i][1];
+		//~ a += nodeGroup[i];
 		//~ if (nodeGroup[i] == 0)
 			//~ b += nodeGroup[i][1];
 		//~ else
@@ -157,7 +157,6 @@ double City::criteriaENJ(){
 	}
 	return b/a;
 }
-
 double City::criteriaCI(){
 	vector<double> liste{1,2,3,4};
 	vector<vector<int>> liens{{1,2},{1,4},{3,2}};

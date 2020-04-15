@@ -70,9 +70,6 @@ bool Node::addLink(Node* nodeToLink){
     links.push_back(nodeToLink);
     return true;
 }
-const ID Node::getUID() const{
-    return UID;
-}
 void Node::showNode() const {
     cout <<"UID: " << UID << endl;
     cout << "CenterX: " << nodeCircle.center.x << " " 
@@ -82,6 +79,14 @@ void Node::showNode() const {
     for (auto link:links){
         cout << "   link: " << UID<< " <-> "<<link->UID << endl;
     }
+}
+
+// === Getter functions ===
+const ID Node::getUID() const{
+    return UID;
+}
+double Node::getNbp() const {
+    return nbp;
 }
 
 // === Save functions ===
