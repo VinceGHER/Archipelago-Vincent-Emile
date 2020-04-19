@@ -10,7 +10,7 @@
 
 #include "graphic_gui.h"
 
-class MyArea : public Gtk::DrawingArea {
+class MyArea : public Gtk:: DrawingArea {
 public:
   MyArea();
   void setFrame(Frame x);
@@ -18,20 +18,21 @@ public:
 
 protected:
   //Override default signal handler:
-  bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
+  bool on_draw(const Cairo:: RefPtr<Cairo::Context>& cr) override;
 };
 
 
-class Gui : public Gtk::Window {
+class Gui : public Gtk:: Window {
 public:
 	Gui();
 	virtual ~Gui();
 
 protected:
-	void on_exit_button_clicked();
-	void on_new_button_clicked();
-	void on_open_button_clicked();
-	void on_save_button_clicked();
+	void onExitButtonClicked();
+	void onNewButtonClicked();
+	void onOpenButtonClicked();
+	void onSaveButtonClicked();
+	void onUselessButtonClicked();
 	
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
@@ -41,28 +42,30 @@ protected:
 	Gtk:: Box m_Box_Editor;
 	Gtk:: Box m_Box_Informations;
 	
-	Gtk::Frame m_Frame_General;
-	Gtk::Frame m_Frame_Display;
-	Gtk::Frame m_Frame_Editor;
-	Gtk::Frame m_Frame_Informations;
+	Gtk:: Frame m_Frame_General;
+	Gtk:: Frame m_Frame_Display;
+	Gtk:: Frame m_Frame_Editor;
+	Gtk:: Frame m_Frame_Informations;
 
-	Gtk::Button m_Button_Exit;
-	Gtk::Button m_Button_New;
-	Gtk::Button m_Button_Open;
-	Gtk::Button m_Button_Save;
-	Gtk::Button m_Button_Path;
-	Gtk::Button m_Button_Zin;
-	Gtk::Button m_Button_Zout;
-	Gtk::Button m_Button_Reset;
-	Gtk::Button m_Button_Edit;
+	Gtk:: Button m_Button_Exit;
+	Gtk:: Button m_Button_New;
+	Gtk:: Button m_Button_Open;
+	Gtk:: Button m_Button_Save;
+	Gtk:: Button m_Button_Path;
+	Gtk:: Button m_Button_Zin;
+	Gtk:: Button m_Button_Zout;
+	Gtk:: Button m_Button_Reset;
+	Gtk:: Button m_Button_Edit;
 	
-	Gtk::RadioButtonGroup m_Radio_Type;
-    Gtk::RadioButton m_Radio_Housing, m_Radio_Transport, m_Radio_Production;
+	Gtk:: RadioButtonGroup m_Radio_Type;
+    Gtk:: RadioButton m_Radio_Housing;
+    Gtk:: RadioButton m_Radio_Transport;
+    Gtk:: RadioButton m_Radio_Production;
 
-	Gtk::Label m_Label_Zoom;
-	Gtk::Label m_Label_ENJ;
-	Gtk::Label m_Label_CI;
-	Gtk::Label m_Label_MTA;
+	Gtk:: Label m_Label_Zoom;
+	Gtk:: Label m_Label_ENJ;
+	Gtk:: Label m_Label_CI;
+	Gtk:: Label m_Label_MTA;
 
 	MyArea m_Area;
 	

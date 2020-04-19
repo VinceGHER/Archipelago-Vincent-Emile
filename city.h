@@ -26,6 +26,7 @@ private:
 
 	double criteriaENJ();
 	double criteriaCI();
+	double criteriaMTA();
 
 	std::vector<Node*> nodeGroup;
 };

@@ -149,6 +149,7 @@ double City::criteriaENJ(){
 	double b(0);
 	for (size_t i(0); i < nodeGroup.size(); ++i){
 		cout << nodeGroup[i] << endl;
+		a = Node::getNbp(1);
 		//~ a += nodeGroup[i];
 		//~ if (nodeGroup[i] == 0)
 			//~ b += nodeGroup[i][1];
@@ -162,6 +163,9 @@ double City::criteriaCI(){
 	vector<vector<int>> liens{{1,2},{1,4},{3,2}};
 	
 	//for (unsigned int i(0); i< liens.size(); ++i){
+	return 0;
+}
+double City::criteriaMTA(){
 	return 0;
 }
 
