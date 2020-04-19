@@ -15,7 +15,7 @@
 
 using namespace std;
 
-//============= Class Gui ===========
+//=== Class Gui ===
 Gui::Gui():
 	m_Box(Gtk::ORIENTATION_HORIZONTAL),
 	
@@ -53,6 +53,8 @@ Gui::Gui():
 	m_Label_MTA()
 	{
 	
+	timer.setGuiRef(this);
+	timer.addTimer();
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
 
@@ -102,16 +104,6 @@ Gui::Gui():
 	m_Box_Informations.pack_start(m_Label_CI,false,false);
 	m_Box_Informations.pack_start(m_Label_MTA,false,false);
 	
-	string ZoomText ("zoom: x1.00" );
-	string ENJText ("ENJ: " );
-	string CIText ("CI: ");
-	string MTAText ("MTA: ");
-	
-	m_Label_Zoom.set_text(ZoomText);
-	m_Label_ENJ.set_text(ENJText);
-	m_Label_CI.set_text(CIText);
-	m_Label_MTA.set_text(MTAText);
-	
 	m_Button_Exit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onExitButtonClicked) );	  
 	m_Button_New.signal_clicked().connect(sigc::mem_fun(*this,
@@ -153,12 +145,25 @@ void Gui::onUselessButtonClicked(){
 	cout << "ne fonctionnera qu'au rendu 3" << endl;
 }
 
+void Gui::updateText(){
+
+	string ZoomText ("zoom: x1.00");
+	string ENJText ("ENJ: " + (City::criteriaENJ()));
+	string CIText ("CI: " + (City::criteriaCI()));
+	string MTAText ("MTA: " + (City::criteriaMTA()));
+
+	m_Label_Zoom.set_text(ZoomText);
+	m_Label_ENJ.set_text(ENJText);
+	m_Label_CI.set_text(CIText);
+	m_Label_MTA.set_text(MTAText);	
+}
+
 Gui::~Gui()
 {
 }
 
 
-//============= Class MyArea ===========
+//=== Class MyArea ===
 void MyArea::setFrame(Frame x){
 	graphic_gui::setFrame(x);
 }
@@ -174,5 +179,43 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 	graphic_gui:: graphic_set_context(cr);
 	graphic_gui:: updateFrameSize(width,height);
 	City::updateDraw();
+	return true;
+}
+
+//=== CLass Timer ===
+Timer::Timer():timerAdded(false),disconnect(false),timeoutValue(500),gui(nullptr){}
+bool Timer::addTimer(){
+	if(not timerAdded){
+		Glib::signal_timeout().connect( sigc::mem_fun(*this, &Timer::onTimeout),
+									  timeoutValue);
+		timerAdded = true;
+	
+		return true;
+	} else return false;
+	
+}
+void Timer::setGuiRef(Gui* guiRef){
+	gui = guiRef;
+
+}
+bool Timer::deleteTimer(){
+	if (not timerAdded){
+		return false;
+	} else {
+		disconnect  = true;   
+    	timerAdded = false;
+		return true;
+	}
+}
+bool Timer::onTimeout(){
+	//static unsigned int val(1);
+	
+	if (disconnect){
+		disconnect = false;
+		return false;
+	}
+	
+	gui->updateText();
+
 	return true;
 }

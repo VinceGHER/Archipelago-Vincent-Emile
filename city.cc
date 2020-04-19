@@ -140,33 +140,36 @@ void City::emptyNodeGroup(){
 
 
 // === Criteres ===
-double City::criteriaENJ(){
-	cout << "criteriaENJ :" << endl;
-	if (nodeGroup.empty()) return 0;
+string City::criteriaENJ(){
+	double dayNbpTotal(0);
+	double restNbpTotal(0);
+
+	if (city.nodeGroup.empty()) return to_string(dayNbpTotal);
 	
-	
-	double a(0);
-	double b(0);
-	for (size_t i(0); i < nodeGroup.size(); ++i){
-		cout << nodeGroup[i] << endl;
-		a = Node::getNbp(1);
-		//~ a += nodeGroup[i];
-		//~ if (nodeGroup[i] == 0)
-			//~ b += nodeGroup[i][1];
-		//~ else
-			//~ b -= nodeGroup[i][1];
+	for (size_t i(0); i < city.nodeGroup.size(); ++i){
+		double currentNbp (city.nodeGroup[i]->getNbp());
+		Type currentType (city.nodeGroup[i]->getType());
+		dayNbpTotal += currentNbp;
+		if (currentType == HOUSING)
+			restNbpTotal += currentNbp;
+		else
+			restNbpTotal -= currentNbp;
 	}
-	return b/a;
+	return to_string(restNbpTotal/dayNbpTotal);
 }
-double City::criteriaCI(){
-	vector<double> liste{1,2,3,4};
-	vector<vector<int>> liens{{1,2},{1,4},{3,2}};
+string City::criteriaCI(){
+	// vector<double> liste{1,2,3,4};
+	// vector<vector<int>> liens{{1,2},{1,4},{3,2}};
 	
-	//for (unsigned int i(0); i< liens.size(); ++i){
-	return 0;
+	// //for (unsigned int i(0); i< liens.size(); ++i){
+	 return "";
 }
-double City::criteriaMTA(){
-	return 0;
+string City::criteriaMTA(){
+
+	//Ne pas oublie de d'oublier les fonctions de reinsitlation dans exit
+	//Et aussi les boutons ou l'on reste enfoncés
+	//STP merci !
+	return "";
 }
 
 

@@ -15,18 +15,20 @@ public:
 	static bool readFile(char * data);
 	static void updateDraw();
 	static bool save(std::string nom);
+	void emptyNodeGroup();
+
+	static std::string criteriaENJ();
+	static std::string criteriaCI();
+	static std::string criteriaMTA();
 
 private:
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
 	Node* pickNodeByUID(ID UID) const;
 	void showNodeGroup() const;
-	void emptyNodeGroup();
 	std::vector<Node*> getType(Type type);
 
-	double criteriaENJ();
-	double criteriaCI();
-	double criteriaMTA();
+
 
 	std::vector<Node*> nodeGroup;
 };

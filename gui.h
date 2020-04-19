@@ -10,6 +10,10 @@
 
 #include "graphic_gui.h"
 
+class MyArea;
+class Timer;
+class Gui;
+
 class MyArea : public Gtk:: DrawingArea {
 public:
   MyArea();
@@ -21,11 +25,28 @@ protected:
   bool on_draw(const Cairo:: RefPtr<Cairo::Context>& cr) override;
 };
 
+class Timer {
+public:
+	Timer();
+	void setGuiRef(Gui* guiRef);
+	bool addTimer();
+	bool onTimeout();
+	bool deleteTimer();
+
+private:
+	bool timerAdded;
+	bool disconnect;
+	const int timeoutValue;
+	Gui* gui;
+
+};
+
 
 class Gui : public Gtk:: Window {
 public:
 	Gui();
 	virtual ~Gui();
+	void updateText();
 
 protected:
 	void onExitButtonClicked();
@@ -68,10 +89,7 @@ protected:
 	Gtk:: Label m_Label_MTA;
 
 	MyArea m_Area;
-	
-	
-private:
-	void draw();
-};
 
+	Timer timer;
+};
 #endif
