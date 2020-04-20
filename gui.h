@@ -9,6 +9,7 @@
 #include <gtkmm.h>
 
 #include "graphic_gui.h"
+#include "city.h"
 
 class MyArea;
 class Timer;
@@ -16,13 +17,14 @@ class Gui;
 
 class MyArea : public Gtk:: DrawingArea {
 public:
-  MyArea();
-  void setFrame(Frame x);
-  virtual ~MyArea();
+	MyArea();
+	void setFrame(Frame x);
+	virtual ~MyArea();
 
 protected:
-  //Override default signal handler:
-  bool on_draw(const Cairo:: RefPtr<Cairo::Context>& cr) override;
+	//Override default signal handler:
+	bool on_draw(const Cairo:: RefPtr<Cairo::Context>& cr) override;
+	
 };
 
 class Timer {
@@ -49,6 +51,7 @@ public:
 	void updateText();
 
 protected:
+	
 	void onExitButtonClicked();
 	void onNewButtonClicked();
 	void onOpenButtonClicked();
@@ -76,7 +79,8 @@ protected:
 	Gtk:: Button m_Button_Zin;
 	Gtk:: Button m_Button_Zout;
 	Gtk:: Button m_Button_Reset;
-	Gtk:: Button m_Button_Edit;
+		
+	Gtk:: ToggleButton m_Button_Edit;
 	
 	Gtk:: RadioButtonGroup m_Radio_Type;
     Gtk:: RadioButton m_Radio_Housing;
@@ -87,9 +91,14 @@ protected:
 	Gtk:: Label m_Label_ENJ;
 	Gtk:: Label m_Label_CI;
 	Gtk:: Label m_Label_MTA;
+	
+	Gtk:: Box m_Box_Open;
+	Gtk:: Button m_Button_File;
+	Gtk:: Label m_Label_Open;
 
 	MyArea m_Area;
-
-	Timer timer;
+	City   city;
+	Timer  timer;
+	
 };
 #endif
