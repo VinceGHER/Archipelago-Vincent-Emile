@@ -50,11 +50,10 @@ Gui::Gui():
 	m_Label_Zoom(),
 	m_Label_ENJ(),
 	m_Label_CI(),
-	m_Label_MTA()
+	m_Label_MTA(),
+	timer(*this,500)
 	{
-	
-	timer.setGuiRef(this);
-	timer.addTimer();
+	timer.startTimer();
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
 
@@ -155,7 +154,7 @@ void Gui::updateText(){
 	m_Label_Zoom.set_text(ZoomText);
 	m_Label_ENJ.set_text(ENJText);
 	m_Label_CI.set_text(CIText);
-	m_Label_MTA.set_text(MTAText);	
+	m_Label_MTA.set_text(MTAText);
 }
 
 Gui::~Gui()
@@ -183,8 +182,12 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 }
 
 //=== CLass Timer ===
-Timer::Timer():timerAdded(false),disconnect(false),timeoutValue(500),gui(nullptr){}
-bool Timer::addTimer(){
+Timer::Timer(Gui& gui,int timeoutValueRef)
+:timerAdded(false),disconnect(false),timeoutValue(timeoutValueRef),
+guiRef(gui){}
+
+bool Timer::startTimer(){
+	
 	if(not timerAdded){
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &Timer::onTimeout),
 									  timeoutValue);
@@ -194,11 +197,7 @@ bool Timer::addTimer(){
 	} else return false;
 	
 }
-void Timer::setGuiRef(Gui* guiRef){
-	gui = guiRef;
-
-}
-bool Timer::deleteTimer(){
+bool Timer::stopTimer(){
 	if (not timerAdded){
 		return false;
 	} else {
@@ -208,14 +207,13 @@ bool Timer::deleteTimer(){
 	}
 }
 bool Timer::onTimeout(){
-	//static unsigned int val(1);
-	
+
 	if (disconnect){
 		disconnect = false;
 		return false;
 	}
 	
-	gui->updateText();
+	guiRef.updateText();
 
 	return true;
 }

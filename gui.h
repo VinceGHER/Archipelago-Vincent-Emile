@@ -27,18 +27,16 @@ protected:
 
 class Timer {
 public:
-	Timer();
-	void setGuiRef(Gui* guiRef);
-	bool addTimer();
+	Timer(Gui& gui,int timeoutValueRef);
+	bool startTimer();
+	bool stopTimer();
 	bool onTimeout();
-	bool deleteTimer();
 
 private:
 	bool timerAdded;
 	bool disconnect;
 	const int timeoutValue;
-	Gui* gui;
-
+	Gui& guiRef;
 };
 
 
