@@ -20,6 +20,7 @@ public:
 	MyArea();
 	void setFrame(Frame x);
 	virtual ~MyArea();
+	void refresh();
 
 protected:
 	//Override default signal handler:
@@ -95,7 +96,6 @@ protected:
 	Gtk:: Label m_Label_Open;
 
 	MyArea m_Area;
-	City* ptr_city;
 	Timer  timer;
 	
 };

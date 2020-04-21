@@ -138,7 +138,7 @@ void Gui::onExitButtonClicked(){
 void Gui::onNewButtonClicked(){
 	City::save("dd.txt");
 	City::emptyNodeGroup();
-	//m_Area.clear();
+	m_Area.refresh();
 	cout << "New." << endl;
 }
 void Gui::onOpenButtonClicked(){
@@ -161,6 +161,7 @@ void Gui::onOpenButtonClicked(){
 			string filename = dialog.get_filename(); 
 			cout << "File selected: " <<  filename << endl;
 			City::readFile(filename);
+			m_Area.refresh();
 			break;
 		}
 		case(Gtk::RESPONSE_CANCEL):{
@@ -206,6 +207,15 @@ void MyArea::setFrame(Frame x){
 MyArea::MyArea(){}
 
 MyArea::~MyArea(){}
+
+void MyArea::refresh(){
+	auto win = get_window();
+	if(win){
+		Gdk::Rectangle r(0,0, get_allocation().get_width(),
+		get_allocation().get_height());
+		win->invalidate_rect(r,false);
+	}
+}
 
 bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 	Gtk::Allocation allocation = get_allocation();
