@@ -95,7 +95,7 @@ protected:
 	Gtk:: Label m_Label_Open;
 
 	MyArea m_Area;
-	City   city;
+	City* ptr_city;
 	Timer  timer;
 	
 };

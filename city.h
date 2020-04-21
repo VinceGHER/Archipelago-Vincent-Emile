@@ -7,15 +7,16 @@
 
 #include <vector>
 #include <string>
+#include <array>
 
 #include "node.h"
 
 class City {
 public:
-	static bool readFile(char * data);
+	static bool readFile(std::string data);
 	static void updateDraw();
 	static bool save(std::string nom);
-	void emptyNodeGroup();
+	static void emptyNodeGroup();
 
 	static std::string criteriaENJ();
 	static std::string criteriaCI();
@@ -28,7 +29,7 @@ private:
 	void showNodeGroup() const;
 	std::vector<Node*> getType(Type type);
 
-
+	std::vector<std::array<Node*,2>> getLinkGroup();
 
 	std::vector<Node*> nodeGroup;
 };

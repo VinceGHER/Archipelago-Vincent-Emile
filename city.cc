@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <array>
+#include <algorithm>
 
 #include "city.h"
 #include "node.h"
@@ -22,7 +23,7 @@ namespace {
 
 // === Node Gestion ===
 
-bool City::readFile(char* data) {
+bool City::readFile(string data) {
 	ifstream fichier(data);
 	 	
 	if(!fichier.fail()) {
@@ -132,10 +133,10 @@ void City::showNodeGroup() const {
     }
 }
 void City::emptyNodeGroup(){
-    for (auto& node:nodeGroup){
+    for (auto& node:city.nodeGroup){
        delete node;
     }
-    nodeGroup.clear();
+    city.nodeGroup.clear();
 }
 
 
@@ -158,17 +159,18 @@ string City::criteriaENJ(){
 	return to_string(restNbpTotal/dayNbpTotal);
 }
 string City::criteriaCI(){
-	if (city.nodeGroup.empty()) return to_string(0);
-	
+	if (city.nodeGroup.empty()) return "";
+	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
+	//min(1,2);
 	//~ for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
-	return ("");
+	return "";
 }
 string City::criteriaMTA(){
 
 	//Ne pas oublie de d'oublier les fonctions de reinsitlation dans exit
 	//Et aussi les boutons ou l'on reste enfoncés
 	//STP merci !
-	return ("");
+	return "";
 }
 
 
@@ -207,13 +209,11 @@ bool City::save(string nom){
 			}
 		}
 
-		vector<array<ID,2>> linkCreated;
-		for (auto& node:city.nodeGroup){
-        	node->getVectorLink(linkCreated);
-    	}
+		vector<array<Node*,2>> linkCreated(city.getLinkGroup());
+
 		fichier << linkCreated.size() << endl;
 		for (auto& link:linkCreated){
-			fichier << "\t" << link[0] << " " << link[1] << endl;
+			fichier << "\t" << link[0]->getUID() << " " << link[1]->getUID() << endl;
 		}
 	} else return false;
 	fichier.close();
@@ -225,4 +225,11 @@ vector<Node*> City::getType(Type type){
 		if (node->getType() == type) output.push_back(node);
 	}
 	return output;
+}
+vector<array<Node*,2>> City::getLinkGroup(){
+	vector<array<Node*,2>> linkCreated;
+	for (auto& node:city.nodeGroup){
+		node->getVectorLink(linkCreated,node);
+	}
+	return linkCreated;
 }

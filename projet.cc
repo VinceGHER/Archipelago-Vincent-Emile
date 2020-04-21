@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <gtkmm.h>
+#include <string>
 
 #include "city.h"
 #include "gui.h"
@@ -15,8 +16,11 @@ using namespace std;
 	#include "constantes.h"
 
 int main(int argc, char * argv[]){
-
-	if(argc == 2) City::readFile(argv[1]);
+	
+	if(argc == 2){
+		string filename(argv[1]);
+		City::readFile(filename);
+	} 
 	/// temporaire ce qui suit
 	int argcFake (1);
 	auto app_gui = Gtk::Application::create(argcFake, argv, "org.gtkmm.example_gui");

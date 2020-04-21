@@ -131,13 +131,13 @@ Gui::Gui():
 	
 void Gui::onExitButtonClicked(){
 	City::save("dd.txt");
-	city.emptyNodeGroup();
+	City::emptyNodeGroup();
 	cout << "Exit" << endl;
 	exit(0);
 }
 void Gui::onNewButtonClicked(){
 	City::save("dd.txt");
-	city.emptyNodeGroup();
+	City::emptyNodeGroup();
 	//m_Area.clear();
 	cout << "New." << endl;
 }
@@ -158,9 +158,9 @@ void Gui::onOpenButtonClicked(){
 		
 		case(Gtk::RESPONSE_OK):{
 			cout << "Open clicked." << endl;
-			string filename = dialog.get_filename();
+			string filename = dialog.get_filename(); 
 			cout << "File selected: " <<  filename << endl;
-			//~ City::readFile(filename);
+			City::readFile(filename);
 			break;
 		}
 		case(Gtk::RESPONSE_CANCEL):{

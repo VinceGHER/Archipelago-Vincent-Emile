@@ -38,7 +38,8 @@ public:
 
     //save functions
     std::ostream& saveNode(std::ostream& fichier) const;
-    void getVectorLink(std::vector<std::array<ID,2>>& linkCreated) const;
+    void getVectorLink(std::vector<std::array<Node*,2>>& linkCreated,
+                        Node* thisNodePtr) const;
     
     //draw functions
     virtual void drawNode() const;

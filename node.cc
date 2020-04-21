@@ -97,12 +97,12 @@ ostream& Node::saveNode(ostream& fichier) const{
                    << nodeCircle.center.y << " "
                    << nbp << endl;
 } 
-void Node::getVectorLink(vector<array<ID,2>>& linkCreated) const{
+void Node::getVectorLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr) const{
 
     for (auto& link:links){
 
-        array<ID,2> link1 = {UID,link->UID};
-        array<ID,2> link2 = {link->UID,UID};
+        array<Node*,2> link1 = {thisNodePtr,link};
+        array<Node*,2> link2 = {link,thisNodePtr};
 
         //test if link1 or link2 already exists
         if (not (std::find(linkCreated.begin(), linkCreated.end(), link1)
