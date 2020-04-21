@@ -7,7 +7,7 @@
 
 #include <gtkmm/drawingarea.h>
 
-enum Color {BLACK,RED,GREEN};
+#include "graphic_color.h"
 
 namespace graphic {
   bool drawSegment(double x1,double y1, double x2, double y2);

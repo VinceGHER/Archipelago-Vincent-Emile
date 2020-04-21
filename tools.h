@@ -4,7 +4,7 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-#include "graphic.h"
+#include "graphic_color.h"
 
 typedef unsigned int ID;
 
