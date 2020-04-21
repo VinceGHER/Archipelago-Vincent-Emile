@@ -139,11 +139,11 @@ void City::emptyNodeGroup(){
 }
 
 
-// === Criteres ===
+// === Criteria ===
 string City::criteriaENJ(){
 	double dayNbpTotal(0);
 	double restNbpTotal(0);
-
+	
 	if (city.nodeGroup.empty()) return to_string(dayNbpTotal);
 	
 	for (size_t i(0); i < city.nodeGroup.size(); ++i){
@@ -158,18 +158,17 @@ string City::criteriaENJ(){
 	return to_string(restNbpTotal/dayNbpTotal);
 }
 string City::criteriaCI(){
-	// vector<double> liste{1,2,3,4};
-	// vector<vector<int>> liens{{1,2},{1,4},{3,2}};
+	if (city.nodeGroup.empty()) return to_string(0);
 	
-	// //for (unsigned int i(0); i< liens.size(); ++i){
-	 return "";
+	//~ for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
+	return ("");
 }
 string City::criteriaMTA(){
 
 	//Ne pas oublie de d'oublier les fonctions de reinsitlation dans exit
 	//Et aussi les boutons ou l'on reste enfoncés
 	//STP merci !
-	return "";
+	return ("");
 }
 
 

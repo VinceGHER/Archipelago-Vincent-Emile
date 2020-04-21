@@ -41,6 +41,7 @@ Gui::Gui():
 	m_Button_Zin("zoom in"),
 	m_Button_Zout("zoom out"),
 	m_Button_Reset("zoom reset"),
+	
 	m_Button_Edit("edit link"),
 	
 	m_Radio_Housing(m_Radio_Type, "housing"),
@@ -88,7 +89,7 @@ Gui::Gui():
 	m_Box_General.pack_start(m_Button_Open,false,false); 
 	m_Box_General.pack_start(m_Button_Save,false,false);
 	
-	m_Box_Display.pack_start(m_Button_Path,true,false);
+	m_Box_Display.pack_start(m_Button_Path,false,false);
 	m_Box_Display.pack_start(m_Button_Zin,false,false);
 	m_Box_Display.pack_start(m_Button_Zout,false,false);
 	m_Box_Display.pack_start(m_Button_Reset,false,false);
@@ -129,13 +130,49 @@ Gui::Gui():
 
 	
 void Gui::onExitButtonClicked(){
+	City::save("dd.txt");
+	city.emptyNodeGroup();
+	cout << "Exit" << endl;
 	exit(0);
 }
 void Gui::onNewButtonClicked(){
 	City::save("dd.txt");
+	city.emptyNodeGroup();
+	//m_Area.clear();
+	cout << "New." << endl;
 }
 void Gui::onOpenButtonClicked(){
-	//City::readFile("dd.txt");
+	Gtk::FileChooserDialog dialog("Please choose a file",
+		  Gtk::FILE_CHOOSER_ACTION_OPEN);
+	dialog.set_transient_for(*this);
+	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+	dialog.add_button("_Open", Gtk::RESPONSE_OK);
+
+	m_Label_Open.set_text("choosing a file");
+
+	int result = dialog.run();
+
+	m_Label_Open.set_text("Done choosing a file");
+
+	switch(result){
+		
+		case(Gtk::RESPONSE_OK):{
+			cout << "Open clicked." << endl;
+			string filename = dialog.get_filename();
+			cout << "File selected: " <<  filename << endl;
+			//~ City::readFile(filename);
+			break;
+		}
+		case(Gtk::RESPONSE_CANCEL):{
+		    cout << "Cancel clicked." << endl;
+		    break;
+		}
+		default:{
+		    cout << "Unexpected button clicked." << endl;
+		    break;
+		}
+	}
+
 }
 void Gui::onSaveButtonClicked(){
 	City::save("dd.txt");
