@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <array>
 #include <algorithm>
@@ -139,12 +140,16 @@ void City::emptyNodeGroup(){
     city.nodeGroup.clear();
 }
 
+string City::convertDoubleToString(const double& value){
+	stringstream name("");
+	name << value;
+	return name.str();
+}
 
 // === Criteria ===
 string City::criteriaENJ(){
 	double dayNbpTotal(0);
 	double restNbpTotal(0);
-	
 	if (city.nodeGroup.empty()) return to_string(dayNbpTotal);
 	
 	for (size_t i(0); i < city.nodeGroup.size(); ++i){
@@ -156,21 +161,63 @@ string City::criteriaENJ(){
 		else
 			restNbpTotal -= currentNbp;
 	}
-	return to_string(restNbpTotal/dayNbpTotal);
+	double balance(restNbpTotal/dayNbpTotal);
+	return city.convertDoubleToString (balance);
 }
 string City::criteriaCI(){
-	if (city.nodeGroup.empty()) return "";
+	if (city.nodeGroup.empty()) return "0";
 	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
-	//min(1,2);
-	//~ for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
-	return "";
-}
-string City::criteriaMTA(){
+	
+	double cost(0);
+	for (unsigned int i(0); i< linkCreated.size(); ++i){
+		
+		double distance (linkCreated[i][0]->dist(linkCreated[i][1]));
 
-	//Ne pas oublie de d'oublier les fonctions de reinsitlation dans exit
-	//Et aussi les boutons ou l'on reste enfoncés
-	//STP merci !
-	return "";
+		double capacity (min((linkCreated[i][0]->getNbp()),
+				(linkCreated[i][1]->getNbp())));
+				
+		double speed (1);
+		if ((linkCreated[i][1]->getNbp()) == TRANSPORT
+			and(linkCreated[i][1]->getNbp())== TRANSPORT)
+				speed = fast_speed;
+		else
+				speed = default_speed;
+		
+		cost += (distance*capacity*speed);
+	}
+	
+	return city.convertDoubleToString (cost);
+}
+
+bool City::initialiseDijkstra(){
+	setIn(true);
+	setAccess(infinite_time);
+	setParent(no_link);
+}
+
+double City::dijkstra(int d, Type type){
+	city.initialiseDijkstra();
+	double n(0);
+	while (not city.nodeGroup.empty()){
+		n = 1;
+		if (city.nodeGroup[n]->getNbp() == type)
+			return n;
+		node.setIn(false);
+		
+	return 0;
+
+string City::criteriaMTA(){
+	if (city.nodeGroup.empty()) return "0";
+	int sizeHousing(0);
+	double accessTime(0);
+	for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
+		if (city.nodeGroup[i]->getType() == HOUSING){
+			sizeHousing += 1;
+			accessTime += city.dijkstra(i,PRODUCTION);
+			accessTime += city.dijkstra(i,TRANSPORT);
+	}
+	mean = accessTime/sizeHousing;
+	return city.convertDoubleToString (mean);
 }
 
 

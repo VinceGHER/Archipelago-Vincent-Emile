@@ -25,6 +25,9 @@ public:
 private:
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
+	bool initialiseDijkstra();
+	double dijkstra(int d, Type type);
+	std::string convertDoubleToString(const double& value);
 	Node* pickNodeByUID(ID UID) const;
 	void showNodeGroup() const;
 	std::vector<Node*> getType(Type type);
