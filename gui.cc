@@ -52,82 +52,91 @@ Gui::Gui():
 	m_Label_ENJ(),
 	m_Label_CI(),
 	m_Label_MTA(),
-	timer(*this,500)
-	{
-		timer.startTimer();
-		Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
-		wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
+	timer(*this,500) {
 		
-		wd.height = default_drawing_size;
-		wd.width = wd.height*wd.ratio;
-
-		m_Area.setFrame(wd);
-		m_Area.set_size_request(default_drawing_size,default_drawing_size);
-
-		set_title("Drawing Area and Buttons");
-		set_border_width(0);
-	  
-		add(m_Box);
+		creationBoxFrame();
+		creationPackStart();
+		creationClicked();
 		
-		m_Box.pack_start(m_Box_Buttons,false,false);
-		m_Box.pack_start(m_Box_Drawing,false,false);
-
-		m_Box_Buttons.pack_start(m_Frame_General,false,false);
-		m_Box_Buttons.pack_start(m_Frame_Display,false,false);
-		m_Box_Buttons.pack_start(m_Frame_Editor,false,false);
-		m_Box_Buttons.pack_start(m_Frame_Informations,false,false);
-		
-		m_Frame_General.add(m_Box_General);
-		m_Frame_Display.add(m_Box_Display);
-		m_Frame_Editor.add(m_Box_Editor);
-		m_Frame_Informations.add(m_Box_Informations);
-		
-		m_Box_Drawing.pack_start(m_Area);
-		
-		m_Box_General.pack_start(m_Button_Exit,false,false);
-		m_Box_General.pack_start(m_Button_New,false,false); 	
-		m_Box_General.pack_start(m_Button_Open,false,false); 
-		m_Box_General.pack_start(m_Button_Save,false,false);
-		
-		m_Box_Display.pack_start(m_Button_Path,false,false);
-		m_Box_Display.pack_start(m_Button_Zin,false,false);
-		m_Box_Display.pack_start(m_Button_Zout,false,false);
-		m_Box_Display.pack_start(m_Button_Reset,false,false);
-		m_Box_Display.pack_start(m_Label_Zoom,false,false);
-		
-		m_Box_Editor.pack_start(m_Button_Edit,false,false);
-		m_Box_Editor.pack_start(m_Radio_Housing,false,false);
-		m_Box_Editor.pack_start(m_Radio_Transport,false,false);
-		m_Box_Editor.pack_start(m_Radio_Production,false,false);
-		
-		m_Box_Informations.pack_start(m_Label_ENJ,false,false);
-		m_Box_Informations.pack_start(m_Label_CI,false,false);
-		m_Box_Informations.pack_start(m_Label_MTA,false,false);
-		
-		m_Button_Exit.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onExitButtonClicked) );	  
-		m_Button_New.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onNewButtonClicked) );
-		m_Button_Open.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onOpenButtonClicked) );
-		m_Button_Save.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onSaveButtonClicked) );
-				  
-		m_Button_Path.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onUselessButtonClicked) );
-		m_Button_Zin.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onUselessButtonClicked) );
-		m_Button_Zout.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onUselessButtonClicked) );
-		m_Button_Reset.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onUselessButtonClicked) );
-		m_Button_Edit.signal_clicked().connect(sigc::mem_fun(*this,
-				  &Gui:: onUselessButtonClicked) );
-		
-				  
 		show_all_children();
 }
+void Gui::creationBoxFrame(){
+	timer.startTimer();
+	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
+	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
+	
+	wd.height = default_drawing_size;
+	wd.width = wd.height*wd.ratio;
 
+	m_Area.setFrame(wd);
+	m_Area.set_size_request(default_drawing_size,default_drawing_size);
+
+	set_title("Drawing Area and Buttons");
+	set_border_width(0);
+  
+	add(m_Box);
+	
+	m_Box.pack_start(m_Box_Buttons,false,false);
+	m_Box.pack_start(m_Box_Drawing,false,false);
+
+	m_Box_Buttons.pack_start(m_Frame_General,false,false);
+	m_Box_Buttons.pack_start(m_Frame_Display,false,false);
+	m_Box_Buttons.pack_start(m_Frame_Editor,false,false);
+	m_Box_Buttons.pack_start(m_Frame_Informations,false,false);
+	
+	m_Frame_General.add(m_Box_General);
+	m_Frame_Display.add(m_Box_Display);
+	m_Frame_Editor.add(m_Box_Editor);
+	m_Frame_Informations.add(m_Box_Informations);
+}
+
+void Gui::creationPackStart(){
+
+	m_Box_Drawing.pack_start(m_Area);
+	
+	m_Box_General.pack_start(m_Button_Exit,false,false);
+	m_Box_General.pack_start(m_Button_New,false,false); 	
+	m_Box_General.pack_start(m_Button_Open,false,false); 
+	m_Box_General.pack_start(m_Button_Save,false,false);
+	
+	m_Box_Display.pack_start(m_Button_Path,false,false);
+	m_Box_Display.pack_start(m_Button_Zin,false,false);
+	m_Box_Display.pack_start(m_Button_Zout,false,false);
+	m_Box_Display.pack_start(m_Button_Reset,false,false);
+	m_Box_Display.pack_start(m_Label_Zoom,false,false);
+	
+	m_Box_Editor.pack_start(m_Button_Edit,false,false);
+	m_Box_Editor.pack_start(m_Radio_Housing,false,false);
+	m_Box_Editor.pack_start(m_Radio_Transport,false,false);
+	m_Box_Editor.pack_start(m_Radio_Production,false,false);
+	
+	m_Box_Informations.pack_start(m_Label_ENJ,false,false);
+	m_Box_Informations.pack_start(m_Label_CI,false,false);
+	m_Box_Informations.pack_start(m_Label_MTA,false,false);
+}
+
+void Gui::creationClicked(){
+	
+	m_Button_Exit.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onExitButtonClicked) );	  
+	m_Button_New.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onNewButtonClicked) );
+	m_Button_Open.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onOpenButtonClicked) );
+	m_Button_Save.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onSaveButtonClicked) );
+			  
+	m_Button_Path.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onUselessButtonClicked) );
+	m_Button_Zin.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onUselessButtonClicked) );
+	m_Button_Zout.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onUselessButtonClicked) );
+	m_Button_Reset.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onUselessButtonClicked) );
+	m_Button_Edit.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onUselessButtonClicked) );
+}
 	
 void Gui::onExitButtonClicked(){
 	City::save("dd.txt");

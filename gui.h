@@ -51,6 +51,9 @@ public:
 
 protected:
 	
+	void creationBoxFrame();
+	void creationPackStart();
+	void creationClicked();
 	void onExitButtonClicked();
 	void onNewButtonClicked();
 	void onOpenButtonClicked();

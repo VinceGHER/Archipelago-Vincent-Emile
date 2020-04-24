@@ -87,6 +87,7 @@ bool City::addNode(string line, int type){
 	city.nodeGroup.push_back(pNode);
 	return true;
 }
+
 bool City::addLink(string line){
 
 	ID UID1,UID2;
@@ -118,6 +119,7 @@ bool City::addLink(string line){
     return true;
 
 }
+
 Node* City::pickNodeByUID(ID UID) const {
     for (size_t i(0); i < nodeGroup.size(); ++i){
         if ( nodeGroup[i]->getUID() == UID){
@@ -127,12 +129,14 @@ Node* City::pickNodeByUID(ID UID) const {
     cout << error::link_vacuum(UID) << endl;
     return nullptr;
 }
+
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;
     for (auto& node:nodeGroup){
        node->showNode();
     }
 }
+
 void City::emptyNodeGroup(){
     for (auto& node:city.nodeGroup){
        delete node;
@@ -144,6 +148,20 @@ string City::convertDoubleToString(const double& value){
 	stringstream name("");
 	name << value;
 	return name.str();
+}
+
+void City::sort(){
+	unsigned int index(0);
+	bool p(true);
+	for (size_t i(0); i<city.nodeGroup.size() && p; ++i){
+		if (city.nodeGroup[i] == node){
+			index = 1;
+			p = false;
+		}
+	}
+	while(index > 0 && city.nodeGroup[index-1]->access > city.nodeGroup[index]->access){
+		swap (city.nodeGroup[index-1],city.nodeGroup[index]);
+		++index;
 }
 
 // === Criteria ===
@@ -164,6 +182,7 @@ string City::criteriaENJ(){
 	double balance(restNbpTotal/dayNbpTotal);
 	return city.convertDoubleToString (balance);
 }
+
 string City::criteriaCI(){
 	if (city.nodeGroup.empty()) return "0";
 	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
@@ -189,35 +208,37 @@ string City::criteriaCI(){
 	return city.convertDoubleToString (cost);
 }
 
-bool City::initialiseDijkstra(){
-	setIn(true);
-	setAccess(infinite_time);
-	setParent(no_link);
-}
+//~ bool City::initialiseDijkstra(){
+	//~ setIn(true);
+	//~ setAccess(infinite_time);
+	//~ setParent(no_link);
+//~ }
 
 double City::dijkstra(int d, Type type){
-	city.initialiseDijkstra();
-	double n(0);
-	while (not city.nodeGroup.empty()){
-		n = 1;
-		if (city.nodeGroup[n]->getNbp() == type)
-			return n;
-		node.setIn(false);
+	//~ city.initialiseDijkstra();
+	//~ double n(0);
+	//~ while (not city.nodeGroup.empty()){
+		//~ n = 1;
+		//~ if (city.nodeGroup[n]->getNbp() == type)
+			//~ return n;
+		//~ node.setIn(false);
 		
 	return 0;
+}
 
 string City::criteriaMTA(){
 	if (city.nodeGroup.empty()) return "0";
-	int sizeHousing(0);
-	double accessTime(0);
-	for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
-		if (city.nodeGroup[i]->getType() == HOUSING){
-			sizeHousing += 1;
-			accessTime += city.dijkstra(i,PRODUCTION);
-			accessTime += city.dijkstra(i,TRANSPORT);
-	}
-	mean = accessTime/sizeHousing;
-	return city.convertDoubleToString (mean);
+	//~ int sizeHousing(0);
+	//~ double accessTime(0);
+	//~ for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
+		//~ if (city.nodeGroup[i]->getType() == HOUSING){
+			//~ sizeHousing += 1;
+			//~ accessTime += city.dijkstra(i,PRODUCTION);
+			//~ accessTime += city.dijkstra(i,TRANSPORT);
+		//~ }
+	//~ }
+	//~ mean = accessTime/sizeHousing;
+	//~ return city.convertDoubleToString (mean);
 }
 
 
@@ -233,8 +254,6 @@ void City::updateDraw(){
 	for (auto& node:city.nodeGroup){
 		node->drawNode();
 	}
-	    
-
 }
 
 // === Save ===
