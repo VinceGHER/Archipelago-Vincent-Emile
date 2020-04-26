@@ -177,18 +177,20 @@ string City::convertDoubleToString(const double& value){
 	return name.str();
 }
 
-void City::sort(){
+void City::sort(int degree){
 	unsigned int index(0);
 	bool p(true);
 	for (size_t i(0); i<city.nodeGroup.size() && p; ++i){
-		if (city.nodeGroup[i] == node){
+		if (city.nodeGroup[i] == city.nodeGroup[degree]){
 			index = 1;
 			p = false;
 		}
 	}
-	while(index > 0 && city.nodeGroup[index-1]->access > city.nodeGroup[index]->access){
-		swap (city.nodeGroup[index-1],city.nodeGroup[index]);
-		++index;
+	while(index > 0 && (city.nodeGroup[index-1]->getAccess() 
+		> city.nodeGroup[index]->getAccess())){
+			swap (city.nodeGroup[index-1],city.nodeGroup[index]);
+			++index;
+	}
 }
 
 // === Criteria ===
@@ -230,42 +232,70 @@ string City::criteriaCI(){
 				speed = default_speed;
 		
 		cost += (distance*capacity*speed);
-	}
-	
+	}	
 	return city.convertDoubleToString (cost);
 }
 
-//~ bool City::initialiseDijkstra(){
-	//~ setIn(true);
-	//~ setAccess(infinite_time);
-	//~ setParent(no_link);
-//~ }
+int City::findMinAccess(){
+	return 1;
+}
+
+double City::computeAccess(int n,int lv){
+	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
+	return 1;
+}
+
+bool City::initialiseDijkstra(int d){
+	for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
+		city.nodeGroup[i]->setIn(true);
+		city.nodeGroup[i]->setAccess(infinite_time);
+		city.nodeGroup[i]->setParent(no_link);
+	}
+	city.nodeGroup[d]->setAccess(0);
+	return 0;
+}
 
 double City::dijkstra(int d, Type type){
-	//~ city.initialiseDijkstra();
-	//~ double n(0);
-	//~ while (not city.nodeGroup.empty()){
-		//~ n = 1;
-		//~ if (city.nodeGroup[n]->getNbp() == type)
-			//~ return n;
-		//~ node.setIn(false);
+	city.initialiseDijkstra(d);
+	city.sort(d);
+	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
+	
+	while (not city.nodeGroup.empty()){
+		int n(findMinAccess());
+		if (city.nodeGroup[n]->getNbp() == type)
+			return n;
+			
+		city.nodeGroup[n]->setIn(false);
 		
-	return 0;
+		for (unsigned int lv(0); lv < linkCreated.size(); ++lv){
+			if (city.nodeGroup[lv]->getIn() == true){
+				double alt(city.nodeGroup[lv]->getAccess() 
+					+ city.computeAccess(n,lv));
+				if (city.nodeGroup[lv]->getAccess() > alt){
+					city.nodeGroup[lv]->setAccess(alt);
+					city.nodeGroup[lv]->setParent(n);
+					city.sort(lv);
+				}
+			}
+		}
+	}
+	return no_link;
 }
 
 string City::criteriaMTA(){
 	if (city.nodeGroup.empty()) return "0";
-	//~ int sizeHousing(0);
-	//~ double accessTime(0);
-	//~ for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
-		//~ if (city.nodeGroup[i]->getType() == HOUSING){
-			//~ sizeHousing += 1;
-			//~ accessTime += city.dijkstra(i,PRODUCTION);
-			//~ accessTime += city.dijkstra(i,TRANSPORT);
-		//~ }
-	//~ }
-	//~ mean = accessTime/sizeHousing;
-	//~ return city.convertDoubleToString (mean);
+	double mean(0);
+	int sizeHousing(0);
+	double accessTime(0);
+	for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
+		if (city.nodeGroup[i]->getType() == HOUSING){
+			sizeHousing += 1;
+			accessTime += city.dijkstra(i,PRODUCTION);
+			accessTime += city.dijkstra(i,TRANSPORT);
+		}
+	}
+	mean = accessTime/sizeHousing;
+	return city.convertDoubleToString (mean);
 }
 
 
