@@ -24,8 +24,9 @@ int main(int argc, char * argv[]){
 	/// temporaire ce qui suit
 	int argcFake (1);
 	auto app_gui = Gtk::Application::create(argcFake, argv, "org.gtkmm.example_gui");
-
+	
 	Gui eventWindow;
+	eventWindow.set_title("Archipelago Vincent-Emile");
 	eventWindow.set_default_size(900, 900);
 	//eventWindow.set_resizable(false);
 

@@ -47,14 +47,22 @@ public:
 
     //save functions
     std::ostream& saveNode(std::ostream& fichier) const;
-    void getVectorLink(std::vector<std::array<Node*,2>>& linkCreated,
-                        Node* thisNodePtr) const;
+    // void getVectorLink(std::vector<std::array<Node*,2>>& linkCreated,
+    //                     Node* thisNodePtr) const;
     
     //draw functions
     virtual void drawNode() const;
-    void drawLink(std::vector<ID>& linkCreated);
+    void drawLink(std::vector<std::array<Node*,2>>& linkCreated,Node* thisNodePtr,
+                  bool drawing)const;
 
-    //verification function
+    //dijkstra functions
+    void initNodeDijkstra(ID startNode);
+    static void sortNodeGroup(std::vector<Node*>& nodeGroup, ID UIDToUpdate);
+    static size_t findMinAccess(const std::vector<Node*>& nodeGroup);
+    static double dijkstra(std::vector<Node*>& nodeGroup, Type type);
+    double computeAccess(Node* node);
+
+    //verification functions
     bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                              ID identifier,const std::vector<Node*>& nodeGroup);
     bool checkCollisionNodeLink(Node* pNode1,Node* pNode2) const;
@@ -66,10 +74,11 @@ protected:
     unsigned int nbp;
     ID UID;
     std::vector<Node*> links;
+
+    //Dijksra Attributs
     bool in;
     double access;
-    double parent;
-
+    ID parent;
 };
 class NodeHousing: public Node {
 public:

@@ -25,14 +25,18 @@ public:
 private:
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
-	bool initialiseDijkstra(int d);
-	void sort(int d);
-	double dijkstra(int d, Type type);
-	int findMinAccess();
-	double computeAccess(int n,int lv);
 	std::string convertDoubleToString(const double& value);
 	void showNodeGroup() const;
-	
+
+	//dijkstra Methods
+	void initDijkstra(ID startNodeID);
+	void sort(int d);
+	double dijkstra(ID startNodeID, Type type);
+	int findMinAccess();
+	double computeAccess(int n,int lv);
+	void sortUIDTable(std::vector<ID>& UIDTable,ID UIDToUpdate);
+
+
 	//Tools Methods
 	Node* pickNodeByUID(ID UID) const;
 	std::vector<Node*> getType(Type type) const;

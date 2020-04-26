@@ -17,6 +17,7 @@ using namespace std;
 
 //=== Class Gui ===
 Gui::Gui():
+	
 	m_Box(Gtk::ORIENTATION_HORIZONTAL),
 	
 	m_Box_Buttons(Gtk::ORIENTATION_VERTICAL),
@@ -42,7 +43,7 @@ Gui::Gui():
 	m_Radio_Production (m_Radio_Type, "production"),
 	
 	m_Label_Zoom(),   m_Label_ENJ(),
-	m_Label_CI(),     m_Label_MTA(),
+	m_Label_CI(),     m_Label_MTA()
 	 {
 		
 		creationBoxFrame();

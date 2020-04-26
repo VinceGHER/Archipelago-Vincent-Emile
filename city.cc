@@ -9,6 +9,7 @@
 #include <string>
 #include <array>
 #include <algorithm>
+//#include <iomanip> 
 
 #include "city.h"
 #include "node.h"
@@ -114,7 +115,6 @@ bool City::addNode(string line, int type){
 	city.nodeGroup.push_back(pNode);
 	return true;
 }
-
 bool City::addLink(string line){
 
 	ID UID1,UID2;
@@ -173,6 +173,7 @@ void City::emptyNodeGroup(){
 
 string City::convertDoubleToString(const double& value){
 	stringstream name("");
+
 	name << value;
 	return name.str();
 }
@@ -186,8 +187,8 @@ void City::sort(int degree){
 			p = false;
 		}
 	}
-	while(index > 0 && (city.nodeGroup[index-1]->getAccess() 
-		> city.nodeGroup[index]->getAccess())){
+	while(index > 0 
+	&& (city.nodeGroup[index-1]->getAccess() > city.nodeGroup[index]->getAccess())){
 			swap (city.nodeGroup[index-1],city.nodeGroup[index]);
 			++index;
 	}
@@ -245,56 +246,42 @@ double City::computeAccess(int n,int lv){
 	return 1;
 }
 
-bool City::initialiseDijkstra(int d){
-	for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
-		city.nodeGroup[i]->setIn(true);
-		city.nodeGroup[i]->setAccess(infinite_time);
-		city.nodeGroup[i]->setParent(no_link);
-	}
-	city.nodeGroup[d]->setAccess(0);
-	return 0;
+void City::initDijkstra(ID startNodeID){
+	for (auto node:nodeGroup) node->initNodeDijkstra(startNodeID);
+	cout << "initialisation terminée" << endl;
 }
 
-double City::dijkstra(int d, Type type){
-	city.initialiseDijkstra(d);
-	city.sort(d);
-	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
-	
-	while (not city.nodeGroup.empty()){
-		int n(findMinAccess());
-		if (city.nodeGroup[n]->getNbp() == type)
-			return n;
-			
-		city.nodeGroup[n]->setIn(false);
-		
-		for (unsigned int lv(0); lv < linkCreated.size(); ++lv){
-			if (city.nodeGroup[lv]->getIn() == true){
-				double alt(city.nodeGroup[lv]->getAccess() 
-					+ city.computeAccess(n,lv));
-				if (city.nodeGroup[lv]->getAccess() > alt){
-					city.nodeGroup[lv]->setAccess(alt);
-					city.nodeGroup[lv]->setParent(n);
-					city.sort(lv);
-				}
-			}
-		}
-	}
-	return no_link;
+
+
+double City::dijkstra(ID startNodeID, Type type){
+	initDijkstra(startNodeID);
+
+	Node::sortNodeGroup(nodeGroup, startNodeID);
+	//showNodeGroup();
+	double result (Node::dijkstra(nodeGroup, type));
+	if (result == no_link) return infinite_time;
+	return result;
+	// return no_link;
+
+	// vector<array<Node*,2>> linkGroup(getLinkGroup());
 }
 
 string City::criteriaMTA(){
 	if (city.nodeGroup.empty()) return "0";
 	double mean(0);
-	int sizeHousing(0);
+	size_t sizeHousing(0);
 	double accessTime(0);
-	for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
-		if (city.nodeGroup[i]->getType() == HOUSING){
-			sizeHousing += 1;
-			accessTime += city.dijkstra(i,PRODUCTION);
-			accessTime += city.dijkstra(i,TRANSPORT);
+	for (auto node:city.nodeGroup){
+		if (node->getType() == HOUSING){
+			++sizeHousing;
+			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
+			accessTime += city.dijkstra(node->getUID(),TRANSPORT);
 		}
 	}
 	mean = accessTime/sizeHousing;
+	cout << "accessTIme " << accessTime << endl;
+	cout << "mean " << mean << endl;
+	//city.showNodeGroup();
 	return city.convertDoubleToString (mean);
 }
 
@@ -302,9 +289,9 @@ string City::criteriaMTA(){
 // === Drawing ====
 void City::updateDraw(){
 	//draw Links
-	vector<ID> linkCreated;
+	vector<array<Node*,2>> linkCreated;
     for (auto& node:city.nodeGroup){
-        node->drawLink(linkCreated);
+        node->drawLink(linkCreated,node,true);
     }
 
 	//draw Nodes
@@ -324,7 +311,7 @@ vector<Node*> City::getType(Type type) const{
 vector<array<Node*,2>> City::getLinkGroup() const{
 	vector<array<Node*,2>> linkCreated;
 	for (auto& node:city.nodeGroup){
-		node->getVectorLink(linkCreated,node);
+		node->drawLink(linkCreated,node,false);
 	}
 	return linkCreated;
 }

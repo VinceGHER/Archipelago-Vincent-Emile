@@ -26,16 +26,16 @@ Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
     unsigned int nbp; 
     try {
         //stoul() convert string to unsigned long
-        //stoi() convert string to int
+        //stod() convert string to double
         string dataToTest;
         data >> dataToTest;
         UID = stoul(dataToTest);
         
         data >> dataToTest;
-        nodeCircle.center.x = stoi(dataToTest);
+        nodeCircle.center.x = stod(dataToTest);
 
         data >> dataToTest;
-        nodeCircle.center.y = stoi(dataToTest);
+        nodeCircle.center.y = stod(dataToTest);
 
         data >> dataToTest;
         nbp = stoul(dataToTest);
@@ -79,8 +79,12 @@ void Node::showNode() const {
     for (auto link:links){
         cout << "   link: " << UID<< " <-> "<<link->UID << endl;
     }
+    cout << "=== Dijkstra === " << endl;
+    cout << "access " << access << endl;
+    cout << "in " << in << endl;
+    cout << "parent " << parent << endl;
+    cout << "===" << endl;
 }
-
 double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
@@ -116,43 +120,129 @@ ostream& Node::saveNode(ostream& fichier) const{
                    << nodeCircle.center.y << " "
                    << nbp << endl;
 } 
-void Node::getVectorLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr) const{
+// void Node::getVectorLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr) const{
 
+//     for (auto& link:links){
+
+//         array<Node*,2> link1 = {thisNodePtr,link};
+//         array<Node*,2> link2 = {link,thisNodePtr};
+
+//         //test if link1 or link2 already exists
+//         if (not (std::find(linkCreated.begin(), linkCreated.end(), link1)
+//             != linkCreated.end())
+//          && not (std::find(linkCreated.begin(), linkCreated.end(), link2)
+//             != linkCreated.end()) ){
+
+//             linkCreated.push_back(link1);
+//         }
+//     }
+// }
+
+// === Draw functions ===
+void Node::drawNode() const{
+    tools::drawCircle(nodeCircle);
+}
+void Node::drawLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr,
+                    bool drawing) const{	
     for (auto& link:links){
-
+     
         array<Node*,2> link1 = {thisNodePtr,link};
         array<Node*,2> link2 = {link,thisNodePtr};
 
         //test if link1 or link2 already exists
         if (not (std::find(linkCreated.begin(), linkCreated.end(), link1)
             != linkCreated.end())
-         && not (std::find(linkCreated.begin(), linkCreated.end(), link2)
+        && not (std::find(linkCreated.begin(), linkCreated.end(), link2)
             != linkCreated.end()) ){
-
+            
+            if (drawing){
+                Point start(nodeCircle.center);
+                Point end  (link->nodeCircle.center);
+                tools::drawSegment(Segment{start,end});
+            }
+           
             linkCreated.push_back(link1);
-        }
-    }
-}
-
-// === Draw functions ===
-void Node::drawNode() const{
-    tools::drawCircle(nodeCircle);
-}
-void Node::drawLink(vector<ID>& linkCreated) {		
-    for (auto& link:links){
-        if (not (std::find(linkCreated.begin(), linkCreated.end(), link->UID) 
-            != linkCreated.end()) ){
-
-            Point start(nodeCircle.center);
-            Point end  (link->nodeCircle.center);
-            tools::drawSegment(Segment{start,end});
-            linkCreated.push_back(link->UID);
         }
     }
    
 }
 
+// === Dijkstra functions ===
+void Node::initNodeDijkstra(ID startNodeID){
+    in = true;
+    access = (startNodeID == UID)? 0 : infinite_time;
+    parent = no_link;
 
+}
+void Node::sortNodeGroup(vector<Node*>& nodeGroup, ID UIDToUpdate){
+    double currentIndex(no_link);
+    for (size_t i(0); i < nodeGroup.size(); ++i){
+		if (nodeGroup[i]->UID == UIDToUpdate){
+            currentIndex = i;
+            break;
+		}
+	}
+    double success(false);
+    while (currentIndex > 0 and not success){
+        if (nodeGroup[currentIndex]->access <= 
+            nodeGroup[currentIndex-1]->access){
+            swap(nodeGroup[currentIndex],nodeGroup[currentIndex-1]);
+            --currentIndex;
+        } else success = true;
+    }		
+}
+size_t Node::findMinAccess(const vector<Node*>& nodeGroup){
+    unsigned int minAcess(-1);
+    size_t indexNode(-1);
+    for (size_t i(0); i < nodeGroup.size(); ++i){
+        if (nodeGroup[i]->access < minAcess and nodeGroup[i]->in){
+            minAcess = nodeGroup[i]->access;
+            indexNode = i;
+        }
+    }
+    return indexNode;
+}
+//Probleme crtière ouverture fichier
+//Ajouter de ne pas passer au travers d'un noeuds de production
+double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
+    cout << endl;
+    while (Node::findMinAccess(nodeGroup) != (size_t)-1){
+        cout << "nodeIndex " << Node::findMinAccess(nodeGroup) << endl;
+        size_t nodeIndex(Node::findMinAccess(nodeGroup));
+    
+        if (nodeGroup[nodeIndex]->getType() == type) 
+            return nodeGroup[nodeIndex]->access;
+
+        nodeGroup[nodeIndex]->in = false;
+        if (nodeGroup[nodeIndex]->getType()==PRODUCTION) continue;
+        vector<Node*> currentLinks(nodeGroup[nodeIndex]->links);
+        cout << "=== liens ===" << endl;
+        for (size_t lv(0); lv < currentLinks.size(); ++lv){
+            if (currentLinks[lv]->in == true){
+                
+                double alt(nodeGroup[nodeIndex]->access 
+                         + nodeGroup[nodeIndex]->computeAccess(currentLinks[lv]));
+                cout << "alt " << alt << endl;
+                if (currentLinks[lv]->access > alt){
+                    currentLinks[lv]->access = alt;
+                    currentLinks[lv]->parent = nodeIndex;
+                    sortNodeGroup(nodeGroup, currentLinks[lv]->UID);
+                }
+            }
+        }
+
+    }
+    return no_link;
+}
+double Node::computeAccess(Node* node){
+    double distBetweenNode(dist(node));
+    double speed(0);
+    if (getType() == TRANSPORT and node->getType() == TRANSPORT) 
+        speed = fast_speed;
+    else speed = default_speed;
+
+    return distBetweenNode/speed;
+}
 // === Verification method ===
 bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                                ID identifier, const vector<Node*>& nodeGroup){
@@ -182,6 +272,12 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
     nodeCircle = circle;
     nbp = sizePopulation;
     UID = identifier;
+
+    //Dijksra attribut initialisation
+    in = true;
+    access = infinite_time;
+    parent = no_link;
+
     return true;
 }
 bool Node::checkCollisionNodeLink(Node* pNode1,Node* pNode2) const{
