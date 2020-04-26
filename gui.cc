@@ -52,13 +52,19 @@ Gui::Gui():
 	m_Label_ENJ(),
 	m_Label_CI(),
 	m_Label_MTA()
-
-	// timer(*this,500)
 	{
-	// timer.startTimer();
+		
+		creationBoxFrame();
+		creationPackStart();
+		creationClicked();
+		
+		show_all_children();
+}
+void Gui::creationBoxFrame(){
+
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
-
+	
 	wd.height = default_drawing_size;
 	wd.width = wd.height*wd.ratio;
 
@@ -70,8 +76,8 @@ Gui::Gui():
   
 	add(m_Box);
 	
-	m_Box.pack_start(m_Box_Buttons);
-	m_Box.pack_start(m_Box_Drawing);
+	m_Box.pack_start(m_Box_Buttons,false,false);
+	m_Box.pack_start(m_Box_Drawing,false,false);
 
 	m_Box_Buttons.pack_start(m_Frame_General,false,false);
 	m_Box_Buttons.pack_start(m_Frame_Display,false,false);
@@ -82,7 +88,10 @@ Gui::Gui():
 	m_Frame_Display.add(m_Box_Display);
 	m_Frame_Editor.add(m_Box_Editor);
 	m_Frame_Informations.add(m_Box_Informations);
-	
+}
+
+void Gui::creationPackStart(){
+
 	m_Box_Drawing.pack_start(m_Area);
 	
 	m_Box_General.pack_start(m_Button_Exit,false,false);
@@ -104,6 +113,9 @@ Gui::Gui():
 	m_Box_Informations.pack_start(m_Label_ENJ,false,false);
 	m_Box_Informations.pack_start(m_Label_CI,false,false);
 	m_Box_Informations.pack_start(m_Label_MTA,false,false);
+}
+
+void Gui::creationClicked(){
 	
 	m_Button_Exit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onExitButtonClicked) );	  
@@ -124,9 +136,6 @@ Gui::Gui():
 			  &Gui:: onUselessButtonClicked) );
 	m_Button_Edit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onUselessButtonClicked) );
-	
-			  
-	show_all_children();
 }
 	
 void Gui::onExitButtonClicked(){

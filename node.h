@@ -30,6 +30,13 @@ public:
 
     virtual bool checkLinksLimit() const = 0;
     virtual void showNode() const;
+    
+    double dist(Node* node);
+    
+    //Setter
+    void setIn(bool value);
+    void setAccess(double value);
+    void setParent(double value);
 
     //Getter
     const ID getUID() const;  
@@ -57,6 +64,9 @@ protected:
     unsigned int nbp;
     ID UID;
     std::vector<Node*> links;
+    bool in;
+    double access;
+    double parent;
 
 };
 class NodeHousing: public Node {

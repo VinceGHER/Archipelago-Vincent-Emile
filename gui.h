@@ -51,6 +51,9 @@ public:
 	void refreshGuiAndDraw();
 protected:
 	
+	void creationBoxFrame();
+	void creationPackStart();
+	void creationClicked();
 	void onExitButtonClicked();
 	void onNewButtonClicked();
 	void onOpenButtonClicked();

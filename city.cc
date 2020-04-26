@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <array>
 #include <algorithm>
@@ -113,6 +114,7 @@ bool City::addNode(string line, int type){
 	city.nodeGroup.push_back(pNode);
 	return true;
 }
+
 bool City::addLink(string line){
 
 	ID UID1,UID2;
@@ -144,12 +146,24 @@ bool City::addLink(string line){
     return true;
 
 }
+
+Node* City::pickNodeByUID(ID UID) const {
+    for (size_t i(0); i < nodeGroup.size(); ++i){
+        if ( nodeGroup[i]->getUID() == UID){
+            return nodeGroup[i];
+        }
+    }
+    cout << error::link_vacuum(UID) << endl;
+    return nullptr;
+}
+
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;
     for (auto& node:nodeGroup){
        node->showNode();
     }
 }
+
 void City::emptyNodeGroup(){
     for (auto& node:city.nodeGroup){
        delete node;
@@ -157,12 +171,30 @@ void City::emptyNodeGroup(){
     city.nodeGroup.clear();
 }
 
+string City::convertDoubleToString(const double& value){
+	stringstream name("");
+	name << value;
+	return name.str();
+}
+
+void City::sort(){
+	unsigned int index(0);
+	bool p(true);
+	for (size_t i(0); i<city.nodeGroup.size() && p; ++i){
+		if (city.nodeGroup[i] == node){
+			index = 1;
+			p = false;
+		}
+	}
+	while(index > 0 && city.nodeGroup[index-1]->access > city.nodeGroup[index]->access){
+		swap (city.nodeGroup[index-1],city.nodeGroup[index]);
+		++index;
+}
 
 // === Criteria ===
 string City::criteriaENJ(){
 	double dayNbpTotal(0);
 	double restNbpTotal(0);
-	
 	if (city.nodeGroup.empty()) return to_string(dayNbpTotal);
 	
 	for (size_t i(0); i < city.nodeGroup.size(); ++i){
@@ -174,21 +206,66 @@ string City::criteriaENJ(){
 		else
 			restNbpTotal -= currentNbp;
 	}
-	return to_string(restNbpTotal/dayNbpTotal);
+	double balance(restNbpTotal/dayNbpTotal);
+	return city.convertDoubleToString (balance);
 }
-string City::criteriaCI(){
-	if (city.nodeGroup.empty()) return "";
-	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
-	//min(1,2);
-	//~ for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
-	return "";
-}
-string City::criteriaMTA(){
 
-	//Ne pas oublie de d'oublier les fonctions de reinsitlation dans exit
-	//Et aussi les boutons ou l'on reste enfoncés
-	//STP merci !
-	return "";
+string City::criteriaCI(){
+	if (city.nodeGroup.empty()) return "0";
+	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
+	
+	double cost(0);
+	for (unsigned int i(0); i< linkCreated.size(); ++i){
+		
+		double distance (linkCreated[i][0]->dist(linkCreated[i][1]));
+
+		double capacity (min((linkCreated[i][0]->getNbp()),
+				(linkCreated[i][1]->getNbp())));
+				
+		double speed (1);
+		if ((linkCreated[i][1]->getNbp()) == TRANSPORT
+			and(linkCreated[i][1]->getNbp())== TRANSPORT)
+				speed = fast_speed;
+		else
+				speed = default_speed;
+		
+		cost += (distance*capacity*speed);
+	}
+	
+	return city.convertDoubleToString (cost);
+}
+
+//~ bool City::initialiseDijkstra(){
+	//~ setIn(true);
+	//~ setAccess(infinite_time);
+	//~ setParent(no_link);
+//~ }
+
+double City::dijkstra(int d, Type type){
+	//~ city.initialiseDijkstra();
+	//~ double n(0);
+	//~ while (not city.nodeGroup.empty()){
+		//~ n = 1;
+		//~ if (city.nodeGroup[n]->getNbp() == type)
+			//~ return n;
+		//~ node.setIn(false);
+		
+	return 0;
+}
+
+string City::criteriaMTA(){
+	if (city.nodeGroup.empty()) return "0";
+	//~ int sizeHousing(0);
+	//~ double accessTime(0);
+	//~ for (unsigned int i(0); i< city.nodeGroup.size(); ++i){
+		//~ if (city.nodeGroup[i]->getType() == HOUSING){
+			//~ sizeHousing += 1;
+			//~ accessTime += city.dijkstra(i,PRODUCTION);
+			//~ accessTime += city.dijkstra(i,TRANSPORT);
+		//~ }
+	//~ }
+	//~ mean = accessTime/sizeHousing;
+	//~ return city.convertDoubleToString (mean);
 }
 
 
@@ -204,8 +281,6 @@ void City::updateDraw(){
 	for (auto& node:city.nodeGroup){
 		node->drawNode();
 	}
-	    
-
 }
 
 // === Tools Methods ===
@@ -222,13 +297,4 @@ vector<array<Node*,2>> City::getLinkGroup() const{
 		node->getVectorLink(linkCreated,node);
 	}
 	return linkCreated;
-}
-Node* City::pickNodeByUID(ID UID) const {
-    for (size_t i(0); i < nodeGroup.size(); ++i){
-        if ( nodeGroup[i]->getUID() == UID){
-            return nodeGroup[i];
-        }
-    }
-    cout << error::link_vacuum(UID) << endl;
-    return nullptr;
 }

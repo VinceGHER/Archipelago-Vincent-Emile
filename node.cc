@@ -81,8 +81,21 @@ void Node::showNode() const {
     }
 }
 
+double Node::dist(Node* node){
+	return tools::distance(nodeCircle.center, node->nodeCircle.center);
+}
+// === Setter functions ===
+void Node::setIn(bool value){
+	in = value;
+}
+void Node::setAccess(double value){
+	access = value;
+}
+void Node::setParent(double value){
+	parent = value;
+}
 // === Getter functions ===
-const ID Node::getUID() const{
+const ID Node::getUID() const {
     return UID;
 }
 double Node::getNbp() const {

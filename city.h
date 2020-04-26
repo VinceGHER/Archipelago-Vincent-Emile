@@ -25,7 +25,10 @@ public:
 private:
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
-	
+	bool initialiseDijkstra();
+	void sort();
+	double dijkstra(int d, Type type);
+	std::string convertDoubleToString(const double& value);
 	void showNodeGroup() const;
 	
 	//Tools Methods
