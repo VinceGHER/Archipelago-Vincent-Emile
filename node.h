@@ -42,6 +42,8 @@ public:
     const ID getUID() const;  
     virtual Type getType() const = 0;
     double getNbp() const;
+    bool getIn() const;
+    double getAccess() const;
 
     //save functions
     std::ostream& saveNode(std::ostream& fichier) const;

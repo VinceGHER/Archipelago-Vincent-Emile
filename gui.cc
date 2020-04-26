@@ -28,30 +28,21 @@ Gui::Gui():
 	m_Box_Editor(Gtk::ORIENTATION_VERTICAL),
 	m_Box_Informations(Gtk::ORIENTATION_VERTICAL),
 
-	m_Frame_General("General"),
-	m_Frame_Display("Display"),
-	m_Frame_Editor("Editor"),
-	m_Frame_Informations("Informations"),
+	m_Frame_General("General"), m_Frame_Display("Display"),
+	m_Frame_Editor("Editor"),   m_Frame_Informations("Informations"),
 
-	m_Button_Exit("exit"),
-    m_Button_New("new"),
-    m_Button_Open("open"),
-    m_Button_Save("save"),
-    m_Button_Path("shortest path"),
-	m_Button_Zin("zoom in"),
-	m_Button_Zout("zoom out"),
-	m_Button_Reset("zoom reset"),
-	
+	m_Button_Exit("exit"),          m_Button_New("new"),
+    m_Button_Open("open"),          m_Button_Save("save"),
+    m_Button_Path("shortest path"), m_Button_Zin("zoom in"),
+	m_Button_Zout("zoom out"),      m_Button_Reset("zoom reset"),
 	m_Button_Edit("edit link"),
 	
-	m_Radio_Housing(m_Radio_Type, "housing"),
-	m_Radio_Transport(m_Radio_Type, "transport"),
-	m_Radio_Production(m_Radio_Type, "production"),
+	m_Radio_Housing (m_Radio_Type, "housing"),
+	m_Radio_Transport (m_Radio_Type, "transport"),
+	m_Radio_Production (m_Radio_Type, "production"),
 	
-	m_Label_Zoom(),
-	m_Label_ENJ(),
-	m_Label_CI(),
-	m_Label_MTA(),
+	m_Label_Zoom(),   m_Label_ENJ(),
+	m_Label_CI(),     m_Label_MTA(),
 	timer(*this,500) {
 		
 		creationBoxFrame();
@@ -61,6 +52,7 @@ Gui::Gui():
 		show_all_children();
 }
 void Gui::creationBoxFrame(){
+	
 	timer.startTimer();
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
@@ -151,6 +143,7 @@ void Gui::onNewButtonClicked(){
 	cout << "New." << endl;
 }
 void Gui::onOpenButtonClicked(){
+	City::emptyNodeGroup();
 	Gtk::FileChooserDialog dialog("Please choose a file",
 		  Gtk::FILE_CHOOSER_ACTION_OPEN);
 	dialog.set_transient_for(*this);

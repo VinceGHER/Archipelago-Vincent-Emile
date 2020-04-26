@@ -101,6 +101,12 @@ const ID Node::getUID() const {
 double Node::getNbp() const {
     return nbp;
 }
+bool Node::getIn() const {
+	return in;
+}
+double Node::getAccess() const {
+	return access;
+}
 
 // === Save functions ===
 ostream& Node::saveNode(ostream& fichier) const{
