@@ -62,6 +62,7 @@ public:
     static double dijkstra(std::vector<Node*>& nodeGroup, Type type);
     static double computeAccess(Node* node1, Node* node2);
     static void showdijkstra(std::vector<Node*>& nodeGroup);
+    
     //verification functions
     bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                              ID identifier,const std::vector<Node*>& nodeGroup);

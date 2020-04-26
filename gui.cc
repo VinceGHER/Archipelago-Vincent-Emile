@@ -36,7 +36,7 @@ Gui::Gui():
     m_Button_Open("open"),          m_Button_Save("save"),
     m_Button_Path("shortest path"), m_Button_Zin("zoom in"),
 	m_Button_Zout("zoom out"),      m_Button_Reset("zoom reset"),
-	m_Button_Edit("edit link"),
+	m_TButton_Edit("edit link"),
 	
 	m_Radio_Housing (m_Radio_Type, "housing"),
 	m_Radio_Transport (m_Radio_Type, "transport"),
@@ -49,9 +49,12 @@ Gui::Gui():
 		creationBoxFrame();
 		creationPackStart();
 		creationClicked();
+		bool edit(0);
+		refreshGuiAndDraw();
 		
 		show_all_children();
 }
+
 void Gui::creationBoxFrame(){
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
@@ -96,7 +99,7 @@ void Gui::creationPackStart(){
 	m_Box_Display.pack_start(m_Button_Reset,false,false);
 	m_Box_Display.pack_start(m_Label_Zoom,false,false);
 	
-	m_Box_Editor.pack_start(m_Button_Edit,false,false);
+	m_Box_Editor.pack_start(m_TButton_Edit,false,false);
 	m_Box_Editor.pack_start(m_Radio_Housing,false,false);
 	m_Box_Editor.pack_start(m_Radio_Transport,false,false);
 	m_Box_Editor.pack_start(m_Radio_Production,false,false);
@@ -118,70 +121,58 @@ void Gui::creationClicked(){
 			  &Gui:: onSaveButtonClicked) );
 			  
 	m_Button_Path.signal_clicked().connect(sigc::mem_fun(*this,
-			  &Gui:: onUselessButtonClicked) );
+			  &Gui:: onPathButtonClicked) );
 	m_Button_Zin.signal_clicked().connect(sigc::mem_fun(*this,
-			  &Gui:: onUselessButtonClicked) );
+			  &Gui:: onZinButtonClicked) );
 	m_Button_Zout.signal_clicked().connect(sigc::mem_fun(*this,
-			  &Gui:: onUselessButtonClicked) );
+			  &Gui:: onZoutButtonClicked) );
 	m_Button_Reset.signal_clicked().connect(sigc::mem_fun(*this,
-			  &Gui:: onUselessButtonClicked) );
-	m_Button_Edit.signal_clicked().connect(sigc::mem_fun(*this,
-			  &Gui:: onUselessButtonClicked) );
+			  &Gui:: onResetButtonClicked) );
+	m_TButton_Edit.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onEditButtonClicked) );
 }
 	
 void Gui::onExitButtonClicked(){
-	//City::save("dd.txt");
+	City::save(fileSelection());
 	City::emptyNodeGroup();
-	cout << "Exit" << endl;
 	exit(0);
 }
 void Gui::onNewButtonClicked(){
-	City::save("dd.txt");
+	City::save(fileSelection());
 	City::emptyNodeGroup();
 	refreshGuiAndDraw();
-	cout << "New." << endl;
 }
 void Gui::onOpenButtonClicked(){
 	City::emptyNodeGroup();
-	Gtk::FileChooserDialog dialog("Please choose a file",
-		  Gtk::FILE_CHOOSER_ACTION_OPEN);
-	dialog.set_transient_for(*this);
-	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
-	dialog.add_button("_Open", Gtk::RESPONSE_OK);
-
-	m_Label_Open.set_text("choosing a file");
-
-	int result = dialog.run();
-
-	m_Label_Open.set_text("Done choosing a file");
-
-	switch(result){
-		
-		case(Gtk::RESPONSE_OK):{
-			cout << "Open clicked." << endl;
-			string filename = dialog.get_filename(); 
-			cout << "File selected: " <<  filename << endl;
-			City::readFile(filename);
-			refreshGuiAndDraw();
-			break;
-		}
-		case(Gtk::RESPONSE_CANCEL):{
-		    cout << "Cancel clicked." << endl;
-		    break;
-		}
-		default:{
-		    cout << "Unexpected button clicked." << endl;
-		    break;
-		}
-	}
-
+	City::readFile(fileSelection());
+	refreshGuiAndDraw();
 }
 void Gui::onSaveButtonClicked(){
-	City::save("dd.txt");
+	City::save(fileSelection());
 }
-void Gui::onUselessButtonClicked(){
-	cout << "ne fonctionnera qu'au rendu 3" << endl;
+void Gui::onPathButtonClicked(){
+	cout << "INFO: Boutton << Shortest path >> cliqué." << endl;
 }
+void Gui::onZinButtonClicked(){
+	cout << "INFO: Boutton << Zoom in >> cliqué." << endl;
+}
+void Gui::onZoutButtonClicked(){
+	cout << "INFO: Boutton << Zoom out >> cliqué." << endl;
+}
+void Gui::onResetButtonClicked(){
+	cout << "INFO: Boutton << Reset zoom >> cliqué." << endl;
+}
+void Gui::onEditButtonClicked(){
+    if (edit == 0) {
+        cout << "INFO: Boutton Toggle << Edit path >> cliqué." << endl;
+        edit = 1;
+    }
+    else {
+        cout << "INFO: Boutton Toggle << Edit path >> relaché." << endl;
+        edit = 0;
+    }
+}
+
 // void Gui::updateText(){
 // }
 void Gui::refreshGuiAndDraw(){
@@ -198,6 +189,39 @@ void Gui::refreshGuiAndDraw(){
 	m_Label_MTA.set_text(MTAText);
 }
 
+string Gui::fileSelection(){
+	
+	Gtk::FileChooserDialog dialog("Please choose a file",
+		  Gtk::FILE_CHOOSER_ACTION_OPEN);
+	dialog.set_transient_for(*this);
+	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+	dialog.add_button("_Open", Gtk::RESPONSE_OK);
+
+	m_Label_Open.set_text("choosing a file");
+
+	int result = dialog.run();
+	string filename(" ");
+	m_Label_Open.set_text("Done choosing a file");
+
+	switch(result){
+		
+		case(Gtk::RESPONSE_OK):{
+			cout << "Open clicked." << endl;
+			filename = dialog.get_filename(); 
+			cout << "File selected: " <<  filename << endl;
+			break;
+		}
+		case(Gtk::RESPONSE_CANCEL):{
+		    cout << "Cancel clicked." << endl;
+		    break;
+		}
+		default:{
+		    cout << "Unexpected button clicked." << endl;
+		    break;
+		}
+	}
+	return filename;
+}
 
 Gui::~Gui()
 {

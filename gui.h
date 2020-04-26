@@ -6,6 +6,7 @@
 #define GUI_H
 
 #include <iostream>
+#include <string>
 #include <gtkmm.h>
 
 #include "graphic_gui.h"
@@ -51,14 +52,25 @@ public:
 	void refreshGuiAndDraw();
 protected:
 	
+	//initialisation
 	void creationBoxFrame();
 	void creationPackStart();
 	void creationClicked();
+	
+	//buttons' methods
 	void onExitButtonClicked();
 	void onNewButtonClicked();
 	void onOpenButtonClicked();
 	void onSaveButtonClicked();
-	void onUselessButtonClicked();
+	void onPathButtonClicked();
+	void onZinButtonClicked();
+	void onZoutButtonClicked();
+	void onResetButtonClicked();
+	void onEditButtonClicked();
+	
+	bool edit;
+	
+	std:: string fileSelection();
 	
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
@@ -82,7 +94,7 @@ protected:
 	Gtk:: Button m_Button_Zout;
 	Gtk:: Button m_Button_Reset;
 		
-	Gtk:: ToggleButton m_Button_Edit;
+	Gtk:: ToggleButton m_TButton_Edit;
 	
 	Gtk:: RadioButtonGroup m_Radio_Type;
     Gtk:: RadioButton m_Radio_Housing;
