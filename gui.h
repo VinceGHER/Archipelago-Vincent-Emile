@@ -28,19 +28,19 @@ protected:
 	
 };
 
-class Timer {
-public:
-	Timer(Gui& gui,int timeoutValueRef);
-	bool startTimer();
-	bool stopTimer();
-	bool onTimeout();
+// class Timer {
+// public:
+// 	Timer(Gui& gui,int timeoutValueRef);
+// 	bool startTimer();
+// 	bool stopTimer();
+// 	bool onTimeout();
 
-private:
-	bool timerAdded;
-	bool disconnect;
-	const int timeoutValue;
-	Gui& guiRef;
-};
+// private:
+// 	bool timerAdded;
+// 	bool disconnect;
+// 	const int timeoutValue;
+// 	Gui& guiRef;
+// };
 
 
 class Gui : public Gtk:: Window {
@@ -48,7 +48,7 @@ public:
 	Gui();
 	virtual ~Gui();
 	void updateText();
-
+	void refreshGuiAndDraw();
 protected:
 	
 	void onExitButtonClicked();
@@ -96,7 +96,7 @@ protected:
 	Gtk:: Label m_Label_Open;
 
 	MyArea m_Area;
-	Timer  timer;
+	// Timer  timer;
 	
 };
 #endif

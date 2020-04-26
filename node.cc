@@ -165,7 +165,7 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
     UID = identifier;
     return true;
 }
-bool Node::checkCollisionNodeLink(Node* pNode1,Node* pNode2){
+bool Node::checkCollisionNodeLink(Node* pNode1,Node* pNode2) const{
     Segment currentSegment = {pNode1->nodeCircle.center, pNode2->nodeCircle.center};
     if (UID != pNode1->UID
         and UID != pNode2->UID

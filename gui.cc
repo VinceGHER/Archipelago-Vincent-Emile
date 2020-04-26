@@ -51,10 +51,11 @@ Gui::Gui():
 	m_Label_Zoom(),
 	m_Label_ENJ(),
 	m_Label_CI(),
-	m_Label_MTA(),
-	timer(*this,500)
+	m_Label_MTA()
+
+	// timer(*this,500)
 	{
-	timer.startTimer();
+	// timer.startTimer();
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
 
@@ -127,10 +128,9 @@ Gui::Gui():
 			  
 	show_all_children();
 }
-
 	
 void Gui::onExitButtonClicked(){
-	City::save("dd.txt");
+	//City::save("dd.txt");
 	City::emptyNodeGroup();
 	cout << "Exit" << endl;
 	exit(0);
@@ -138,7 +138,7 @@ void Gui::onExitButtonClicked(){
 void Gui::onNewButtonClicked(){
 	City::save("dd.txt");
 	City::emptyNodeGroup();
-	m_Area.refresh();
+	refreshGuiAndDraw();
 	cout << "New." << endl;
 }
 void Gui::onOpenButtonClicked(){
@@ -161,7 +161,7 @@ void Gui::onOpenButtonClicked(){
 			string filename = dialog.get_filename(); 
 			cout << "File selected: " <<  filename << endl;
 			City::readFile(filename);
-			m_Area.refresh();
+			refreshGuiAndDraw();
 			break;
 		}
 		case(Gtk::RESPONSE_CANCEL):{
@@ -181,9 +181,11 @@ void Gui::onSaveButtonClicked(){
 void Gui::onUselessButtonClicked(){
 	cout << "ne fonctionnera qu'au rendu 3" << endl;
 }
-
-void Gui::updateText(){
-
+// void Gui::updateText(){
+// }
+void Gui::refreshGuiAndDraw(){
+	m_Area.refresh();
+	
 	string ZoomText ("zoom: x1.00");
 	string ENJText ("ENJ: " + (City::criteriaENJ()));
 	string CIText ("CI: " + (City::criteriaCI()));
@@ -194,6 +196,7 @@ void Gui::updateText(){
 	m_Label_CI.set_text(CIText);
 	m_Label_MTA.set_text(MTAText);
 }
+
 
 Gui::~Gui()
 {
@@ -229,38 +232,38 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 }
 
 //=== CLass Timer ===
-Timer::Timer(Gui& gui,int timeoutValueRef)
-:timerAdded(false),disconnect(false),timeoutValue(timeoutValueRef),
-guiRef(gui){}
+// Timer::Timer(Gui& gui,int timeoutValueRef)
+// :timerAdded(false),disconnect(false),timeoutValue(timeoutValueRef),
+// guiRef(gui){}
 
-bool Timer::startTimer(){
+// bool Timer::startTimer(){
 	
-	if(not timerAdded){
-		Glib::signal_timeout().connect( sigc::mem_fun(*this, &Timer::onTimeout),
-									  timeoutValue);
-		timerAdded = true;
+// 	if(not timerAdded){
+// 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &Timer::onTimeout),
+// 									  timeoutValue);
+// 		timerAdded = true;
 	
-		return true;
-	} else return false;
+// 		return true;
+// 	} else return false;
 	
-}
-bool Timer::stopTimer(){
-	if (not timerAdded){
-		return false;
-	} else {
-		disconnect  = true;   
-    	timerAdded = false;
-		return true;
-	}
-}
-bool Timer::onTimeout(){
+// }
+// bool Timer::stopTimer(){
+// 	if (not timerAdded){
+// 		return false;
+// 	} else {
+// 		disconnect  = true;   
+//     	timerAdded = false;
+// 		return true;
+// 	}
+// }
+// bool Timer::onTimeout(){
 
-	if (disconnect){
-		disconnect = false;
-		return false;
-	}
+// 	if (disconnect){
+// 		disconnect = false;
+// 		return false;
+// 	}
 	
-	guiRef.updateText();
+// //	guiRef.updateText();
 
-	return true;
-}
+// 	return true;
+// }

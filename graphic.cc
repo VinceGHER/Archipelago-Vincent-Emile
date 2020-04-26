@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "graphic_gui.h"
+#include "graphic.h"
 
 //debug
 using namespace std;
@@ -69,7 +70,6 @@ void graphic_gui::updateFrameSize(int width, int height){
     current.width = width;
     current.height = height;
 }
-
 
 //Function for tools module
 bool graphic::setColor(Color color) {

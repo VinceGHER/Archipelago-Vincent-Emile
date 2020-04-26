@@ -14,8 +14,8 @@
 class City {
 public:
 	static bool readFile(std::string data);
-	static void updateDraw();
 	static bool save(std::string nom);
+	static void updateDraw();
 	static void emptyNodeGroup();
 
 	static std::string criteriaENJ();
@@ -25,11 +25,13 @@ public:
 private:
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
-	Node* pickNodeByUID(ID UID) const;
+	
 	void showNodeGroup() const;
-	std::vector<Node*> getType(Type type);
-
-	std::vector<std::array<Node*,2>> getLinkGroup();
+	
+	//Tools Methods
+	Node* pickNodeByUID(ID UID) const;
+	std::vector<Node*> getType(Type type) const;
+	std::vector<std::array<Node*,2>> getLinkGroup() const;
 
 	std::vector<Node*> nodeGroup;
 };

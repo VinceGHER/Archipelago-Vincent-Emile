@@ -48,7 +48,7 @@ public:
     //verification function
     bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                              ID identifier,const std::vector<Node*>& nodeGroup);
-    bool checkCollisionNodeLink(Node* pNode1,Node* pNode2);
+    bool checkCollisionNodeLink(Node* pNode1,Node* pNode2) const;
     bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
 
     

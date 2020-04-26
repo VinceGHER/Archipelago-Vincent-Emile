@@ -7,8 +7,6 @@
 
 #include <gtkmm/drawingarea.h>
 
-#include "graphic.h"
-
 struct Frame {
   double xmin;
   double xmax;
