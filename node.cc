@@ -82,7 +82,9 @@ void Node::showNode() const {
     cout << "=== Dijkstra === " << endl;
     cout << "access " << access << endl;
     cout << "in " << in << endl;
-    cout << "parent " << parent << endl;
+    if(parent != nullptr) cout << "parent " << parent->UID << endl;
+    else cout << "parent " << "nullptr" << endl;
+    
     cout << "===" << endl;
 }
 double Node::dist(Node* node){
@@ -96,7 +98,7 @@ void Node::setAccess(double value){
 	access = value;
 }
 void Node::setParent(double value){
-	parent = value;
+	
 }
 // === Getter functions ===
 const ID Node::getUID() const {
@@ -171,7 +173,7 @@ void Node::drawLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr,
 void Node::initNodeDijkstra(ID startNodeID){
     in = true;
     access = (startNodeID == UID)? 0 : infinite_time;
-    parent = no_link;
+    parent = nullptr;
 
 }
 void Node::sortNodeGroup(vector<Node*>& nodeGroup, ID UIDToUpdate){
@@ -209,23 +211,23 @@ double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
     while (Node::findMinAccess(nodeGroup) != (size_t)-1){
         cout << "nodeIndex " << Node::findMinAccess(nodeGroup) << endl;
         size_t nodeIndex(Node::findMinAccess(nodeGroup));
-    
+        showdijkstra(nodeGroup);
         if (nodeGroup[nodeIndex]->getType() == type) 
             return nodeGroup[nodeIndex]->access;
 
         nodeGroup[nodeIndex]->in = false;
         if (nodeGroup[nodeIndex]->getType()==PRODUCTION) continue;
         vector<Node*> currentLinks(nodeGroup[nodeIndex]->links);
-        cout << "=== liens ===" << endl;
+      //  cout << "=== liens ===" << endl;
         for (size_t lv(0); lv < currentLinks.size(); ++lv){
             if (currentLinks[lv]->in == true){
                 
                 double alt(nodeGroup[nodeIndex]->access 
-                         + nodeGroup[nodeIndex]->computeAccess(currentLinks[lv]));
-                cout << "alt " << alt << endl;
+                         + computeAccess(nodeGroup[nodeIndex],currentLinks[lv]));
+               // cout << "alt " << alt << endl;
                 if (currentLinks[lv]->access > alt){
                     currentLinks[lv]->access = alt;
-                    currentLinks[lv]->parent = nodeIndex;
+                    currentLinks[lv]->parent = nodeGroup[nodeIndex];
                     sortNodeGroup(nodeGroup, currentLinks[lv]->UID);
                 }
             }
@@ -234,10 +236,18 @@ double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
     }
     return no_link;
 }
-double Node::computeAccess(Node* node){
-    double distBetweenNode(dist(node));
+void Node::showdijkstra(std::vector<Node*>& nodeGroup){
+    for (auto node:nodeGroup){
+        cout << "---" << endl;
+        cout << "UID: " << node->UID << " In: " << node->in << " access " << node->access << endl;
+    }
+}
+
+double Node::computeAccess(Node* node1, Node* node2){
+    double distBetweenNode(node1->dist(node2));
     double speed(0);
-    if (getType() == TRANSPORT and node->getType() == TRANSPORT) 
+   // cout << "getType() " << node1->getType() << " type " << node2->getType()<< endl;
+    if (node1->getType() == TRANSPORT and node2->getType() == TRANSPORT) 
         speed = fast_speed;
     else speed = default_speed;
 
@@ -276,7 +286,7 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
     //Dijksra attribut initialisation
     in = true;
     access = infinite_time;
-    parent = no_link;
+    parent = nullptr;
 
     return true;
 }

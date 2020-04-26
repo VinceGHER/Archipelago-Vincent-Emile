@@ -60,8 +60,8 @@ public:
     static void sortNodeGroup(std::vector<Node*>& nodeGroup, ID UIDToUpdate);
     static size_t findMinAccess(const std::vector<Node*>& nodeGroup);
     static double dijkstra(std::vector<Node*>& nodeGroup, Type type);
-    double computeAccess(Node* node);
-
+    static double computeAccess(Node* node1, Node* node2);
+    static void showdijkstra(std::vector<Node*>& nodeGroup);
     //verification functions
     bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                              ID identifier,const std::vector<Node*>& nodeGroup);
@@ -78,7 +78,7 @@ protected:
     //Dijksra Attributs
     bool in;
     double access;
-    ID parent;
+    Node* parent;
 };
 class NodeHousing: public Node {
 public:

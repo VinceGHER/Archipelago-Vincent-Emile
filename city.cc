@@ -247,18 +247,26 @@ double City::computeAccess(int n,int lv){
 }
 
 void City::initDijkstra(ID startNodeID){
-	for (auto node:nodeGroup) node->initNodeDijkstra(startNodeID);
-	cout << "initialisation terminée" << endl;
+
 }
 
 
 
 double City::dijkstra(ID startNodeID, Type type){
-	initDijkstra(startNodeID);
-
+	
+	for (auto node:nodeGroup) node->initNodeDijkstra(startNodeID);
+	cout << "initialisation terminée" << endl;
 	Node::sortNodeGroup(nodeGroup, startNodeID);
-	//showNodeGroup();
+	cout << endl;
+	cout << "startNodeID" <<startNodeID  << " type " << type << endl;
+	Node::showdijkstra(nodeGroup);
+
+
+
+	
+	
 	double result (Node::dijkstra(nodeGroup, type));
+	cout << "sucess" << endl << endl;
 	if (result == no_link) return infinite_time;
 	return result;
 	// return no_link;
@@ -269,18 +277,23 @@ double City::dijkstra(ID startNodeID, Type type){
 string City::criteriaMTA(){
 	if (city.nodeGroup.empty()) return "0";
 	double mean(0);
-	size_t sizeHousing(0);
+	int sizeHousing(0);
 	double accessTime(0);
-	for (auto node:city.nodeGroup){
+	vector<Node*> nodeGroupMTA(city.nodeGroup);
+	for (auto node:nodeGroupMTA){
 		if (node->getType() == HOUSING){
+			cout << "eeeeeeeeeee " << endl;
+			cout << "node " << node->getUID() << endl;
+			cout << "eeeeeeeeeeeee"<< endl;
 			++sizeHousing;
-			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
 			accessTime += city.dijkstra(node->getUID(),TRANSPORT);
+			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
 		}
 	}
 	mean = accessTime/sizeHousing;
 	cout << "accessTIme " << accessTime << endl;
 	cout << "mean " << mean << endl;
+	cout << "sizeH " << sizeHousing << endl;
 	//city.showNodeGroup();
 	return city.convertDoubleToString (mean);
 }
