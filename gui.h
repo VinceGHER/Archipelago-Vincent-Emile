@@ -70,7 +70,7 @@ protected:
 	
 	bool edit;
 	
-	std:: string fileSelection();
+	std:: string fileSelection(bool choice);
 	
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;

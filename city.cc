@@ -53,7 +53,7 @@ bool City::readFile(string data) {
 		}
 		city.showNodeGroup();
 		cout << error::success() << endl;
-		City::save("dd.txt");
+		//City::save("dd.txt");
 		//Node::getNodeGroup()[0]->showNode();
 
 		//city.emptyNodeGroup();

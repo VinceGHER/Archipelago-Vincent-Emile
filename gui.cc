@@ -133,22 +133,20 @@ void Gui::creationClicked(){
 }
 	
 void Gui::onExitButtonClicked(){
-	City::save(fileSelection());
 	City::emptyNodeGroup();
 	exit(0);
 }
 void Gui::onNewButtonClicked(){
-	City::save(fileSelection());
 	City::emptyNodeGroup();
 	refreshGuiAndDraw();
 }
 void Gui::onOpenButtonClicked(){
 	City::emptyNodeGroup();
-	City::readFile(fileSelection());
+	City::readFile(fileSelection(true));
 	refreshGuiAndDraw();
 }
 void Gui::onSaveButtonClicked(){
-	City::save(fileSelection());
+	City::save(fileSelection(false));
 }
 void Gui::onPathButtonClicked(){
 	cout << "INFO: Boutton << Shortest path >> cliqué." << endl;
@@ -168,7 +166,7 @@ void Gui::onEditButtonClicked(){
         edit = 1;
     }
     else {
-        cout << "INFO: Boutton Toggle << Edit path >> relaché." << endl;
+        cout << "INFO: Boutton Toggle << Edit link >> relaché." << endl;
         edit = 0;
     }
 }
@@ -189,16 +187,30 @@ void Gui::refreshGuiAndDraw(){
 	m_Label_MTA.set_text(MTAText);
 }
 
-string Gui::fileSelection(){
+string Gui::fileSelection(bool choice){
+	// choice == true => open a file
+	// choice == false => save a file
 	
-	Gtk::FileChooserDialog dialog("Please choose a file",
+	string textDialog(" ");
+	string textOk(" ");
+	if (choice == true) {
+		textOk = "_Open";
+		textDialog = "Please select a file to open";
+	}
+	else {
+		textOk = "_Save";
+		textDialog = "Please choose a file to save";
+	}
+	Gtk::FileChooserDialog dialog(textDialog,
 		  Gtk::FILE_CHOOSER_ACTION_OPEN);
 	dialog.set_transient_for(*this);
 	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
-	dialog.add_button("_Open", Gtk::RESPONSE_OK);
-
+	dialog.add_button(textOk, Gtk::RESPONSE_OK); 
 	m_Label_Open.set_text("choosing a file");
-
+	
+	if (choice == false) {
+		dialog.add_button("_New File", Gtk::RESPONSE_CANCEL);
+	}
 	int result = dialog.run();
 	string filename(" ");
 	m_Label_Open.set_text("Done choosing a file");
@@ -206,7 +218,7 @@ string Gui::fileSelection(){
 	switch(result){
 		
 		case(Gtk::RESPONSE_OK):{
-			cout << "Open clicked." << endl;
+			cout << "Open/Save clicked." << endl;
 			filename = dialog.get_filename(); 
 			cout << "File selected: " <<  filename << endl;
 			break;
