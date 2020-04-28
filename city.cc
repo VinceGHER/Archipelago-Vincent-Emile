@@ -1,6 +1,7 @@
 // Module City (implementation)
-// made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0
+// Made by Vincent GHEROLD and Emile CAILLOL
+// Version 2.1
+// Architechture b1
 
 #include <iostream>
 #include <vector>
@@ -8,8 +9,6 @@
 #include <sstream>
 #include <string>
 #include <array>
-#include <algorithm>
-//#include <iomanip> 
 
 #include "city.h"
 #include "node.h"
@@ -51,13 +50,7 @@ bool City::readFile(string data) {
 				--compteur;
 			}
 		}
-		city.showNodeGroup();
 		cout << error::success() << endl;
-		//City::save("dd.txt");
-		//Node::getNodeGroup()[0]->showNode();
-
-		//city.emptyNodeGroup();
-
 		return true;
 
 	} else return false;
@@ -93,7 +86,7 @@ bool City::save(string nom){
 bool City::addNode(string line, int type){
 	Node* pNode(nullptr);
 	bool success(false);
-	//cout << "line: " << line << " type: " << type << endl;
+	
 	switch (type){
 		case 0:
 			pNode = new NodeHousing(line,type,success,nodeGroup);
@@ -146,51 +139,16 @@ bool City::addLink(string line){
     return true;
 
 }
-
-Node* City::pickNodeByUID(ID UID) const {
-    for (size_t i(0); i < nodeGroup.size(); ++i){
-        if ( nodeGroup[i]->getUID() == UID){
-            return nodeGroup[i];
-        }
-    }
-    cout << error::link_vacuum(UID) << endl;
-    return nullptr;
-}
-
-void City::showNodeGroup() const {
-    cout << "--------- nodeGroup -----------" << endl;
-    for (auto& node:nodeGroup){
-       node->showNode();
-	}
-}
-
 void City::emptyNodeGroup(){
     for (auto& node:city.nodeGroup){
        delete node;
     }
     city.nodeGroup.clear();
 }
-
-string City::convertDoubleToString(const double& value){
-	stringstream name("");
-
-	name << value;
-	return name.str();
-}
-
-void City::sort(int degree){
-	unsigned int index(0);
-	bool p(true);
-	for (size_t i(0); i<city.nodeGroup.size() && p; ++i){
-		if (city.nodeGroup[i] == city.nodeGroup[degree]){
-			index = 1;
-			p = false;
-		}
-	}
-	while(index > 0 
-	&& (city.nodeGroup[index-1]->getAccess() > city.nodeGroup[index]->getAccess())){
-			swap (city.nodeGroup[index-1],city.nodeGroup[index]);
-			++index;
+void City::showNodeGroup() const {
+    cout << "--------- nodeGroup -----------" << endl;
+    for (auto& node:nodeGroup){
+       node->showNode();
 	}
 }
 
@@ -218,60 +176,22 @@ string City::criteriaCI(){
 	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
 	
 	double cost(0);
-	for (unsigned int i(0); i< linkCreated.size(); ++i){
+	for (size_t i(0); i < linkCreated.size(); ++i){
 		
 		double distance (linkCreated[i][0]->dist(linkCreated[i][1]));
 		
-		double capacity (min((linkCreated[i][0]->getNbp()),
-				(linkCreated[i][1]->getNbp())));
+		double capacity ( min((linkCreated[i][0]->getNbp()),
+				(linkCreated[i][1]->getNbp())) );
 				
 		double speed(1);
-		if ((linkCreated[i][0]->getNbp()) == TRANSPORT
-			and(linkCreated[i][1]->getNbp())== TRANSPORT)
+		if (linkCreated[i][0]->getType() == TRANSPORT
+			and linkCreated[i][1]->getType() == TRANSPORT)
 				speed = fast_speed;
-		else
-				speed = default_speed;
+		else speed = default_speed;
 		
 		cost += (distance*capacity*speed);
 	}
 	return city.convertDoubleToString (cost);
-}
-
-int City::findMinAccess(){
-	return 1;
-}
-
-double City::computeAccess(int n,int lv){
-	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
-	return 1;
-}
-
-void City::initDijkstra(ID startNodeID){
-
-}
-
-
-
-double City::dijkstra(ID startNodeID, Type type){
-	
-	for (auto node:nodeGroup) node->initNodeDijkstra(startNodeID);
-	cout << "initialisation terminée" << endl;
-	Node::sortNodeGroup(nodeGroup, startNodeID);
-	cout << endl;
-	cout << "startNodeID" <<startNodeID  << " type " << type << endl;
-	Node::showdijkstra(nodeGroup);
-
-
-
-	
-	
-	double result (Node::dijkstra(nodeGroup, type));
-	cout << "sucess" << endl << endl;
-	if (result == no_link) return infinite_time;
-	return result;
-	// return no_link;
-
-	// vector<array<Node*,2>> linkGroup(getLinkGroup());
 }
 
 string City::criteriaMTA(){
@@ -279,25 +199,39 @@ string City::criteriaMTA(){
 	double mean(0);
 	int sizeHousing(0);
 	double accessTime(0);
-	vector<Node*> nodeGroupMTA(city.nodeGroup);
-	for (auto node:nodeGroupMTA){
+
+	for (auto node:city.nodeGroup){
 		if (node->getType() == HOUSING){
-			cout << "eeeeeeeeeee " << endl;
-			cout << "node " << node->getUID() << endl;
-			cout << "eeeeeeeeeeeee"<< endl;
+		
 			++sizeHousing;
 			accessTime += city.dijkstra(node->getUID(),TRANSPORT);
 			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
 		}
 	}
 	mean = accessTime/sizeHousing;
-	cout << "accessTIme " << accessTime << endl;
-	cout << "mean " << mean << endl;
-	cout << "sizeH " << sizeHousing << endl;
-	//city.showNodeGroup();
+	
 	return city.convertDoubleToString (mean);
 }
 
+// === Dijstra Method ===
+double City::dijkstra(ID startNodeID, Type type){
+	
+	//Je fais une copie de surface des pointeurs du tableau de noeuds.
+	//Donc j'aurais deux tableaux qui pointent vers mes noeuds
+	//car mon algorithme dijkstra mélange mon tableau de noeuds copiées.
+	vector<Node*> nodeGroupMTA(city.nodeGroup);
+	for (auto node:nodeGroupMTA) node->initNodeDijkstra(startNodeID);
+	
+	Node::sortNodeGroup(nodeGroupMTA, startNodeID);
+	
+	double result (Node::dijkstra(nodeGroupMTA, type));
+
+	if (result == no_link) return infinite_time;
+	return result;
+	// return no_link;
+
+	// vector<array<Node*,2>> linkGroup(getLinkGroup());
+}
 
 // === Drawing ====
 void City::updateDraw(){
@@ -314,6 +248,15 @@ void City::updateDraw(){
 }
 
 // === Tools Methods ===
+Node* City::pickNodeByUID(ID UID) const {
+    for (size_t i(0); i < nodeGroup.size(); ++i){
+        if ( nodeGroup[i]->getUID() == UID){
+            return nodeGroup[i];
+        }
+    }
+    cout << error::link_vacuum(UID) << endl;
+    return nullptr;
+}
 vector<Node*> City::getType(Type type) const{
 	vector<Node*> output;
 	for (auto& node:city.nodeGroup){
@@ -328,3 +271,10 @@ vector<array<Node*,2>> City::getLinkGroup() const{
 	}
 	return linkCreated;
 }
+string City::convertDoubleToString(const double& value){
+	stringstream name("");
+
+	name << value;
+	return name.str();
+}
+

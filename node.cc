@@ -1,6 +1,7 @@
 // Module Node (implementation)
-// made by Vincent GHEROLD and Emile CAILLOL
-// version 1.3
+// Made by Vincent GHEROLD and Emile CAILLOL
+// Version 2.1
+// Architechture b1
 
 #include <vector>
 #include <iostream>
@@ -18,7 +19,6 @@
 using namespace std;
 
 //========== Node Methods ==========
-
 Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
     istringstream data(line);
     ID UID; 
@@ -90,28 +90,13 @@ void Node::showNode() const {
 double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
-// === Setter functions ===
-void Node::setIn(bool value){
-	in = value;
-}
-void Node::setAccess(double value){
-	access = value;
-}
-void Node::setParent(double value){
-	
-}
+
 // === Getter functions ===
 const ID Node::getUID() const {
     return UID;
 }
 double Node::getNbp() const {
     return nbp;
-}
-bool Node::getIn() const {
-	return in;
-}
-double Node::getAccess() const {
-	return access;
 }
 
 // === Save functions ===
@@ -122,23 +107,6 @@ ostream& Node::saveNode(ostream& fichier) const{
                    << nodeCircle.center.y << " "
                    << nbp << endl;
 } 
-// void Node::getVectorLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr) const{
-
-//     for (auto& link:links){
-
-//         array<Node*,2> link1 = {thisNodePtr,link};
-//         array<Node*,2> link2 = {link,thisNodePtr};
-
-//         //test if link1 or link2 already exists
-//         if (not (std::find(linkCreated.begin(), linkCreated.end(), link1)
-//             != linkCreated.end())
-//          && not (std::find(linkCreated.begin(), linkCreated.end(), link2)
-//             != linkCreated.end()) ){
-
-//             linkCreated.push_back(link1);
-//         }
-//     }
-// }
 
 // === Draw functions ===
 void Node::drawNode() const{
@@ -170,6 +138,36 @@ void Node::drawLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr,
 }
 
 // === Dijkstra functions ===
+double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
+
+    while (Node::findMinAccess(nodeGroup) != (size_t)-1){
+       
+        size_t nodeIndex(Node::findMinAccess(nodeGroup));
+       
+        if (nodeGroup[nodeIndex]->getType() == type) 
+            return nodeGroup[nodeIndex]->access;
+
+        nodeGroup[nodeIndex]->in = false;
+        if (nodeGroup[nodeIndex]->getType()==PRODUCTION) continue;
+        vector<Node*> currentLinks(nodeGroup[nodeIndex]->links);
+  
+        for (size_t lv(0); lv < currentLinks.size(); ++lv){
+            if (currentLinks[lv]->in == true){
+                
+                double alt(nodeGroup[nodeIndex]->access 
+                         + computeAccess(nodeGroup[nodeIndex],currentLinks[lv]));
+            
+                if (currentLinks[lv]->access > alt){
+                    currentLinks[lv]->access = alt;
+                    currentLinks[lv]->parent = nodeGroup[nodeIndex];
+                    sortNodeGroup(nodeGroup, currentLinks[lv]->UID);
+                }
+            }
+        }
+
+    }
+    return no_link;
+}
 void Node::initNodeDijkstra(ID startNodeID){
     in = true;
     access = (startNodeID == UID)? 0 : infinite_time;
@@ -177,14 +175,14 @@ void Node::initNodeDijkstra(ID startNodeID){
 
 }
 void Node::sortNodeGroup(vector<Node*>& nodeGroup, ID UIDToUpdate){
-    double currentIndex(no_link);
+    size_t currentIndex(no_link);
     for (size_t i(0); i < nodeGroup.size(); ++i){
 		if (nodeGroup[i]->UID == UIDToUpdate){
             currentIndex = i;
             break;
 		}
 	}
-    double success(false);
+    bool success(false);
     while (currentIndex > 0 and not success){
         if (nodeGroup[currentIndex]->access <= 
             nodeGroup[currentIndex-1]->access){
@@ -204,37 +202,15 @@ size_t Node::findMinAccess(const vector<Node*>& nodeGroup){
     }
     return indexNode;
 }
-//Probleme crtière ouverture fichier
-//Ajouter de ne pas passer au travers d'un noeuds de production
-double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
-    cout << endl;
-    while (Node::findMinAccess(nodeGroup) != (size_t)-1){
-        cout << "nodeIndex " << Node::findMinAccess(nodeGroup) << endl;
-        size_t nodeIndex(Node::findMinAccess(nodeGroup));
-        showdijkstra(nodeGroup);
-        if (nodeGroup[nodeIndex]->getType() == type) 
-            return nodeGroup[nodeIndex]->access;
+double Node::computeAccess(Node* node1, Node* node2){
+    double distBetweenNode(node1->dist(node2));
+    double speed(0);
+    
+    if (node1->getType() == TRANSPORT and node2->getType() == TRANSPORT) 
+        speed = fast_speed;
+    else speed = default_speed;
 
-        nodeGroup[nodeIndex]->in = false;
-        if (nodeGroup[nodeIndex]->getType()==PRODUCTION) continue;
-        vector<Node*> currentLinks(nodeGroup[nodeIndex]->links);
-      //  cout << "=== liens ===" << endl;
-        for (size_t lv(0); lv < currentLinks.size(); ++lv){
-            if (currentLinks[lv]->in == true){
-                
-                double alt(nodeGroup[nodeIndex]->access 
-                         + computeAccess(nodeGroup[nodeIndex],currentLinks[lv]));
-               // cout << "alt " << alt << endl;
-                if (currentLinks[lv]->access > alt){
-                    currentLinks[lv]->access = alt;
-                    currentLinks[lv]->parent = nodeGroup[nodeIndex];
-                    sortNodeGroup(nodeGroup, currentLinks[lv]->UID);
-                }
-            }
-        }
-
-    }
-    return no_link;
+    return distBetweenNode/speed;
 }
 void Node::showdijkstra(std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
@@ -243,16 +219,6 @@ void Node::showdijkstra(std::vector<Node*>& nodeGroup){
     }
 }
 
-double Node::computeAccess(Node* node1, Node* node2){
-    double distBetweenNode(node1->dist(node2));
-    double speed(0);
-   // cout << "getType() " << node1->getType() << " type " << node2->getType()<< endl;
-    if (node1->getType() == TRANSPORT and node2->getType() == TRANSPORT) 
-        speed = fast_speed;
-    else speed = default_speed;
-
-    return distBetweenNode/speed;
-}
 // === Verification method ===
 bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                                ID identifier, const vector<Node*>& nodeGroup){
@@ -311,7 +277,6 @@ bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
     return false;
 }
 
-
 //================= NodeHousing =================
 NodeHousing::NodeHousing(string line,int type, bool& success,
                          const vector<Node*>& nodeGroup)
@@ -335,7 +300,6 @@ void NodeHousing::drawNode() const {
 Type NodeHousing::getType() const {
     return HOUSING;
 }
-
 
 //================= NodeTransport =================
 NodeTransport::NodeTransport(string line,int type, bool& success,
@@ -363,7 +327,6 @@ void NodeTransport::drawNode() const {
 Type NodeTransport::getType() const {
     return TRANSPORT;
 }
-
 
 //================= NodeProduction =================
 NodeProduction::NodeProduction(string line,int type, bool& success,

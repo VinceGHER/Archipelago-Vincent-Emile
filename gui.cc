@@ -1,11 +1,10 @@
 // Module Node (interface)
-// made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0 
+// Made by Vincent GHEROLD and Emile CAILLOL
+// Version 2.1
+// Architechture b1
 
 #include <iostream>
 #include <string>
-#include <gtkmm/application.h>
-#include <gtkmm/window.h>
 #include <gtkmm.h>
 
 #include "gui.h"
@@ -16,18 +15,17 @@
 using namespace std;
 
 //=== Class Gui ===
-Gui::Gui():
-	
+Gui::Gui():	
 	m_Box(Gtk::ORIENTATION_HORIZONTAL),
 	
-	m_Box_Buttons(Gtk::ORIENTATION_VERTICAL),
+	m_Box_Buttons(Gtk::ORIENTATION_VERTICAL,5),
 	
 	m_Box_Drawing(Gtk::ORIENTATION_HORIZONTAL),
 
-	m_Box_General(Gtk::ORIENTATION_VERTICAL),
-	m_Box_Display(Gtk::ORIENTATION_VERTICAL),
-	m_Box_Editor(Gtk::ORIENTATION_VERTICAL),
-	m_Box_Informations(Gtk::ORIENTATION_VERTICAL),
+	m_Box_General(Gtk::ORIENTATION_VERTICAL,3),
+	m_Box_Display(Gtk::ORIENTATION_VERTICAL,3),
+	m_Box_Editor(Gtk::ORIENTATION_VERTICAL,3),
+	m_Box_Informations(Gtk::ORIENTATION_VERTICAL,3),
 
 	m_Frame_General("General"), m_Frame_Display("Display"),
 	m_Frame_Editor("Editor"),   m_Frame_Informations("Informations"),
@@ -43,31 +41,22 @@ Gui::Gui():
 	m_Radio_Production (m_Radio_Type, "production"),
 	
 	m_Label_Zoom(),   m_Label_ENJ(),
-	m_Label_CI(),     m_Label_MTA(),
-	edit(false)
-	 {
-		
-		creationBoxFrame();
-		creationPackStart();
-		creationClicked();
+	m_Label_CI(),     m_Label_MTA()
+	 {	
+		set_title("Drawing Area and Buttons");
+		set_border_width(0);
+
+		createBoxStruct();
+		createDrawingArea();
+		addButtonsToBox();
+		linkFunctionButtons();
 		refreshGuiAndDraw();
 		
 		show_all_children();
 }
 
-void Gui::creationBoxFrame(){
-	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
-	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
-	
-	wd.height = default_drawing_size;
-	wd.width = wd.height*wd.ratio;
+void Gui::createBoxStruct(){
 
-	m_Area.setFrame(wd);
-	m_Area.set_size_request(default_drawing_size,default_drawing_size);
-
-	set_title("Drawing Area and Buttons");
-	set_border_width(0);
-  
 	add(m_Box);
 	
 	m_Box.pack_start(m_Box_Buttons,false,false);
@@ -82,11 +71,22 @@ void Gui::creationBoxFrame(){
 	m_Frame_Display.add(m_Box_Display);
 	m_Frame_Editor.add(m_Box_Editor);
 	m_Frame_Informations.add(m_Box_Informations);
-}
 
-void Gui::creationPackStart(){
+
+}
+void Gui::createDrawingArea(){
+	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
+	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
+	
+	wd.height = default_drawing_size;
+	wd.width = wd.height*wd.ratio;
+
+	m_Area.setFrame(wd);
+	m_Area.set_size_request(default_drawing_size,default_drawing_size);
 
 	m_Box_Drawing.pack_start(m_Area);
+}
+void Gui::addButtonsToBox(){
 	
 	m_Box_General.pack_start(m_Button_Exit,false,false);
 	m_Box_General.pack_start(m_Button_New,false,false); 	
@@ -109,7 +109,7 @@ void Gui::creationPackStart(){
 	m_Box_Informations.pack_start(m_Label_MTA,false,false);
 }
 
-void Gui::creationClicked(){
+void Gui::linkFunctionButtons(){
 	
 	m_Button_Exit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onExitButtonClicked) );	  
@@ -133,28 +133,20 @@ void Gui::creationClicked(){
 }
 	
 void Gui::onExitButtonClicked(){
-<<<<<<< HEAD
-
-=======
->>>>>>> 8e5e02b9273b87e9122806068cb96818c646e1f1
 	City::emptyNodeGroup();
 	exit(0);
 }
 void Gui::onNewButtonClicked(){
-<<<<<<< HEAD
-
-=======
->>>>>>> 8e5e02b9273b87e9122806068cb96818c646e1f1
 	City::emptyNodeGroup();
 	refreshGuiAndDraw();
 }
 void Gui::onOpenButtonClicked(){
 	City::emptyNodeGroup();
-	City::readFile(fileSelection(true));
+	City::readFile( fileSelection(true) );
 	refreshGuiAndDraw();
 }
 void Gui::onSaveButtonClicked(){
-	City::save(fileSelection(false));
+	City::save( fileSelection(false) );
 }
 void Gui::onPathButtonClicked(){
 	cout << "INFO: Boutton << Shortest path >> cliqué." << endl;
@@ -169,18 +161,16 @@ void Gui::onResetButtonClicked(){
 	cout << "INFO: Boutton << Reset zoom >> cliqué." << endl;
 }
 void Gui::onEditButtonClicked(){
-    if (edit == false) {
+    if (editPath == false) {
         cout << "INFO: Boutton Toggle << Edit path >> cliqué." << endl;
-        edit = true;
+        editPath = true;
     }
     else {
         cout << "INFO: Boutton Toggle << Edit path >> relaché." << endl;
-        edit = false;
+        editPath = false;
     }
 }
 
-// void Gui::updateText(){
-// }
 void Gui::refreshGuiAndDraw(){
 	m_Area.refresh();
 	
@@ -194,39 +184,33 @@ void Gui::refreshGuiAndDraw(){
 	m_Label_CI.set_text(CIText);
 	m_Label_MTA.set_text(MTAText);
 }
+string Gui::fileSelection(bool open){	
 
-string Gui::fileSelection(bool choice){
-	// choice == true => open a file
-	// choice == false => save a file
-	
-	string textDialog(" ");
-	string textOk(" ");
-	if (choice == true) {
-		textOk = "_Open";
-		textDialog = "Please select a file to open";
+	string textInfo("");
+	string state("");
+
+	auto action (Gtk::FILE_CHOOSER_ACTION_OPEN);
+	if (open){
+		state = "Open";
+		textInfo = "Please choose a file";
+	} else {
+		state = "Save";
+		textInfo = "Name";
+		action = Gtk::FILE_CHOOSER_ACTION_SAVE;
 	}
-	else {
-		textOk = "_Save";
-		textDialog = "Please choose a file to save";
-	}
-	Gtk::FileChooserDialog dialog(textDialog,
-		  Gtk::FILE_CHOOSER_ACTION_OPEN);
+
+	Gtk::FileChooserDialog dialog(textInfo,action);
 	dialog.set_transient_for(*this);
 	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
-	dialog.add_button(textOk, Gtk::RESPONSE_OK); 
-	m_Label_Open.set_text("choosing a file");
-	
-	if (choice == false) {
-		dialog.add_button("_New File", Gtk::RESPONSE_CANCEL);
-	}
-	int result = dialog.run();
-	string filename(" ");
-	m_Label_Open.set_text("Done choosing a file");
+	dialog.add_button("_"+state, Gtk::RESPONSE_OK); 
 
+	int result = dialog.run();
+	string filename("");
+	
 	switch(result){
 		
 		case(Gtk::RESPONSE_OK):{
-			cout << "Open/Save clicked." << endl;
+			cout << state << " clicked." << endl;
 			filename = dialog.get_filename(); 
 			cout << "File selected: " <<  filename << endl;
 			break;
@@ -242,6 +226,7 @@ string Gui::fileSelection(bool choice){
 	}
 	return filename;
 }
+
 
 Gui::~Gui()
 {
@@ -275,40 +260,3 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 	City::updateDraw();
 	return true;
 }
-
-//=== CLass Timer ===
-// Timer::Timer(Gui& gui,int timeoutValueRef)
-// :timerAdded(false),disconnect(false),timeoutValue(timeoutValueRef),
-// guiRef(gui){}
-
-// bool Timer::startTimer(){
-	
-// 	if(not timerAdded){
-// 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &Timer::onTimeout),
-// 									  timeoutValue);
-// 		timerAdded = true;
-	
-// 		return true;
-// 	} else return false;
-	
-// }
-// bool Timer::stopTimer(){
-// 	if (not timerAdded){
-// 		return false;
-// 	} else {
-// 		disconnect  = true;   
-//     	timerAdded = false;
-// 		return true;
-// 	}
-// }
-// bool Timer::onTimeout(){
-
-// 	if (disconnect){
-// 		disconnect = false;
-// 		return false;
-// 	}
-	
-// //	guiRef.updateText();
-
-// 	return true;
-// }

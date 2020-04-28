@@ -1,6 +1,7 @@
 // Module Node (interface)
-// made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0  
+// Made by Vincent GHEROLD and Emile CAILLOL
+// Version 2.1
+// Architechture b1
 
 #ifndef NODE_H
 #define NODE_H
@@ -31,24 +32,15 @@ public:
     virtual bool checkLinksLimit() const = 0;
     virtual void showNode() const;
     
-    double dist(Node* node);
-    
-    //Setter
-    void setIn(bool value);
-    void setAccess(double value);
-    void setParent(double value);
+    double dist(Node* node);    
 
     //Getter
     const ID getUID() const;  
     virtual Type getType() const = 0;
     double getNbp() const;
-    bool getIn() const;
-    double getAccess() const;
 
     //save functions
     std::ostream& saveNode(std::ostream& fichier) const;
-    // void getVectorLink(std::vector<std::array<Node*,2>>& linkCreated,
-    //                     Node* thisNodePtr) const;
     
     //draw functions
     virtual void drawNode() const;
@@ -56,10 +48,10 @@ public:
                   bool drawing)const;
 
     //dijkstra functions
+    static double dijkstra(std::vector<Node*>& nodeGroup, Type type);
     void initNodeDijkstra(ID startNode);
     static void sortNodeGroup(std::vector<Node*>& nodeGroup, ID UIDToUpdate);
     static size_t findMinAccess(const std::vector<Node*>& nodeGroup);
-    static double dijkstra(std::vector<Node*>& nodeGroup, Type type);
     static double computeAccess(Node* node1, Node* node2);
     static void showdijkstra(std::vector<Node*>& nodeGroup);
     

@@ -1,6 +1,7 @@
 // Module Node (interface)
-// made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0 
+// Made by Vincent GHEROLD and Emile CAILLOL
+// Version 2.1
+// Architechture b1
 
 #include <iostream>
 

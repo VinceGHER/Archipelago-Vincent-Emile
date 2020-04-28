@@ -1,6 +1,7 @@
 // Projet (fichier maitre)
 // made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0
+// Version 2.1
+// Architechture b1
 
 #include <iostream>
 #include <vector>
@@ -26,7 +27,6 @@ int main(int argc, char * argv[]){
 	Gui eventWindow;
 	eventWindow.set_title("Archipelago Vincent-Emile");
 	eventWindow.set_default_size(900, 900);
-	//eventWindow.set_resizable(false);
 	
    return app->run(eventWindow);
 	

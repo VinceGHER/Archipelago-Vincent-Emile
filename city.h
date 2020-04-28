@@ -1,6 +1,7 @@
 // Module City (interface)
-// made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0
+// Made by Vincent GHEROLD and Emile CAILLOL
+// Version 2.0
+// Architechture b1
 
 #ifndef CITY_H
 #define CITY_H
@@ -25,23 +26,18 @@ public:
 private:
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
-	std::string convertDoubleToString(const double& value);
 	void showNodeGroup() const;
 
-	//dijkstra Methods
-	void initDijkstra(ID startNodeID);
-	void sort(int d);
+	//dijkstra Method
 	double dijkstra(ID startNodeID, Type type);
-	int findMinAccess();
-	double computeAccess(int n,int lv);
-	void sortUIDTable(std::vector<ID>& UIDTable,ID UIDToUpdate);
-
 
 	//Tools Methods
 	Node* pickNodeByUID(ID UID) const;
 	std::vector<Node*> getType(Type type) const;
 	std::vector<std::array<Node*,2>> getLinkGroup() const;
+	std::string convertDoubleToString(const double& value);
 
+	//Attributs
 	std::vector<Node*> nodeGroup;
 };
 

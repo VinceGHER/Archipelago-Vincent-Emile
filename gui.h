@@ -1,6 +1,7 @@
 // Module Node (interface)
-// made by Vincent GHEROLD and Emile CAILLOL
-// version 1.0 
+// Made by Vincent GHEROLD and Emile CAILLOL
+// Version 2.1
+// Architechture b1
 
 #ifndef GUI_H
 #define GUI_H
@@ -13,7 +14,6 @@
 #include "city.h"
 
 class MyArea;
-class Timer;
 class Gui;
 
 class MyArea : public Gtk:: DrawingArea {
@@ -29,21 +29,6 @@ protected:
 	
 };
 
-// class Timer {
-// public:
-// 	Timer(Gui& gui,int timeoutValueRef);
-// 	bool startTimer();
-// 	bool stopTimer();
-// 	bool onTimeout();
-
-// private:
-// 	bool timerAdded;
-// 	bool disconnect;
-// 	const int timeoutValue;
-// 	Gui& guiRef;
-// };
-
-
 class Gui : public Gtk:: Window {
 public:
 	Gui();
@@ -53,9 +38,10 @@ public:
 protected:
 	
 	//initialisation
-	void creationBoxFrame();
-	void creationPackStart();
-	void creationClicked();
+	void createBoxStruct();
+	void addButtonsToBox();
+	void linkFunctionButtons();
+	void createDrawingArea();
 	
 	//buttons' methods
 	void onExitButtonClicked();
@@ -68,7 +54,7 @@ protected:
 	void onResetButtonClicked();
 	void onEditButtonClicked();
 	
-	std:: string fileSelection(bool choice);
+	std:: string fileSelection(bool open);
 	
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
@@ -108,11 +94,8 @@ protected:
 	Gtk:: Button m_Button_File;
 	Gtk:: Label m_Label_Open;
 
-	bool edit;
 	MyArea m_Area;
-
-	bool edit;
-	// Timer  timer;
+	bool editPath;
 	
 };
 #endif
