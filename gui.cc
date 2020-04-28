@@ -43,13 +43,13 @@ Gui::Gui():
 	m_Radio_Production (m_Radio_Type, "production"),
 	
 	m_Label_Zoom(),   m_Label_ENJ(),
-	m_Label_CI(),     m_Label_MTA()
+	m_Label_CI(),     m_Label_MTA(),
+	edit(false)
 	 {
 		
 		creationBoxFrame();
 		creationPackStart();
 		creationClicked();
-		bool edit(0);
 		refreshGuiAndDraw();
 		
 		show_all_children();
@@ -133,12 +133,12 @@ void Gui::creationClicked(){
 }
 	
 void Gui::onExitButtonClicked(){
-	City::save(fileSelection());
+
 	City::emptyNodeGroup();
 	exit(0);
 }
 void Gui::onNewButtonClicked(){
-	City::save(fileSelection());
+
 	City::emptyNodeGroup();
 	refreshGuiAndDraw();
 }
@@ -163,13 +163,13 @@ void Gui::onResetButtonClicked(){
 	cout << "INFO: Boutton << Reset zoom >> cliqué." << endl;
 }
 void Gui::onEditButtonClicked(){
-    if (edit == 0) {
+    if (edit == false) {
         cout << "INFO: Boutton Toggle << Edit path >> cliqué." << endl;
-        edit = 1;
+        edit = true;
     }
     else {
         cout << "INFO: Boutton Toggle << Edit path >> relaché." << endl;
-        edit = 0;
+        edit = false;
     }
 }
 

@@ -161,7 +161,7 @@ void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;
     for (auto& node:nodeGroup){
        node->showNode();
-    }
+	}
 }
 
 void City::emptyNodeGroup(){
