@@ -161,8 +161,8 @@ void Gui::onResetButtonClicked(){
 	cout << "INFO: Boutton << Reset zoom >> cliqué." << endl;
 }
 void Gui::onEditButtonClicked(){
-    if (edit == 0) {
-        cout << "INFO: Boutton Toggle << Edit path >> cliqué." << endl;
+    if (edit == false) {
+        cout << "INFO: Boutton Toggle << Edit link >> cliqué." << endl;
         edit = 1;
     }
     else {

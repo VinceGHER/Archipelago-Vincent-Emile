@@ -221,19 +221,19 @@ string City::criteriaCI(){
 	for (unsigned int i(0); i< linkCreated.size(); ++i){
 		
 		double distance (linkCreated[i][0]->dist(linkCreated[i][1]));
-
+		
 		double capacity (min((linkCreated[i][0]->getNbp()),
 				(linkCreated[i][1]->getNbp())));
 				
-		double speed (1);
-		if ((linkCreated[i][1]->getNbp()) == TRANSPORT
+		double speed(1);
+		if ((linkCreated[i][0]->getNbp()) == TRANSPORT
 			and(linkCreated[i][1]->getNbp())== TRANSPORT)
 				speed = fast_speed;
 		else
 				speed = default_speed;
 		
 		cost += (distance*capacity*speed);
-	}	
+	}
 	return city.convertDoubleToString (cost);
 }
 
