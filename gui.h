@@ -68,7 +68,7 @@ protected:
 	void onResetButtonClicked();
 	void onEditButtonClicked();
 	
-	std:: string fileSelection();
+	std:: string fileSelection(bool choice);
 	
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
@@ -108,6 +108,7 @@ protected:
 	Gtk:: Button m_Button_File;
 	Gtk:: Label m_Label_Open;
 
+	bool edit;
 	MyArea m_Area;
 
 	bool edit;

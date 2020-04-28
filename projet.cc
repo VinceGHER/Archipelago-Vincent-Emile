@@ -9,27 +9,25 @@
 
 #include "city.h"
 #include "gui.h"
+#include "constantes.h"
 
 using namespace std;
  
-
-	#include "constantes.h"
 
 int main(int argc, char * argv[]){
 	
 	if(argc == 2){
 		string filename(argv[1]);
 		City::readFile(filename);
-	} 
-	/// temporaire ce qui suit
-	int argcFake (1);
-	auto app_gui = Gtk::Application::create(argcFake, argv, "org.gtkmm.example_gui");
+	}
+	int argcFake(1);
+	auto app = Gtk::Application::create(argcFake, argv, "org.gtkmm.example");
 	
 	Gui eventWindow;
 	eventWindow.set_title("Archipelago Vincent-Emile");
 	eventWindow.set_default_size(900, 900);
 	//eventWindow.set_resizable(false);
-
-   return app_gui->run(eventWindow);
+	
+   return app->run(eventWindow);
 	
 }
