@@ -1,7 +1,7 @@
 // Projet (fichier maitre)
 // made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 #include <iostream>
 #include <vector>

@@ -1,7 +1,7 @@
 // Module Node (interface)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 #include <iostream>
 #include <string>
@@ -14,47 +14,93 @@
 
 using namespace std;
 
-//=== Class Gui ===
+//========== Class MyArea ==========
+MyArea::MyArea(){
+}
+MyArea::~MyArea(){
+}
+
+void MyArea::setFrame(Frame x){
+	graphic_gui::setFrame(x);
+}
+void MyArea::refresh(){
+	auto win = get_window();
+	if(win){
+		Gdk::Rectangle r(0,0, get_allocation().get_width(),
+		get_allocation().get_height());
+		win->invalidate_rect(r,false);
+	}
+}
+
+bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
+	Gtk::Allocation allocation = get_allocation();
+	const int width  = allocation.get_width();
+	const int height = allocation.get_height();
+	
+	graphic_gui:: graphic_set_context(cr);
+	graphic_gui:: updateFrameSize(width,height);
+	City::updateDraw();
+	return true;
+}
+
+//========== Class Gui ==========
 Gui::Gui():	
 	m_Box(Gtk::ORIENTATION_HORIZONTAL),
-	
 	m_Box_Buttons(Gtk::ORIENTATION_VERTICAL,5),
-	
 	m_Box_Drawing(Gtk::ORIENTATION_HORIZONTAL),
-
 	m_Box_General(Gtk::ORIENTATION_VERTICAL,3),
 	m_Box_Display(Gtk::ORIENTATION_VERTICAL,3),
 	m_Box_Editor(Gtk::ORIENTATION_VERTICAL,3),
 	m_Box_Informations(Gtk::ORIENTATION_VERTICAL,3),
+	m_Frame_General("General"),
+	m_Frame_Display("Display"),
+	m_Frame_Editor("Editor"),
+	m_Frame_Informations("Informations"),
 
-	m_Frame_General("General"), m_Frame_Display("Display"),
-	m_Frame_Editor("Editor"),   m_Frame_Informations("Informations"),
-
-	m_Button_Exit("exit"),          m_Button_New("new"),
-    m_Button_Open("open"),          m_Button_Save("save"),
-    m_Button_Path("shortest path"), m_Button_Zin("zoom in"),
-	m_Button_Zout("zoom out"),      m_Button_Reset("zoom reset"),
+	m_Button_Exit("exit"),         
+	m_Button_New("new"),
+    m_Button_Open("open"),
+    m_Button_Save("save"),
+    m_Button_Path("shortest path"),
+    m_Button_Zin("zoom in"),
+	m_Button_Zout("zoom out"),
+	m_Button_Reset("zoom reset"),
 	m_TButton_Edit("edit link"),
-	
 	m_Radio_Housing (m_Radio_Type, "housing"),
 	m_Radio_Transport (m_Radio_Type, "transport"),
 	m_Radio_Production (m_Radio_Type, "production"),
-	
-	m_Label_Zoom(),   m_Label_ENJ(),
-	m_Label_CI(),     m_Label_MTA()
+	m_Label_Zoom(),
+	m_Label_ENJ(),
+	m_Label_CI(),
+	m_Label_MTA()
 	 {	
 		set_title("Drawing Area and Buttons");
 		set_border_width(0);
-
+		
 		createBoxStruct();
 		createDrawingArea();
 		addButtonsToBox();
 		linkFunctionButtons();
 		refreshGuiAndDraw();
-		
 		show_all_children();
 }
+Gui::~Gui(){
+}
+void Gui::refreshGuiAndDraw(){
+	m_Area.refresh();
+	
+	string ZoomText ("zoom: x1.00");
+	string ENJText ("ENJ: " + (City::criteriaENJ()));
+	string CIText ("CI: " + (City::criteriaCI()));
+	string MTAText ("MTA: " + (City::criteriaMTA()));
 
+	m_Label_Zoom.set_text(ZoomText);
+	m_Label_ENJ.set_text(ENJText);
+	m_Label_CI.set_text(CIText);
+	m_Label_MTA.set_text(MTAText);
+}
+
+//=== initialisation ===
 void Gui::createBoxStruct(){
 
 	add(m_Box);
@@ -73,18 +119,6 @@ void Gui::createBoxStruct(){
 	m_Frame_Informations.add(m_Box_Informations);
 
 
-}
-void Gui::createDrawingArea(){
-	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
-	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
-	
-	wd.height = default_drawing_size;
-	wd.width = wd.height*wd.ratio;
-
-	m_Area.setFrame(wd);
-	m_Area.set_size_request(default_drawing_size,default_drawing_size);
-
-	m_Box_Drawing.pack_start(m_Area);
 }
 void Gui::addButtonsToBox(){
 	
@@ -108,7 +142,6 @@ void Gui::addButtonsToBox(){
 	m_Box_Informations.pack_start(m_Label_CI,false,false);
 	m_Box_Informations.pack_start(m_Label_MTA,false,false);
 }
-
 void Gui::linkFunctionButtons(){
 	
 	m_Button_Exit.signal_clicked().connect(sigc::mem_fun(*this,
@@ -131,7 +164,20 @@ void Gui::linkFunctionButtons(){
 	m_TButton_Edit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onEditButtonClicked) );
 }
+void Gui::createDrawingArea(){
+	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
+	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
 	
+	wd.height = default_drawing_size;
+	wd.width = wd.height*wd.ratio;
+
+	m_Area.setFrame(wd);
+	m_Area.set_size_request(default_drawing_size,default_drawing_size);
+
+	m_Box_Drawing.pack_start(m_Area);
+}
+
+//=== buttons functions ===
 void Gui::onExitButtonClicked(){
 	City::emptyNodeGroup();
 	exit(0);
@@ -161,29 +207,16 @@ void Gui::onResetButtonClicked(){
 	cout << "INFO: Boutton << Reset zoom >> cliqué." << endl;
 }
 void Gui::onEditButtonClicked(){
-    if (editPath == false) {
+    if (! editLink) {
         cout << "INFO: Boutton Toggle << Edit path >> cliqué." << endl;
-        editPath = true;
-    }
-    else {
+        editLink = true;
+    } else {
         cout << "INFO: Boutton Toggle << Edit path >> relaché." << endl;
-        editPath = false;
+        editLink = false;
     }
 }
 
-void Gui::refreshGuiAndDraw(){
-	m_Area.refresh();
-	
-	string ZoomText ("zoom: x1.00");
-	string ENJText ("ENJ: " + (City::criteriaENJ()));
-	string CIText ("CI: " + (City::criteriaCI()));
-	string MTAText ("MTA: " + (City::criteriaMTA()));
 
-	m_Label_Zoom.set_text(ZoomText);
-	m_Label_ENJ.set_text(ENJText);
-	m_Label_CI.set_text(CIText);
-	m_Label_MTA.set_text(MTAText);
-}
 string Gui::fileSelection(bool open){	
 
 	string textInfo("");
@@ -225,38 +258,4 @@ string Gui::fileSelection(bool open){
 		}
 	}
 	return filename;
-}
-
-
-Gui::~Gui()
-{
-}
-
-
-//=== Class MyArea ===
-void MyArea::setFrame(Frame x){
-	graphic_gui::setFrame(x);
-}
-MyArea::MyArea(){}
-
-MyArea::~MyArea(){}
-
-void MyArea::refresh(){
-	auto win = get_window();
-	if(win){
-		Gdk::Rectangle r(0,0, get_allocation().get_width(),
-		get_allocation().get_height());
-		win->invalidate_rect(r,false);
-	}
-}
-
-bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
-	Gtk::Allocation allocation = get_allocation();
-	const int width  = allocation.get_width();
-	const int height = allocation.get_height();
-	
-	graphic_gui:: graphic_set_context(cr);
-	graphic_gui:: updateFrameSize(width,height);
-	City::updateDraw();
-	return true;
 }

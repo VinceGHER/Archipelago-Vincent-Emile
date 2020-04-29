@@ -1,7 +1,7 @@
 // Module Node (interface)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 #ifndef GUI_H
 #define GUI_H
@@ -13,14 +13,14 @@
 #include "graphic_gui.h"
 #include "city.h"
 
-class MyArea;
 class Gui;
+class MyArea;
 
 class MyArea : public Gtk:: DrawingArea {
 public:
 	MyArea();
-	void setFrame(Frame x);
 	virtual ~MyArea();
+	void setFrame(Frame x);
 	void refresh();
 
 protected:
@@ -33,17 +33,16 @@ class Gui : public Gtk:: Window {
 public:
 	Gui();
 	virtual ~Gui();
-	void updateText();
 	void refreshGuiAndDraw();
-protected:
 	
+protected:
 	//initialisation
 	void createBoxStruct();
 	void addButtonsToBox();
 	void linkFunctionButtons();
 	void createDrawingArea();
 	
-	//buttons' methods
+	//buttons functions
 	void onExitButtonClicked();
 	void onNewButtonClicked();
 	void onOpenButtonClicked();
@@ -95,7 +94,7 @@ protected:
 	Gtk:: Label m_Label_Open;
 
 	MyArea m_Area;
-	bool editPath;
-	
+	bool editLink;
 };
+
 #endif

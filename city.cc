@@ -1,7 +1,7 @@
 // Module City (implementation)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 #include <iostream>
 #include <vector>
@@ -83,61 +83,17 @@ bool City::save(string nom){
 	fichier.close();
 	return true;
 }
-bool City::addNode(string line, int type){
-	Node* pNode(nullptr);
-	bool success(false);
-	
-	switch (type){
-		case 0:
-			pNode = new NodeHousing(line,type,success,nodeGroup);
-			break;
-		case 1:
-			pNode = new NodeTransport(line,type,success,nodeGroup);
-			break;
-		case 2:
-			pNode = new NodeProduction(line,type,success,nodeGroup);
-			break;
+void City::updateDraw(){
+	//draw links
+	vector<array<Node*,2>> linkCreated;
+    for (auto& node:city.nodeGroup){
+        node->drawLink(linkCreated,node,true);
+    }
+
+	//draw nodes
+	for (auto& node:city.nodeGroup){
+		node->drawNode();
 	}
-	if (pNode == nullptr) return false;
-	if (not success) return false;
-	// if (not pNode->readLine(line,type,nodeGroup)){
-	// 	delete pNode;
-	// 	return false;
-	// }
-
-	city.nodeGroup.push_back(pNode);
-	return true;
-}
-bool City::addLink(string line){
-
-	ID UID1,UID2;
-
-	if (not Node::readLink(line,UID1,UID2)) return false;
-
-    Node* pNode1(pickNodeByUID(UID1)); 
-    Node* pNode2(pickNodeByUID(UID2));
-    if (pNode1 == nullptr or pNode2 == nullptr) return false;
-
-    if (UID1 == UID2) {
-        cout << error::self_link_node(UID1) << endl;
-        return false;
-    }
-   
-    for (auto& node:nodeGroup){
-        if (not (node->checkCollisionNodeLink(pNode1,pNode2))) return false;
-    }
-
-    if(pNode1->checkIfNodeIsAlreadyLinked(pNode2)) return false;
-    if(pNode2->checkIfNodeIsAlreadyLinked(pNode1)) return false;
-
-    if(pNode1->checkLinksLimit()) return false;
-    if(pNode2->checkLinksLimit()) return false;
-
-
-    if(not pNode1->addLink(pNode2)) return false;
-    if(not pNode2->addLink(pNode1)) return false;
-    return true;
-
 }
 void City::emptyNodeGroup(){
     for (auto& node:city.nodeGroup){
@@ -145,14 +101,8 @@ void City::emptyNodeGroup(){
     }
     city.nodeGroup.clear();
 }
-void City::showNodeGroup() const {
-    cout << "--------- nodeGroup -----------" << endl;
-    for (auto& node:nodeGroup){
-       node->showNode();
-	}
-}
 
-// === Criteria ===
+//=== criteria ===
 string City::criteriaENJ(){
 	double dayNbpTotal(0);
 	double restNbpTotal(0);
@@ -162,15 +112,12 @@ string City::criteriaENJ(){
 		double currentNbp (city.nodeGroup[i]->getNbp());
 		Type currentType (city.nodeGroup[i]->getType());
 		dayNbpTotal += currentNbp;
-		if (currentType == HOUSING)
-			restNbpTotal += currentNbp;
-		else
-			restNbpTotal -= currentNbp;
+		if (currentType == HOUSING) restNbpTotal += currentNbp;
+		else restNbpTotal -= currentNbp;
 	}
 	double balance(restNbpTotal/dayNbpTotal);
 	return city.convertDoubleToString (balance);
 }
-
 string City::criteriaCI(){
 	if (city.nodeGroup.empty()) return "0";
 	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
@@ -193,7 +140,6 @@ string City::criteriaCI(){
 	}
 	return city.convertDoubleToString (cost);
 }
-
 string City::criteriaMTA(){
 	if (city.nodeGroup.empty()) return "0";
 	double mean(0);
@@ -213,12 +159,69 @@ string City::criteriaMTA(){
 	return city.convertDoubleToString (mean);
 }
 
-// === Dijstra Method ===
+bool City::addNode(string line, int type){
+	Node* pNode(nullptr);
+	bool success(false);
+	
+	switch (type){
+		case 0:
+			pNode = new NodeHousing(line,type,success,nodeGroup);
+			break;
+		case 1:
+			pNode = new NodeTransport(line,type,success,nodeGroup);
+			break;
+		case 2:
+			pNode = new NodeProduction(line,type,success,nodeGroup);
+			break;
+	}
+	if (pNode == nullptr) return false;
+	if (not success) return false;
+	// if (not pNode->readLine(line,type,nodeGroup)){
+	// 	delete pNode;
+	// 	return false;
+	// }
+	city.nodeGroup.push_back(pNode);
+	return true;
+}
+bool City::addLink(string line){
+	ID UID1,UID2;
+	
+	if (not Node::readLink(line,UID1,UID2)) return false;
+	
+    Node* pNode1(pickNodeByUID(UID1)); 
+    Node* pNode2(pickNodeByUID(UID2));
+    if (pNode1 == nullptr or pNode2 == nullptr) return false;
+	
+    if (UID1 == UID2) {
+        cout << error::self_link_node(UID1) << endl;
+        return false;
+    }   
+    for (auto& node:nodeGroup){
+        if (not (node->checkCollisionNodeLink(pNode1,pNode2))) return false;
+    }
+    if(pNode1->checkIfNodeIsAlreadyLinked(pNode2)) return false;
+    if(pNode2->checkIfNodeIsAlreadyLinked(pNode1)) return false;
+	
+    if(pNode1->checkLinksLimit()) return false;
+    if(pNode2->checkLinksLimit()) return false;
+	
+    if(not pNode1->addLink(pNode2)) return false;
+    if(not pNode2->addLink(pNode1)) return false;
+    return true;
+}
+void City::showNodeGroup() const {
+    cout << "--------- nodeGroup -----------" << endl;
+    for (auto& node:nodeGroup){
+       node->showNode();
+	}
+}
+
+// === Dijstra function ===
 double City::dijkstra(ID startNodeID, Type type){
 	
 	//Je fais une copie de surface des pointeurs du tableau de noeuds.
-	//Donc j'aurais deux tableaux qui pointent vers mes noeuds
-	//car mon algorithme dijkstra mélange mon tableau de noeuds copiées.
+	//Donc j'aurai deux tableaux qui pointent vers mes noeuds
+	//car mon algorithme dijkstra mélange mon tableau de noeuds copiés.
 	vector<Node*> nodeGroupMTA(city.nodeGroup);
 	for (auto node:nodeGroupMTA) node->initNodeDijkstra(startNodeID);
 	
@@ -228,26 +231,9 @@ double City::dijkstra(ID startNodeID, Type type){
 
 	if (result == no_link) return infinite_time;
 	return result;
-	// return no_link;
-
-	// vector<array<Node*,2>> linkGroup(getLinkGroup());
 }
 
-// === Drawing ====
-void City::updateDraw(){
-	//draw Links
-	vector<array<Node*,2>> linkCreated;
-    for (auto& node:city.nodeGroup){
-        node->drawLink(linkCreated,node,true);
-    }
-
-	//draw Nodes
-	for (auto& node:city.nodeGroup){
-		node->drawNode();
-	}
-}
-
-// === Tools Methods ===
+// === tools functions ===
 Node* City::pickNodeByUID(ID UID) const {
     for (size_t i(0); i < nodeGroup.size(); ++i){
         if ( nodeGroup[i]->getUID() == UID){
@@ -277,4 +263,3 @@ string City::convertDoubleToString(const double& value){
 	name << value;
 	return name.str();
 }
-

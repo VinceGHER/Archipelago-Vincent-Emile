@@ -1,7 +1,7 @@
 // Module Node (implementation)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 #include <vector>
 #include <iostream>
@@ -51,6 +51,7 @@ Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
     }
     success = true;
 }
+
 bool Node::readLink(string line,ID& UID1,ID& UID2){
     istringstream data(line);
     try {
@@ -99,7 +100,7 @@ double Node::getNbp() const {
     return nbp;
 }
 
-// === Save functions ===
+// === save functions ===
 ostream& Node::saveNode(ostream& fichier) const{
     return fichier << "\t" 
                    << UID << " "
@@ -108,7 +109,7 @@ ostream& Node::saveNode(ostream& fichier) const{
                    << nbp << endl;
 } 
 
-// === Draw functions ===
+// === draw functions ===
 void Node::drawNode() const{
     tools::drawCircle(nodeCircle);
 }
@@ -137,7 +138,7 @@ void Node::drawLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr,
    
 }
 
-// === Dijkstra functions ===
+//=== Dijkstra functions ===
 double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
 
     while (Node::findMinAccess(nodeGroup) != (size_t)-1){
@@ -219,10 +220,10 @@ void Node::showdijkstra(std::vector<Node*>& nodeGroup){
     }
 }
 
-// === Verification method ===
+//=== Verification method ===
 bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                                ID identifier, const vector<Node*>& nodeGroup){
-     // Check validity of argument
+    // Check validity of argument
     if (identifier == no_link) {
         cout<< error::reserved_uid() << endl; 
         return false;

@@ -1,14 +1,13 @@
 // Module Node (interface)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 #include <iostream>
 
 #include "graphic_gui.h"
 #include "graphic.h"
 
-//debug
 using namespace std;
 
 namespace {
@@ -17,11 +16,11 @@ namespace {
     const Cairo::RefPtr<Cairo::Context>* pCr(nullptr);
 }
 
-//Private Function Prototype
+//private function prototypes
 int ConvertX(double coord, double width); 
 int ConvertY(double coord, double height);
 
-//Private Function
+//private functions
 int ConvertX(double coord, double width){
     double prefactor = width / ( current.xmax - current.xmin ); 
     return ( coord - current.xmin ) * prefactor;	
@@ -32,9 +31,9 @@ int ConvertY(double coord, double height){
 }
 
 
-//===== External Function ====
+//===== External Functions ====
 
-//function for gui module
+//functions for gui module
 void graphic_gui::graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr){
     pCr = &cr;
 }
@@ -56,8 +55,7 @@ void graphic_gui::updateFrameSize(int width, int height){
         current.xmax = mid + 0.5*(newFactor/initial.ratio)*delta ;
         current.xmin = mid - 0.5*(newFactor/initial.ratio)*delta ;		  	  
 
-    }
-    else { // keep xmax and xmin. Adjust ymax and ymin
+    } else { // keep xmax and xmin. Adjust ymax and ymin
         current.xmax = initial.xmax ;
         current.xmin = initial.xmin ;
             
@@ -72,7 +70,7 @@ void graphic_gui::updateFrameSize(int width, int height){
     current.height = height;
 }
 
-//Function for tools module
+//functions for tools module
 bool graphic::setColor(Color color) {
     if (pCr == nullptr) return false;
     double red(0),green(0),blue(0);
@@ -120,7 +118,6 @@ bool graphic::drawCircle(double x,double y,double radius){
     (*pCr)->fill_preserve();
     (*pCr)->restore();
     (*pCr)->stroke();
-  //  (*pCr)->set_source_rgba(1.0, 1.0, 1.0, 0);
 
     return true;   
 }

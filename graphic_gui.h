@@ -1,7 +1,7 @@
 // Module Node (interface)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 
 #ifndef GRAPHIC_GUI_H
@@ -18,7 +18,6 @@ struct Frame {
   int height;
   int width;
 };
-
 
 namespace graphic_gui {
   void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr);

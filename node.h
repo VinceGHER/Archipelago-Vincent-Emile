@@ -1,7 +1,7 @@
 // Module Node (interface)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.1
-// Architechture b1
+// Architecture b1
 
 #ifndef NODE_H
 #define NODE_H
@@ -24,7 +24,7 @@ class Node {
 public:
 
     Node(std::string line,int type,bool& success,const std::vector<Node*>& nodeGroup);
-    virtual ~Node(){}
+    virtual ~Node(){};
 
     static bool readLink(std::string line,ID& UID1,ID& UID2);
     bool addLink(Node* nodeToLink);
@@ -34,7 +34,7 @@ public:
     
     double dist(Node* node);    
 
-    //Getter
+    //getters
     const ID getUID() const;  
     virtual Type getType() const = 0;
     double getNbp() const;
@@ -47,7 +47,7 @@ public:
     void drawLink(std::vector<std::array<Node*,2>>& linkCreated,Node* thisNodePtr,
                   bool drawing)const;
 
-    //dijkstra functions
+    //Dijkstra functions
     static double dijkstra(std::vector<Node*>& nodeGroup, Type type);
     void initNodeDijkstra(ID startNode);
     static void sortNodeGroup(std::vector<Node*>& nodeGroup, ID UIDToUpdate);
@@ -68,7 +68,7 @@ protected:
     ID UID;
     std::vector<Node*> links;
 
-    //Dijksra Attributs
+    //Dijksra attributs
     bool in;
     double access;
     Node* parent;

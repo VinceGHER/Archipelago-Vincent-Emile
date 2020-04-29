@@ -1,7 +1,7 @@
 // Module City (interface)
 // Made by Vincent GHEROLD and Emile CAILLOL
 // Version 2.0
-// Architechture b1
+// Architecture b1
 
 #ifndef CITY_H
 #define CITY_H
@@ -14,11 +14,13 @@
 
 class City {
 public:
+	//node gestion
 	static bool readFile(std::string data);
 	static bool save(std::string nom);
 	static void updateDraw();
 	static void emptyNodeGroup();
-
+	
+	//criteria
 	static std::string criteriaENJ();
 	static std::string criteriaCI();
 	static std::string criteriaMTA();
@@ -28,16 +30,16 @@ private:
 	bool addLink(std::string line);
 	void showNodeGroup() const;
 
-	//dijkstra Method
+	//Dijkstra function
 	double dijkstra(ID startNodeID, Type type);
 
-	//Tools Methods
+	//tools functions
 	Node* pickNodeByUID(ID UID) const;
 	std::vector<Node*> getType(Type type) const;
 	std::vector<std::array<Node*,2>> getLinkGroup() const;
 	std::string convertDoubleToString(const double& value);
 
-	//Attributs
+	//attributs
 	std::vector<Node*> nodeGroup;
 };
 
