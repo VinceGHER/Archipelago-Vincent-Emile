@@ -75,21 +75,21 @@ bool graphic::setColor(Color color) {
     double red(0),green(0),blue(0);
     
     switch (color){
-    case RED:
-        red = 1;
-        green = 0;
-        blue = 0;
-        break;
-    case GREEN:
-        red = 0;
-        green = 1;
-        blue = 0;
-        break;
-    case BLACK:
-        red = 0;
-        green = 0;
-        blue = 0;
-        break;
+        case RED:
+            red = 1;
+            green = 0;
+            blue = 0;
+            break;
+        case GREEN:
+            red = 0;
+            green = 1;
+            blue = 0;
+            break;
+        case BLACK:
+            red = 0;
+            green = 0;
+            blue = 0;
+            break;
     }
 
     (*pCr)->set_source_rgb(red, green, blue);

@@ -18,7 +18,11 @@
 
 using namespace std;
 
-// ========== Node Methods ==========
+// === rectange of production node ===
+#define ratioRectangleWidth 0.75
+#define ratioRectangleHeight 0.125 // (1/8) 
+
+// ========== node methods ==========
 Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
     istringstream data(line);
     ID UID; 
@@ -153,7 +157,7 @@ double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
         vector<Node*> currentLinks(nodeGroup[nodeIndex]->links);
   
         for (size_t lv(0); lv < currentLinks.size(); ++lv){
-            if (currentLinks[lv]->in == true){
+            if (currentLinks[lv]->in){
                 
                 double alt(nodeGroup[nodeIndex]->access 
                          + computeAccess(nodeGroup[nodeIndex],currentLinks[lv]));
@@ -225,24 +229,24 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
                                ID identifier, const vector<Node*>& nodeGroup){
     // Check validity of argument
     if (identifier == no_link) {
-        cout<< error::reserved_uid() << endl; 
+        cout<< error::reserved_uid(); 
         return false;
     }
     if (sizePopulation < min_capacity){
-        cout<< error:: too_little_capacity(sizePopulation) << endl;
+        cout<< error:: too_little_capacity(sizePopulation);
         return false;
     }
     if (sizePopulation > max_capacity){
-        cout<<error:: too_much_capacity(sizePopulation) << endl;
+        cout<<error:: too_much_capacity(sizePopulation);
         return false;
     }
     for (auto& node:nodeGroup){
         if(node->UID == identifier){
-            cout<<error::identical_uid(identifier) << endl;
+            cout<<error::identical_uid(identifier);
             return false;
         }
         if(tools::overlapBetweenCircles(circle, node->nodeCircle, dist_min)){
-           cout<< error::node_node_superposition(identifier,node->UID) << endl;
+           cout<< error::node_node_superposition(identifier,node->UID);
             return false;
         }
     } 
@@ -263,7 +267,7 @@ bool Node::checkCollisionNodeLink(Node* pNode1,Node* pNode2) const{
         and UID != pNode2->UID
         and tools::overlapBetweenCircleSegment(nodeCircle,currentSegment, 
                                                 dist_min)){
-            cout << error::node_link_superposition(UID)<< endl;
+            cout << error::node_link_superposition(UID);
             return false;
         }
     return true;
@@ -271,7 +275,7 @@ bool Node::checkCollisionNodeLink(Node* pNode1,Node* pNode2) const{
 bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
     for (size_t i(0); i < links.size(); ++i){
         if (links[i]->UID == nodeToCheck->UID){
-            cout << error::multiple_same_link(UID,nodeToCheck->UID) << endl;
+            cout << error::multiple_same_link(UID,nodeToCheck->UID);
             return true;
         }
     }
@@ -281,7 +285,7 @@ bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
 //================= NodeHousing =================
 NodeHousing::NodeHousing(string line,int type, bool& success,
                          const vector<Node*>& nodeGroup)
-:Node(line,type,success,nodeGroup){}
+    :Node(line,type,success,nodeGroup){}
 
 void NodeHousing::showNode() const {
     this->Node::showNode();
@@ -290,7 +294,7 @@ void NodeHousing::showNode() const {
 }
 bool NodeHousing::checkLinksLimit() const {
     if (this->links.size() >= max_link){
-        cout << error::max_link(UID) << endl;
+        cout << error::max_link(UID);
         return true;
     }
     return false;
@@ -344,15 +348,17 @@ bool NodeProduction::checkLinksLimit() const {
 }
 void NodeProduction::drawNode() const {
     Node::drawNode();
-    double diameter( nodeCircle.radius*2);
-    Point topLeftCorner {nodeCircle.center.x - (0.75*diameter)/2. ,
-                         nodeCircle.center.y + (diameter/16.) };
-    Point topRightCorner {nodeCircle.center.x + (0.75*diameter)/2.,
-                          nodeCircle.center.y + (diameter/16.) };
-    Point bottomLeftCorner {nodeCircle.center.x - (0.75*diameter)/2.,
-                          nodeCircle.center.y - (diameter/16.) };
-    Point bottomRightCorner {nodeCircle.center.x + (0.75*diameter)/2.,
-                          nodeCircle.center.y - (diameter/16.) };
+    double diameter( nodeCircle.radius*2 );
+    double rectangleWidth(diameter*ratioRectangleWidth);
+    double rectangleHeight(diameter*ratioRectangleHeight);
+    Point topLeftCorner {nodeCircle.center.x - rectangleWidth/2. ,
+                         nodeCircle.center.y + rectangleHeight/2. };
+    Point topRightCorner {nodeCircle.center.x + rectangleWidth/2.,
+                          nodeCircle.center.y + rectangleHeight/2. };
+    Point bottomLeftCorner {nodeCircle.center.x - rectangleWidth/2.,
+                            nodeCircle.center.y - rectangleHeight/2. };
+    Point bottomRightCorner {nodeCircle.center.x + rectangleWidth/2.,
+                          nodeCircle.center.y - rectangleHeight/2. };
     tools::drawSegment(Segment{topLeftCorner,topRightCorner});
     tools::drawSegment(Segment{topRightCorner,bottomRightCorner});
     tools::drawSegment(Segment{bottomRightCorner,bottomLeftCorner});
