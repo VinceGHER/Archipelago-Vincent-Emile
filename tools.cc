@@ -8,27 +8,20 @@
 #include "tools.h"
 #include "graphic.h"
 
-// Private Function
+// private functions
 double scalarProduct(Vector v1, Vector v2);
 
 double scalarProduct(Vector v1, Vector v2){
     return v1.x*v2.x + v1.y*v2.y; 
 }
 
-// Function
-double tools::distance(Vector vector){
-    return sqrt( pow((vector.x),2) + pow((vector.y),2) );
-}
-double tools::distance(Point point1, Point point2){
-    return sqrt( pow((point1.x-point2.x),2) + pow((point1.y-point2.y),2) );
-}
+// public functions
 bool tools::overlapBetweenCircles(Circle circle1, Circle circle2, double dist_min){
     double totalradius( circle1.radius + circle2.radius );
     if (distance(circle1.center, circle2.center) - totalradius < dist_min)
         return true;
     return false;
-};
-
+}
 bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment, 
                                         double dist_min){
     Vector segmentToCircle = {circle.center.x - segment.start.x, 
@@ -48,8 +41,13 @@ bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment,
     if (distCercleTest >= dist_min) return false;
 
     return true;
-};
-
+}
+double tools::distance(Vector vector){
+    return sqrt( pow((vector.x),2) + pow((vector.y),2) );
+}
+double tools::distance(Point point1, Point point2){
+    return sqrt( pow((point1.x-point2.x),2) + pow((point1.y-point2.y),2) );
+}
 bool tools::drawCircle(Circle circle){
     return graphic::drawCircle(circle.center.x,circle.center.y,circle.radius);
 }

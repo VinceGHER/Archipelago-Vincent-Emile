@@ -18,7 +18,7 @@
 
 using namespace std;
 
-//========== Node Methods ==========
+// ========== Node Methods ==========
 Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
     istringstream data(line);
     ID UID; 
@@ -92,7 +92,7 @@ double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
 
-// === Getter functions ===
+// === getter functions ===
 const ID Node::getUID() const {
     return UID;
 }
