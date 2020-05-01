@@ -50,10 +50,13 @@ bool City::readFile(string data) {
 				--compteur;
 			}
 		}
-		cout << error::success() << endl;
+		cout << error::success();
 		return true;
 
-	} else return false;
+	} else {
+		cout << "error opening file" << endl;
+		return false;
+	}
 }
 bool City::save(string nom){
 	ofstream fichier(nom);
@@ -135,7 +138,7 @@ bool City::addLink(string line){
     if (pNode1 == nullptr or pNode2 == nullptr) return false;
 	
     if (UID1 == UID2) {
-        cout << error::self_link_node(UID1) << endl;
+        cout << error::self_link_node(UID1);
         return false;
     }   
     for (auto& node:nodeGroup){
@@ -210,6 +213,8 @@ string City::criteriaMTA(){
 			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
 		}
 	}
+	if (sizeHousing == 0) return "0";
+
 	mean = accessTime/sizeHousing;
 	
 	return city.convertDoubleToString (mean);
@@ -227,7 +232,7 @@ double City::dijkstra(ID startNodeID, Type type){
 	Node::sortNodeGroup(nodeGroupMTA, startNodeID);
 	
 	double result (Node::dijkstra(nodeGroupMTA, type));
-
+	
 	if (result == no_link) return infinite_time;
 	return result;
 }
@@ -239,7 +244,7 @@ Node* City::pickNodeByUID(ID UID) const {
             return nodeGroup[i];
         }
     }
-    cout << error::link_vacuum(UID) << endl;
+    cout << error::link_vacuum(UID);
     return nullptr;
 }
 vector<Node*> City::getType(Type type) const{

@@ -15,10 +15,7 @@
 using namespace std;
 
 // ========== Class MyArea ==========
-MyArea::MyArea(){
-}
-MyArea::~MyArea(){
-}
+
 
 void MyArea::setFrame(Frame x){
 	graphic_gui::setFrame(x);
@@ -84,8 +81,7 @@ Gui::Gui():
 		refreshGuiAndDraw();
 		show_all_children();
 }
-Gui::~Gui(){
-}
+
 void Gui::refreshGuiAndDraw(){
 	m_Area.refresh();
 	
@@ -240,20 +236,12 @@ string Gui::fileSelection(bool open){
 	string filename("");
 	
 	switch(result){	
-		case(Gtk::RESPONSE_OK):{
-			cout << state << " clicked." << endl;
+		case(Gtk::RESPONSE_OK):
 			filename = dialog.get_filename(); 
-			cout << "File selected: " <<  filename << endl;
 			break;
-		}
-		case(Gtk::RESPONSE_CANCEL):{
-		    cout << "Cancel clicked." << endl;
-		    break;
-		}
-		default:{
+		default:
 		    cout << "Unexpected button clicked." << endl;
 		    break;
-		}
 	}
 	return filename;
 }

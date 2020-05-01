@@ -18,8 +18,8 @@ class MyArea;
 
 class MyArea : public Gtk:: DrawingArea {
 public:
-	MyArea();
-	virtual ~MyArea();
+	MyArea(){};
+	virtual ~MyArea(){};
 	void setFrame(Frame x);
 	void refresh();
 
@@ -32,7 +32,7 @@ protected:
 class Gui : public Gtk:: Window {
 public:
 	Gui();
-	virtual ~Gui();
+	virtual ~Gui(){};
 	void refreshGuiAndDraw();
 	
 protected:
