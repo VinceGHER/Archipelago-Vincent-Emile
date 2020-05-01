@@ -22,7 +22,7 @@ namespace {
 	City city;
 }
 
-// === Node Gestion ===
+// === node gestion ===
 bool City::readFile(string data) {
 	ifstream fichier(data);
 	 	
@@ -101,64 +101,6 @@ void City::emptyNodeGroup(){
     }
     city.nodeGroup.clear();
 }
-
-//=== criteria ===
-string City::criteriaENJ(){
-	double dayNbpTotal(0);
-	double restNbpTotal(0);
-	if (city.nodeGroup.empty()) return to_string(dayNbpTotal);
-	
-	for (size_t i(0); i < city.nodeGroup.size(); ++i){
-		double currentNbp (city.nodeGroup[i]->getNbp());
-		Type currentType (city.nodeGroup[i]->getType());
-		dayNbpTotal += currentNbp;
-		if (currentType == HOUSING) restNbpTotal += currentNbp;
-		else restNbpTotal -= currentNbp;
-	}
-	double balance(restNbpTotal/dayNbpTotal);
-	return city.convertDoubleToString (balance);
-}
-string City::criteriaCI(){
-	if (city.nodeGroup.empty()) return "0";
-	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
-	
-	double cost(0);
-	for (size_t i(0); i < linkCreated.size(); ++i){
-		
-		double distance (linkCreated[i][0]->dist(linkCreated[i][1]));
-		
-		double capacity ( min((linkCreated[i][0]->getNbp()),
-				(linkCreated[i][1]->getNbp())) );
-				
-		double speed(1);
-		if (linkCreated[i][0]->getType() == TRANSPORT
-			and linkCreated[i][1]->getType() == TRANSPORT)
-				speed = fast_speed;
-		else speed = default_speed;
-		
-		cost += (distance*capacity*speed);
-	}
-	return city.convertDoubleToString (cost);
-}
-string City::criteriaMTA(){
-	if (city.nodeGroup.empty()) return "0";
-	double mean(0);
-	int sizeHousing(0);
-	double accessTime(0);
-
-	for (auto node:city.nodeGroup){
-		if (node->getType() == HOUSING){
-		
-			++sizeHousing;
-			accessTime += city.dijkstra(node->getUID(),TRANSPORT);
-			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
-		}
-	}
-	mean = accessTime/sizeHousing;
-	
-	return city.convertDoubleToString (mean);
-}
-
 bool City::addNode(string line, int type){
 	Node* pNode(nullptr);
 	bool success(false);
@@ -214,6 +156,63 @@ void City::showNodeGroup() const {
     for (auto& node:nodeGroup){
        node->showNode();
 	}
+}
+
+// === criteria ===
+string City::criteriaENJ(){
+	double dayNbpTotal(0);
+	double restNbpTotal(0);
+	if (city.nodeGroup.empty()) return to_string(dayNbpTotal);
+	
+	for (size_t i(0); i < city.nodeGroup.size(); ++i){
+		double currentNbp (city.nodeGroup[i]->getNbp());
+		Type currentType (city.nodeGroup[i]->getType());
+		dayNbpTotal += currentNbp;
+		if (currentType == HOUSING) restNbpTotal += currentNbp;
+		else restNbpTotal -= currentNbp;
+	}
+	double balance(restNbpTotal/dayNbpTotal);
+	return city.convertDoubleToString (balance);
+}
+string City::criteriaCI(){
+	if (city.nodeGroup.empty()) return "0";
+	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
+	
+	double cost(0);
+	for (size_t i(0); i < linkCreated.size(); ++i){
+		
+		double distance (linkCreated[i][0]->dist(linkCreated[i][1]));
+		
+		double capacity ( min((linkCreated[i][0]->getNbp()),
+				(linkCreated[i][1]->getNbp())) );
+				
+		double speed(1);
+		if (linkCreated[i][0]->getType() == TRANSPORT
+			and linkCreated[i][1]->getType() == TRANSPORT)
+				speed = fast_speed;
+		else speed = default_speed;
+		
+		cost += (distance*capacity*speed);
+	}
+	return city.convertDoubleToString (cost);
+}
+string City::criteriaMTA(){
+	if (city.nodeGroup.empty()) return "0";
+	double mean(0);
+	int sizeHousing(0);
+	double accessTime(0);
+
+	for (auto node:city.nodeGroup){
+		if (node->getType() == HOUSING){
+		
+			++sizeHousing;
+			accessTime += city.dijkstra(node->getUID(),TRANSPORT);
+			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
+		}
+	}
+	mean = accessTime/sizeHousing;
+	
+	return city.convertDoubleToString (mean);
 }
 
 // === Dijstra function ===

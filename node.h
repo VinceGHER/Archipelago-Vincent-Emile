@@ -29,7 +29,6 @@ public:
     static bool readLink(std::string line,ID& UID1,ID& UID2);
     bool addLink(Node* nodeToLink);
 
-    virtual bool checkLinksLimit() const = 0;
     virtual void showNode() const;
     
     double dist(Node* node);    
@@ -60,7 +59,7 @@ public:
                              ID identifier,const std::vector<Node*>& nodeGroup);
     bool checkCollisionNodeLink(Node* pNode1,Node* pNode2) const;
     bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
-
+    virtual bool checkLinksLimit() const = 0;
     
 protected:
     Circle nodeCircle;

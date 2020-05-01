@@ -26,6 +26,7 @@ public:
 	static std::string criteriaMTA();
 
 private:
+	//node gestion
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
 	void showNodeGroup() const;
@@ -39,7 +40,7 @@ private:
 	std::vector<std::array<Node*,2>> getLinkGroup() const;
 	std::string convertDoubleToString(const double& value);
 
-	//attributs
+	//attributes
 	std::vector<Node*> nodeGroup;
 };
 

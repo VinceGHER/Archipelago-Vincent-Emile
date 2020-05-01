@@ -4,13 +4,11 @@
 // Architecture b1
 
 #include <iostream>
-#include <vector>
 #include <gtkmm.h>
 #include <string>
 
 #include "city.h"
 #include "gui.h"
-#include "constantes.h"
 
 using namespace std;
  

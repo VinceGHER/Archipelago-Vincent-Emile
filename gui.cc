@@ -14,7 +14,7 @@
 
 using namespace std;
 
-//========== Class MyArea ==========
+// ========== Class MyArea ==========
 MyArea::MyArea(){
 }
 MyArea::~MyArea(){
@@ -43,7 +43,7 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 	return true;
 }
 
-//========== Class Gui ==========
+// ========== Class Gui ==========
 Gui::Gui():	
 	m_Box(Gtk::ORIENTATION_HORIZONTAL),
 	m_Box_Buttons(Gtk::ORIENTATION_VERTICAL,5),
@@ -100,7 +100,7 @@ void Gui::refreshGuiAndDraw(){
 	m_Label_MTA.set_text(MTAText);
 }
 
-//=== initialisation ===
+// === initialisation ===
 void Gui::createBoxStruct(){
 
 	add(m_Box);
@@ -177,7 +177,7 @@ void Gui::createDrawingArea(){
 	m_Box_Drawing.pack_start(m_Area);
 }
 
-//=== buttons functions ===
+// === buttons functions ===
 void Gui::onExitButtonClicked(){
 	City::emptyNodeGroup();
 	exit(0);
@@ -208,14 +208,13 @@ void Gui::onResetButtonClicked(){
 }
 void Gui::onEditButtonClicked(){
     if (! editLink) {
-        cout << "INFO: Boutton Toggle << Edit path >> cliqué." << endl;
+        cout << "INFO: Boutton Toggle << Edit link >> cliqué." << endl;
         editLink = true;
     } else {
-        cout << "INFO: Boutton Toggle << Edit path >> relaché." << endl;
+        cout << "INFO: Boutton Toggle << Edit link >> relaché." << endl;
         editLink = false;
     }
 }
-
 
 string Gui::fileSelection(bool open){	
 
@@ -240,8 +239,7 @@ string Gui::fileSelection(bool open){
 	int result = dialog.run();
 	string filename("");
 	
-	switch(result){
-		
+	switch(result){	
 		case(Gtk::RESPONSE_OK):{
 			cout << state << " clicked." << endl;
 			filename = dialog.get_filename(); 

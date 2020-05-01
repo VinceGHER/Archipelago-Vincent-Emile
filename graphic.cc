@@ -30,8 +30,7 @@ int ConvertY(double coord, double height){
     return ( current.ymax - coord ) * prefactor;	
 }
 
-
-//===== External Functions ====
+// === externals functions ====
 
 //functions for gui module
 void graphic_gui::graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr){
