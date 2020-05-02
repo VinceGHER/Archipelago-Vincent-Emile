@@ -10,7 +10,6 @@
 #include <sstream>
 #include <algorithm>
 
-
 #include "node.h"
 #include "error.h"
 #include "tools.h"

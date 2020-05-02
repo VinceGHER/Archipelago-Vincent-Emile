@@ -159,7 +159,14 @@ void Gui::linkFunctionButtons(){
 			  &Gui:: onResetButtonClicked) );
 	m_TButton_Edit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onEditButtonClicked) );
+	// m_Radio_Housing.signal_clicked().connect(sigc::mem_fun(*this,
+	// 		  &Gui:: onRadioHousingButtonClicked) );
+	// m_Radio_Transport.signal_clicked().connect(sigc::mem_fun(*this,
+	// 		  &Gui:: onRadioTransportButtonClicked) );
+	// m_Radio_Production.signal_clicked().connect(sigc::mem_fun(*this,
+	// 		  &Gui:: onRadioProductionButtonClicked) );
 }
+
 void Gui::createDrawingArea(){
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
@@ -183,12 +190,19 @@ void Gui::onNewButtonClicked(){
 	refreshGuiAndDraw();
 }
 void Gui::onOpenButtonClicked(){
-	City::emptyNodeGroup();
-	City::readFile( fileSelection(true) );
+	string filename ( fileSelection(true) );
+	if (not (filename == "")){
+		City::emptyNodeGroup();
+		City::readFile(filename);
+	}
 	refreshGuiAndDraw();
 }
 void Gui::onSaveButtonClicked(){
-	City::save( fileSelection(false) );
+	string filename ( fileSelection(false) );
+	if (not (filename == "")){
+		City::save(filename);
+	}
+	
 }
 void Gui::onPathButtonClicked(){
 	cout << "INFO: Boutton << Shortest path >> cliqué." << endl;
@@ -211,7 +225,16 @@ void Gui::onEditButtonClicked(){
         editLink = false;
     }
 }
-
+// void Gui::onRadioHousingButtonClicked(){
+// 	cout << "INFO: RadioButton << Housing >> cliqué." << endl;
+// }
+// void Gui::onRadioTransportButtonClicked(){
+// 	cout << "INFO: RadioButton << Transport >> cliqué." << endl;
+// }
+// void Gui::onRadioProductionButtonClicked(){
+// 	cout << "INFO: RadioButton << Production >> cliqué." << endl;
+// }
+	
 string Gui::fileSelection(bool open){	
 
 	string textInfo("");
@@ -238,6 +261,8 @@ string Gui::fileSelection(bool open){
 	switch(result){	
 		case(Gtk::RESPONSE_OK):
 			filename = dialog.get_filename(); 
+			break;
+		case(Gtk::RESPONSE_CANCEL) :
 			break;
 		default:
 		    cout << "Unexpected button clicked." << endl;
