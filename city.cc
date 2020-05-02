@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <array>
+#include <iomanip>
 
 #include "city.h"
 #include "node.h"
@@ -174,8 +175,9 @@ string City::criteriaENJ(){
 		if (currentType == HOUSING) restNbpTotal += currentNbp;
 		else restNbpTotal -= currentNbp;
 	}
-	double balance(restNbpTotal/dayNbpTotal);
-	return city.convertDoubleToString (balance);
+	stringstream balance("");
+	balance << setprecision(4) << restNbpTotal/dayNbpTotal;
+	return balance.str();
 }
 string City::criteriaCI(){
 	if (city.nodeGroup.empty()) return "0";
@@ -197,11 +199,12 @@ string City::criteriaCI(){
 		
 		cost += (distance*capacity*speed);
 	}
-	return city.convertDoubleToString (cost);
+	stringstream value(" ");
+	value << cost;
+	return value.str();
 }
 string City::criteriaMTA(){
 	if (city.nodeGroup.empty()) return "0";
-	double mean(0);
 	int sizeHousing(0);
 	double accessTime(0);
 
@@ -215,9 +218,9 @@ string City::criteriaMTA(){
 	}
 	if (sizeHousing == 0) return "0";
 
-	mean = accessTime/sizeHousing;
-	
-	return city.convertDoubleToString (mean);
+	stringstream mean("");
+	mean << accessTime/sizeHousing;
+	return mean.str();
 }
 
 // === Dijstra function ===
@@ -263,7 +266,6 @@ vector<array<Node*,2>> City::getLinkGroup() const{
 }
 string City::convertDoubleToString(const double& value){
 	stringstream name("");
-
 	name << value;
 	return name.str();
 }
