@@ -38,7 +38,6 @@ private:
 	Node* pickNodeByUID(ID UID) const;
 	std::vector<Node*> getType(Type type) const;
 	std::vector<std::array<Node*,2>> getLinkGroup() const;
-	std::string convertDoubleToString(const double& value);
 
 	//attributes
 	std::vector<Node*> nodeGroup;

@@ -225,6 +225,7 @@ void Gui::onEditButtonClicked(){
         editLink = false;
     }
 }
+
 // void Gui::onRadioHousingButtonClicked(){
 // 	cout << "INFO: RadioButton << Housing >> cliqué." << endl;
 // }

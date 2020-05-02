@@ -122,10 +122,7 @@ bool City::addNode(string line, int type){
 	}
 	if (pNode == nullptr) return false;
 	if (not success) return false;
-	// if (not pNode->readLine(line,type,nodeGroup)){
-	// 	delete pNode;
-	// 	return false;
-	// }
+
 	city.nodeGroup.push_back(pNode);
 	return true;
 }
@@ -263,9 +260,4 @@ vector<array<Node*,2>> City::getLinkGroup() const{
 		node->drawLink(linkCreated,node,false);
 	}
 	return linkCreated;
-}
-string City::convertDoubleToString(const double& value){
-	stringstream name("");
-	name << value;
-	return name.str();
 }
