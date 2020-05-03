@@ -25,7 +25,7 @@ int main(int argc, char * argv[]){
 	Gui eventWindow;
 	eventWindow.set_title("Archipelago Vincent-Emile");
 
-	eventWindow.set_resizable(false);
+	eventWindow.set_resizable(true);
 	
    return app->run(eventWindow);
 	

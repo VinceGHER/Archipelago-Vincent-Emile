@@ -102,7 +102,9 @@ const ID Node::getUID() const {
 double Node::getNbp() const {
     return nbp;
 }
-
+double Node::getAccess() const{
+    return access;
+};
 // === save functions ===
 ostream& Node::saveNode(ostream& fichier) const{
     return fichier << "\t" 
@@ -142,14 +144,16 @@ void Node::drawLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr,
 }
 
 //=== Dijkstra functions ===
-double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
+Node* Node::dijkstra(vector<Node*>& nodeGroup, Type type){
 
     while (Node::findMinAccess(nodeGroup) != (size_t)-1){
        
         size_t nodeIndex(Node::findMinAccess(nodeGroup));
        
-        if (nodeGroup[nodeIndex]->getType() == type) 
-            return nodeGroup[nodeIndex]->access;
+        if (nodeGroup[nodeIndex]->getType() == type){
+            	
+            return nodeGroup[nodeIndex];
+        }
 
         nodeGroup[nodeIndex]->in = false;
         if (nodeGroup[nodeIndex]->getType()==PRODUCTION) continue;
@@ -170,7 +174,7 @@ double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
         }
 
     }
-    return no_link;
+    return nullptr;
 }
 void Node::initNodeDijkstra(ID startNodeID){
     in = true;
@@ -216,7 +220,22 @@ double Node::computeAccess(Node* node1, Node* node2){
 
     return distBetweenNode/speed;
 }
-void Node::showdijkstra(std::vector<Node*>& nodeGroup){
+void Node::drawSortestPath(Node* nodeFinish){
+    Node* currentNode (nodeFinish);
+    while (currentNode->parent != nullptr){
+
+        Point start(currentNode->nodeCircle.center);
+        Point end(currentNode->parent->nodeCircle.center);
+
+        tools::drawSegment(Segment{start,end});
+        currentNode->drawNode();
+
+        currentNode = currentNode->parent;
+
+    }
+    
+}
+void Node::showdijkstra(const std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
         cout << "---" << endl;
         cout << "UID: " << node->UID << " In: " << node->in << " access " << node->access << endl;
@@ -284,7 +303,7 @@ bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
 //================= NodeHousing =================
 NodeHousing::NodeHousing(string line,int type, bool& success,
                          const vector<Node*>& nodeGroup)
-    :Node(line,type,success,nodeGroup){}
+:Node(line,type,success,nodeGroup){}
 
 void NodeHousing::showNode() const {
     this->Node::showNode();

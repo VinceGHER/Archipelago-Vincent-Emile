@@ -14,22 +14,22 @@ namespace {
     Frame initial;
     Frame current; 
     const Cairo::RefPtr<Cairo::Context>* pCr(nullptr);
+    double currentZoom;
 }
 
 //private function prototypes
-int ConvertX(double coord, double width); 
-int ConvertY(double coord, double height);
+int convertX(double coord); 
+int convertY(double coord);
 
 //private functions
-int ConvertX(double coord, double width){
-    double prefactor = width / ( current.xmax - current.xmin ); 
+int convertX(double coord){
+    double prefactor = current.width / ( current.xmax - current.xmin ); 
     return ( coord - current.xmin ) * prefactor;	
 }
-int ConvertY(double coord, double height){
-    double prefactor = height / ( current.ymax - current.ymin ); 
+int convertY(double coord){
+    double prefactor = current.height / ( current.ymax - current.ymin ); 
     return ( current.ymax - coord ) * prefactor;	
 }
-
 // === externals functions ====
 
 //functions for gui module
@@ -40,8 +40,9 @@ void graphic_gui::setFrame(Frame x){
     initial = x;
     current = x;
 }
-void graphic_gui::updateFrameSize(int width, int height){
+void graphic_gui::updateFrameSize(int width, int height, double zoom){
     
+    currentZoom = zoom;
     double newFactor( (double)width/height);
     
     if (newFactor > initial.ratio){
@@ -51,8 +52,8 @@ void graphic_gui::updateFrameSize(int width, int height){
         double delta(initial.xmax - initial.xmin);
         double mid((initial.xmax + initial.xmin)/2);
 
-        current.xmax = mid + 0.5*(newFactor/initial.ratio)*delta ;
-        current.xmin = mid - 0.5*(newFactor/initial.ratio)*delta ;		  	  
+        current.xmax = mid + 0.5*(newFactor/initial.ratio)*delta;
+        current.xmin = mid - 0.5*(newFactor/initial.ratio)*delta;		  	  
 
     } else { // keep xmax and xmin. Adjust ymax and ymin
         current.xmax = initial.xmax ;
@@ -61,15 +62,59 @@ void graphic_gui::updateFrameSize(int width, int height){
         double delta(initial.ymax - initial.ymin);
         double mid((initial.ymax + initial.ymin)/2);
 
-        current.ymax = mid + 0.5*(initial.ratio/newFactor)*delta ;
-        current.ymin = mid - 0.5*(initial.ratio/newFactor)*delta ;		  	  
+        current.ymax = mid + 0.5*(initial.ratio/newFactor)*delta;
+        current.ymin = mid - 0.5*(initial.ratio/newFactor)*delta;		  	  
     }
+    current.xmin /= zoom;
+    current.xmax /= zoom;
+    current.ymin /= zoom;
+    current.ymax /= zoom;
+
     //Update width and height
     current.width = width;
     current.height = height;
 }
 
+double graphic_gui::convertWindowToModelX(double x){
+    double prefactor = current.width / ( current.xmax - current.xmin );
+    if (prefactor == 0) return 0;
+    return (x/prefactor)+current.xmin;
+
+}
+double graphic_gui::convertWindowToModelY(double y){
+    double prefactor = current.height / ( current.ymax - current.ymin ); 
+    if (prefactor == 0) return 0;
+    return (y/prefactor)-current.ymax;
+
+}
+
 //functions for tools module
+
+bool graphic::drawSegment(double x1,double y1, double x2, double y2){
+    if (pCr == nullptr) return false;
+    (*pCr)->save();
+    (*pCr)->move_to( convertX(x1), convertY(y1) );
+    (*pCr)->line_to( convertX(x2), convertY(y2) );
+    (*pCr)->restore();
+    (*pCr)->stroke();
+    return true;
+}
+bool graphic::drawCircle(double x,double y,double radius){
+    if (pCr == nullptr) return false;
+    (*pCr)->save();  
+    int xc( convertX(x) );
+    int yc( convertY(y) );
+    int startPointCircle ( convertX(x+radius) );
+    int radiusConverted(  startPointCircle-xc );
+    (*pCr)->move_to(startPointCircle,yc);
+    (*pCr)->arc(xc, yc, radiusConverted, 0.0, 2.0 * M_PI);
+    (*pCr)->set_source_rgba(1.0, 1.0, 1.0, 1);
+    (*pCr)->fill_preserve();
+    (*pCr)->restore();
+    (*pCr)->stroke();
+
+    return true;   
+}
 bool graphic::setColor(Color color) {
     if (pCr == nullptr) return false;
     double red(0),green(0),blue(0);
@@ -91,33 +136,7 @@ bool graphic::setColor(Color color) {
             blue = 0;
             break;
     }
-
     (*pCr)->set_source_rgb(red, green, blue);
     return true;
-}
-bool graphic::drawSegment(double x1,double y1, double x2, double y2){
-    if (pCr == nullptr) return false;
-    (*pCr)->save();
-    (*pCr)->move_to( ConvertX(x1,current.width), ConvertY(y1,current.height) );
-    (*pCr)->line_to( ConvertX(x2,current.width), ConvertY(y2,current.height) );
-    (*pCr)->restore();
-    (*pCr)->stroke();
-    return true;
-}
-bool graphic::drawCircle(double x,double y,double radius){
-    if (pCr == nullptr) return false;
-    (*pCr)->save();  
-    int xc( ConvertX(x,current.width)   );
-    int yc( ConvertY(y,current.height) );
-    int startPointCircle ( ConvertX(x+radius,current.width));
-    int radiusConverted(  startPointCircle-xc );
-    (*pCr)->move_to(startPointCircle,yc);
-    (*pCr)->arc(xc, yc, radiusConverted, 0.0, 2.0 * M_PI);
-    (*pCr)->set_source_rgba(1.0, 1.0, 1.0, 1);
-    (*pCr)->fill_preserve();
-    (*pCr)->restore();
-    (*pCr)->stroke();
-
-    return true;   
 }
 

@@ -15,9 +15,10 @@
 class City {
 public:
 	//node gestion
+	City();
 	static bool readFile(std::string data);
 	static bool save(std::string nom);
-	static void updateDraw();
+	static void updateDraw(bool shortestPath);
 	static void emptyNodeGroup();
 	
 	//criteria
@@ -32,7 +33,7 @@ private:
 	void showNodeGroup() const;
 
 	//Dijkstra function
-	double dijkstra(ID startNodeID, Type type);
+	double dijkstra(ID startNodeID, Type type, bool showPath);
 
 	//tools functions
 	Node* pickNodeByUID(ID UID) const;
@@ -41,6 +42,7 @@ private:
 
 	//attributes
 	std::vector<Node*> nodeGroup;
+	Node* nodeSelected;
 };
 
 #endif

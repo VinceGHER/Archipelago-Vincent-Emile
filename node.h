@@ -37,6 +37,7 @@ public:
     const ID getUID() const;  
     virtual Type getType() const = 0;
     double getNbp() const;
+    double getAccess() const;
 
     //save functions
     std::ostream& saveNode(std::ostream& fichier) const;
@@ -47,21 +48,26 @@ public:
                   bool drawing)const;
 
     //Dijkstra functions
-    static double dijkstra(std::vector<Node*>& nodeGroup, Type type);
+    static Node* dijkstra(std::vector<Node*>& nodeGroup, Type type);
     void initNodeDijkstra(ID startNode);
     static void sortNodeGroup(std::vector<Node*>& nodeGroup, ID UIDToUpdate);
-    static size_t findMinAccess(const std::vector<Node*>& nodeGroup);
-    static double computeAccess(Node* node1, Node* node2);
-    static void showdijkstra(std::vector<Node*>& nodeGroup);
+    static void drawSortestPath(Node* nodeFinish);
+    static void showdijkstra(const std::vector<Node*>& nodeGroup);
     
     //verification functions
-    bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
-                             ID identifier,const std::vector<Node*>& nodeGroup);
     bool checkCollisionNodeLink(Node* pNode1,Node* pNode2) const;
     bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
     virtual bool checkLinksLimit() const = 0;
-    
+
 protected:
+    //diastra
+    static size_t findMinAccess(const std::vector<Node*>& nodeGroup);
+    static double computeAccess(Node* node1, Node* node2);
+
+    //verification functions
+    bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
+                             ID identifier,const std::vector<Node*>& nodeGroup);
+
     Circle nodeCircle;
     unsigned int nbp;
     ID UID;
