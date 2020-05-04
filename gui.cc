@@ -81,7 +81,6 @@ Gui::Gui():
 	m_Frame_Display("Display"),
 	m_Frame_Editor("Editor"),
 	m_Frame_Informations("Informations"),
-
 	m_Button_Exit("exit"),         
 	m_Button_New("new"),
     m_Button_Open("open"),
@@ -98,6 +97,7 @@ Gui::Gui():
 	m_Label_ENJ(),
 	m_Label_CI(),
 	m_Label_MTA(),
+	m_Dialog(*this," ",true),
 	editLink(false),
 	type(0) {	
 		set_title("Drawing Area and Buttons");
@@ -321,7 +321,7 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 			
 			if(event->button == 1){ // Left mouse button
-				City::addNodeBridge(pModel.x,pModel.y,type);
+				if (! City::addNodeBridge(pModel.x,pModel.y,type)) m_Dialog.run();
 				refreshGuiAndDraw();
 			}
 		}

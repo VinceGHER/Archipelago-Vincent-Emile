@@ -126,9 +126,8 @@ bool City::addNodeBridge(double x, double y, int type){
 	
 	stringstream line("");
 	line << newUID << " " << x << " " << y << " 1000" << endl;
-	city.addNode(line.str(),type);
-
-	return true;
+	
+	return city.addNode(line.str(),type);
 }
 bool City::addNode(string line, int type){
 	Node* pNode(nullptr);
