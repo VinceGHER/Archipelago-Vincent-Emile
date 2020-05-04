@@ -57,6 +57,9 @@ protected:
 	void onZoutButtonClicked();
 	void onResetButtonClicked();
 	void onEditButtonClicked();
+	void onHousingButtonClicked();
+	void onTransportButtonClicked();
+	void onProductionButtonClicked();
 	
 	std:: string fileSelection(bool open);
 	void refreshGuiAndDraw();
@@ -110,8 +113,7 @@ protected:
 
 	MyArea m_Area;
 	bool editLink;
-
-
+	int type;
 };
 
 #endif

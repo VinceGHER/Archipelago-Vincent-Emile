@@ -79,13 +79,11 @@ double graphic_gui::convertWindowToModelX(double x){
     double prefactor = current.width / ( current.xmax - current.xmin );
     if (prefactor == 0) return 0;
     return (x/prefactor)+current.xmin;
-
 }
 double graphic_gui::convertWindowToModelY(double y){
     double prefactor = current.height / ( current.ymax - current.ymin ); 
     if (prefactor == 0) return 0;
-    return (y/prefactor)-current.ymax;
-
+    return -((y/prefactor)-current.ymax);
 }
 
 //functions for tools module

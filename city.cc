@@ -117,6 +117,19 @@ void City::emptyNodeGroup(){
     }
     city.nodeGroup.clear();
 }
+bool City::addNodeBridge(double x, double y, int type){
+	
+	cout << "x: " << x << endl;
+	cout << "y: " << y << endl;
+	cout << "type: " << type << endl;
+	ID newUID(city.findNewUID());
+	
+	stringstream line("");
+	line << newUID << " " << x << " " << y << " 1000" << endl;
+	city.addNode(line.str(),type);
+
+	return true;
+}
 bool City::addNode(string line, int type){
 	Node* pNode(nullptr);
 	bool success(false);
@@ -133,7 +146,10 @@ bool City::addNode(string line, int type){
 			break;
 	}
 	if (pNode == nullptr) return false;
-	if (not success) return false;
+	if (not success){
+		pNode = nullptr;
+		return false;
+	}
 
 	city.nodeGroup.push_back(pNode);
 	return true;
@@ -169,6 +185,23 @@ void City::showNodeGroup() const {
     for (auto& node:nodeGroup){
        node->showNode();
 	}
+}
+ID City::findNewUID() {
+	bool unused(false);
+	ID testedUID(1);
+	while (! unused){
+		for (unsigned int i(0); i<= city.nodeGroup.size(); ++i){
+			if (i == city.nodeGroup.size()){
+				unused = true;
+				break;
+			}
+		    if (testedUID == city.nodeGroup[i]->getUID()){
+			   ++testedUID;
+			   break;
+		    }
+		}
+	}
+	return testedUID;
 }
 
 // === criteria ===

@@ -98,10 +98,10 @@ Gui::Gui():
 	m_Label_ENJ(),
 	m_Label_CI(),
 	m_Label_MTA(),
-	editLink(false){	
+	editLink(false),
+	type(0) {	
 		set_title("Drawing Area and Buttons");
 		set_border_width(0);
-		
 		createBoxStruct();
 		createDrawingArea();
 		addButtonsToBox();
@@ -145,8 +145,6 @@ void Gui::createBoxStruct(){
 	m_Frame_Display.add(m_Box_Display);
 	m_Frame_Editor.add(m_Box_Editor);
 	m_Frame_Informations.add(m_Box_Informations);
-
-
 }
 void Gui::addButtonsToBox(){
 	
@@ -179,8 +177,7 @@ void Gui::linkFunctionButtons(){
 	m_Button_Open.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onOpenButtonClicked) );
 	m_Button_Save.signal_clicked().connect(sigc::mem_fun(*this,
-			  &Gui:: onSaveButtonClicked) );
-			  
+			  &Gui:: onSaveButtonClicked) );	  
 	m_TButton_Path.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onPathButtonClicked) );
 	m_Button_Zin.signal_clicked().connect(sigc::mem_fun(*this,
@@ -191,6 +188,12 @@ void Gui::linkFunctionButtons(){
 			  &Gui:: onResetButtonClicked) );
 	m_TButton_Edit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onEditButtonClicked) );
+	m_Radio_Housing.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onHousingButtonClicked) );
+	m_Radio_Transport.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onTransportButtonClicked) );
+	m_Radio_Production.signal_clicked().connect(sigc::mem_fun(*this,
+			  &Gui:: onProductionButtonClicked) );		  
 }
 
 void Gui::createDrawingArea(){
@@ -227,10 +230,7 @@ void Gui::onOpenButtonClicked(){
 }
 void Gui::onSaveButtonClicked(){
 	string filename ( fileSelection(false) );
-	if (not (filename == "")){
-		City::save(filename);
-	}
-	
+	if (not (filename == "")) City::save(filename);
 }
 void Gui::onPathButtonClicked(){
 	m_Area.setShortestPath(m_TButton_Path.get_active());
@@ -251,10 +251,17 @@ void Gui::onResetButtonClicked(){
 void Gui::onEditButtonClicked(){
 	editLink = m_TButton_Edit.get_active();
 }
-
+void Gui::onHousingButtonClicked(){
+	type = HOUSING;
+}
+void Gui::onTransportButtonClicked(){
+	type = TRANSPORT;
+}
+void Gui::onProductionButtonClicked(){
+	type = PRODUCTION;
+}
 
 string Gui::fileSelection(bool open){	
-
 	string textInfo("");
 	string state("");
 
@@ -293,32 +300,29 @@ string Gui::fileSelection(bool open){
 bool Gui::on_button_press_event(GdkEventButton * event){
 	if(event->type == GDK_BUTTON_PRESS){
 		// raw mouse coordinates in the window frame
-		double clic_x = event->x ;
-		double clic_y = event->y ;
+		double clicX = event->x ;
+		double clicY = event->y ;
 		
 		// origin of the drawing area
-		double origin_x = m_Area.get_allocation().get_x();
-		double origin_y = m_Area.get_allocation().get_y();
+		double originX = m_Area.get_allocation().get_x();
+		double originY = m_Area.get_allocation().get_y();
 	
 		// get width and height of drawing area
 		double width = m_Area.get_allocation().get_width();
 		double height= m_Area.get_allocation().get_height();
 	
 		// retain only mouse events located within the drawing area
-		if(clic_x >= origin_x && clic_x <= origin_x + width &&
-		   clic_y >= origin_y && clic_y <= origin_y + height){
-
-			Point pWindow({clic_x - origin_x, clic_y -origin_y});
-		
+		if(clicX >= originX && clicX <= originX + width &&
+		   clicY >= originY && clicY <= originY + height) {
+			
+			Point pWindow({clicX - originX, clicY - originY});
+			
 			Point pModel = {graphic_gui::convertWindowToModelX(pWindow.x),
 							graphic_gui::convertWindowToModelY(pWindow.y)};
-			cout << "Modelx: " << pModel.x << endl;
-			cout << "Modely: " << pModel.y << endl;
+			
 			if(event->button == 1){ // Left mouse button
-				
-			}
-			else if(event->button == 3){ // Right mouse button
-				
+				City::addNodeBridge(pModel.x,pModel.y,type);
+				refreshGuiAndDraw();
 			}
 		}
 	}
@@ -334,14 +338,13 @@ bool Gui::on_key_press_event(GdkEventKey * key_event){
 				m_Area.zoomFrame(true);	
 				break;
 			case 'o':
-				m_Area.zoomFrame(false);	
+				m_Area.zoomFrame(false);
 				break;
 			case 'r':
 				m_Area.zoomReset();
 				break;
 		}
 	}
-	
 	return Gtk::Window::on_key_press_event(key_event);
 }
 

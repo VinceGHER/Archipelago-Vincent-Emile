@@ -20,6 +20,7 @@ public:
 	static bool save(std::string nom);
 	static void updateDraw(bool shortestPath);
 	static void emptyNodeGroup();
+	static bool addNodeBridge(double x, double y, int type);
 	
 	//criteria
 	static std::string criteriaENJ();
@@ -31,6 +32,7 @@ private:
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
 	void showNodeGroup() const;
+	ID findNewUID();
 
 	//Dijkstra function
 	double dijkstra(ID startNodeID, Type type, bool showPath);
