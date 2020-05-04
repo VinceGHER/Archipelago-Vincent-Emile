@@ -18,12 +18,18 @@ class MyArea;
 
 class MyArea : public Gtk:: DrawingArea {
 public:
-	MyArea(){};
+	MyArea();
 	virtual ~MyArea(){};
 	void setFrame(Frame x);
+	void zoomFrame(bool zooming);
+	void zoomReset();
+	double getZoom();
+	void setShortestPath(bool path);
 	void refresh();
 
 protected:
+	double currentZoom;
+	bool shortestPath;
 	//Override default signal handler:
 	bool on_draw(const Cairo:: RefPtr<Cairo::Context>& cr) override;
 	
@@ -32,8 +38,7 @@ protected:
 class Gui : public Gtk:: Window {
 public:
 	Gui();
-	virtual ~Gui(){};
-	void refreshGuiAndDraw();
+	 ~Gui(){};
 	
 protected:
 	//initialisation
@@ -54,6 +59,15 @@ protected:
 	void onEditButtonClicked();
 	
 	std:: string fileSelection(bool open);
+	void refreshGuiAndDraw();
+	void refreshZoom();
+	
+	// Mouse event signal handlers:
+	bool on_button_press_event(GdkEventButton * event) override;
+	//bool on_button_release_event(GdkEventButton * event);
+
+	// Keyboard signal handler:
+	bool on_key_press_event(GdkEventKey * key_event) override;
 	
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
@@ -72,12 +86,13 @@ protected:
 	Gtk:: Button m_Button_New;
 	Gtk:: Button m_Button_Open;
 	Gtk:: Button m_Button_Save;
-	Gtk:: Button m_Button_Path;
+
 	Gtk:: Button m_Button_Zin;
 	Gtk:: Button m_Button_Zout;
 	Gtk:: Button m_Button_Reset;
 		
 	Gtk:: ToggleButton m_TButton_Edit;
+	Gtk:: ToggleButton m_TButton_Path;
 	
 	Gtk:: RadioButtonGroup m_Radio_Type;
     Gtk:: RadioButton m_Radio_Housing;
@@ -95,6 +110,8 @@ protected:
 
 	MyArea m_Area;
 	bool editLink;
+
+
 };
 
 #endif

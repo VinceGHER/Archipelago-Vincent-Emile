@@ -24,6 +24,7 @@ namespace {
 }
 
 // === node gestion ===
+City::City():nodeSelected(nullptr){};
 bool City::readFile(string data) {
 	ifstream fichier(data);
 	 	
@@ -87,7 +88,8 @@ bool City::save(string nom){
 	fichier.close();
 	return true;
 }
-void City::updateDraw(){
+void City::updateDraw(bool shortestPath){
+	tools::setColor(BLACK);
 	//draw links
 	vector<array<Node*,2>> linkCreated;
     for (auto& node:city.nodeGroup){
@@ -97,6 +99,16 @@ void City::updateDraw(){
 	//draw nodes
 	for (auto& node:city.nodeGroup){
 		node->drawNode();
+	}
+
+	//draw shortestPath to selected node
+	//debug
+	if (city.nodeGroup.size() > 0)	city.nodeSelected = city.nodeGroup.front();
+
+	tools::setColor(GREEN);
+	if (shortestPath && city.nodeSelected != nullptr){
+		city.dijkstra(city.nodeSelected->getUID(),TRANSPORT,true);
+		city.dijkstra(city.nodeSelected->getUID(),PRODUCTION,true);
 	}
 }
 void City::emptyNodeGroup(){
@@ -207,10 +219,9 @@ string City::criteriaMTA(){
 
 	for (auto node:city.nodeGroup){
 		if (node->getType() == HOUSING){
-		
 			++sizeHousing;
-			accessTime += city.dijkstra(node->getUID(),TRANSPORT);
-			accessTime += city.dijkstra(node->getUID(),PRODUCTION);
+			accessTime += city.dijkstra(node->getUID(),TRANSPORT,false);
+			accessTime += city.dijkstra(node->getUID(),PRODUCTION,false);
 		}
 	}
 	if (sizeHousing == 0) return "0";
@@ -221,7 +232,7 @@ string City::criteriaMTA(){
 }
 
 // === Dijstra function ===
-double City::dijkstra(ID startNodeID, Type type){
+double City::dijkstra(ID startNodeID, Type type, bool showPath){
 	
 	//Je fais une copie de surface des pointeurs du tableau de noeuds.
 	//Donc j'aurai deux tableaux qui pointent vers mes noeuds
@@ -231,10 +242,15 @@ double City::dijkstra(ID startNodeID, Type type){
 	
 	Node::sortNodeGroup(nodeGroupMTA, startNodeID);
 	
-	double result (Node::dijkstra(nodeGroupMTA, type));
-	
-	if (result == no_link) return infinite_time;
-	return result;
+	Node* findedNode(Node::dijkstra(nodeGroupMTA, type));
+
+	if (findedNode != nullptr){
+		if (showPath){
+			Node::drawSortestPath(findedNode);
+		}
+		return findedNode->getAccess();
+	}
+	return infinite_time;
 }
 
 // === tools functions ===

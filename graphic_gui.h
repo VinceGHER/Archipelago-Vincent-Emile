@@ -22,7 +22,10 @@ struct Frame {
 namespace graphic_gui {
 	void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr);
 	void setFrame(Frame x);
-	void updateFrameSize(int width, int height);
+	void updateFrameSize(int width, int height, double zoom);
+
+	double convertWindowToModelX(double x);
+	double convertWindowToModelY(double y);
 }
 
 #endif
