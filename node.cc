@@ -168,7 +168,6 @@ double Node::dijkstra(vector<Node*>& nodeGroup, Type type){
                 }
             }
         }
-
     }
     return no_link;
 }

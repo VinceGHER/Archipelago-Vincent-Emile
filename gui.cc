@@ -159,12 +159,6 @@ void Gui::linkFunctionButtons(){
 			  &Gui:: onResetButtonClicked) );
 	m_TButton_Edit.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onEditButtonClicked) );
-	// m_Radio_Housing.signal_clicked().connect(sigc::mem_fun(*this,
-	// 		  &Gui:: onRadioHousingButtonClicked) );
-	// m_Radio_Transport.signal_clicked().connect(sigc::mem_fun(*this,
-	// 		  &Gui:: onRadioTransportButtonClicked) );
-	// m_Radio_Production.signal_clicked().connect(sigc::mem_fun(*this,
-	// 		  &Gui:: onRadioProductionButtonClicked) );
 }
 
 void Gui::createDrawingArea(){
@@ -226,16 +220,7 @@ void Gui::onEditButtonClicked(){
     }
 }
 
-// void Gui::onRadioHousingButtonClicked(){
-// 	cout << "INFO: RadioButton << Housing >> cliqué." << endl;
-// }
-// void Gui::onRadioTransportButtonClicked(){
-// 	cout << "INFO: RadioButton << Transport >> cliqué." << endl;
-// }
-// void Gui::onRadioProductionButtonClicked(){
-// 	cout << "INFO: RadioButton << Production >> cliqué." << endl;
-// }
-	
+
 string Gui::fileSelection(bool open){	
 
 	string textInfo("");

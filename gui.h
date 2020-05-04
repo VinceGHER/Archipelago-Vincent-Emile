@@ -52,9 +52,6 @@ protected:
 	void onZoutButtonClicked();
 	void onResetButtonClicked();
 	void onEditButtonClicked();
-	// void onRadioHousingButtonClicked();
-	// void onRadioTransportButtonClicked();
-	// void onRadioProductionButtonClicked();
 	
 	std:: string fileSelection(bool open);
 	
