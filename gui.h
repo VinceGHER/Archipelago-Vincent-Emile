@@ -110,8 +110,6 @@ protected:
 	Gtk:: Box m_Box_Open;
 	Gtk:: Button m_Button_File;
 	Gtk:: Label m_Label_Open;
-	
-	Gtk:: MessageDialog m_Dialog;
 
 	MyArea m_Area;
 	bool editLink;

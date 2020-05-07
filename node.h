@@ -31,7 +31,10 @@ public:
 
     virtual void showNode() const;
     
-    double dist(Node* node);    
+    double dist(Node* node);  
+
+    static Node* selectNode(double posX, double posY, 
+                            const std::vector<Node*>& nodeGroup); 
 
     //getters
     const ID getUID() const;  

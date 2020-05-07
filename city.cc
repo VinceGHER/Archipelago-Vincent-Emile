@@ -98,6 +98,8 @@ void City::updateDraw(bool shortestPath){
 
 	//draw nodes
 	for (auto& node:city.nodeGroup){
+		if (node = city.nodeSelected) tools::setColor(RED);
+		else tools::setColor(BLACK);
 		node->drawNode();
 	}
 
@@ -146,6 +148,7 @@ bool City::addNode(string line, int type){
 	}
 	if (pNode == nullptr) return false;
 	if (not success){
+		delete pNode;
 		pNode = nullptr;
 		return false;
 	}
@@ -179,6 +182,14 @@ bool City::addLink(string line){
     if(not pNode2->addLink(pNode1)) return false;
     return true;
 }
+bool City::editLink(double posX, double posY){
+	Node* currentSelect (Node::selectNode(posX,posY, city.nodeGroup));
+	if (currentSelect == nullptr) return false;
+	if (currentSelect == city.nodeSelected) return false;
+
+	sdfgh
+}
+
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;
     for (auto& node:nodeGroup){

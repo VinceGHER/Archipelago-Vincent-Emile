@@ -30,6 +30,8 @@ struct Segment {
 namespace tools {
     bool overlapBetweenCircles(Circle circle1, Circle circle2, double dist_min);
     bool overlapBetweenCircleSegment(Circle circle, Segment segment, double dist_min);
+    bool overlapBetweenCirclePoint(Circle circle, Point point);
+
     double distance(Point point1, Point point2);
     double distance(Vector vector);
 

@@ -94,6 +94,14 @@ void Node::showNode() const {
 double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
+Node* Node::selectNode(double posX, double posY, 
+                            const std::vector<Node*>& nodeGroup){
+    for (auto node:nodeGroup){
+        Point pos = {posX,posY};
+        if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)) return node;
+    }
+    return nullptr;
+} 
 
 // === getter functions ===
 const ID Node::getUID() const {

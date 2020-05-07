@@ -21,6 +21,7 @@ public:
 	static void updateDraw(bool shortestPath);
 	static void emptyNodeGroup();
 	static bool addNodeBridge(double x, double y, int type);
+	static bool editLink(double posX, double posY);
 	
 	//criteria
 	static std::string criteriaENJ();
@@ -31,6 +32,7 @@ private:
 	//node gestion
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
+
 	void showNodeGroup() const;
 	ID findNewUID();
 

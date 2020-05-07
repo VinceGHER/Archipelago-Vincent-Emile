@@ -42,6 +42,10 @@ bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment,
 
     return true;
 }
+bool tools::overlapBetweenCirclePoint(Circle circle, Point point){
+    if (tools::distance(circle.center,point) <= circle.radius) return true;
+    return false;
+}
 double tools::distance(Vector vector){
     return sqrt( pow((vector.x),2) + pow((vector.y),2) );
 }
