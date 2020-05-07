@@ -321,7 +321,7 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 			
 			if(event->button == 1){ // Left mouse button
-				if (! City::addNodeBridge(pModel.x,pModel.y,type)) m_Dialog.run();
+				if (! City::testSelectNode(pModel.x,pModel.y,type)) m_Dialog.run();
 				refreshGuiAndDraw();
 			}
 		}
