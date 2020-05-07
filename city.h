@@ -20,9 +20,9 @@ public:
 	static bool save(std::string nom);
 	static void updateDraw(bool shortestPath);
 	static void emptyNodeGroup();
-	static bool addNodeBridge(double x, double y, int type);
+	static bool addNodeBridge(double x, double y, Type type);
 	static bool editLink(double posX, double posY);
-	static bool testSelectNode(double x, double y);
+	static bool testSelectNode(double x, double y, Type type);
 	
 	//criteria
 	static std::string criteriaENJ();

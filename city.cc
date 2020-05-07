@@ -98,7 +98,7 @@ void City::updateDraw(bool shortestPath){
 
 	//draw nodes
 	for (auto& node:city.nodeGroup){
-		if (node = city.nodeSelected) tools::setColor(RED);
+		if (node == city.nodeSelected) tools::setColor(RED);
 		else tools::setColor(BLACK);
 		node->drawNode();
 	}
@@ -119,7 +119,7 @@ void City::emptyNodeGroup(){
     }
     city.nodeGroup.clear();
 }
-bool City::addNodeBridge(double x, double y, int type){
+bool City::addNodeBridge(double x, double y, Type type){
 	
 	cout << "x: " << x << endl;
 	cout << "y: " << y << endl;
@@ -131,13 +131,33 @@ bool City::addNodeBridge(double x, double y, int type){
 	
 	return city.addNode(line.str(),type);
 }
-bool City::testSelectNode(double x, double y){
-	Node::selectNode(x,y,city.nodeGroup);
-	
-	if (nodeSelected == nullptr){
-		addLinkBridge(x,y);
-		return false;
+bool City::testSelectNode(double x, double y, Type type){
+	Node* currentSelectedNode (Node::selectNode(x,y,city.nodeGroup));
+
+	cout << city.nodeSelected << endl;
+
+	if (currentSelectedNode != nullptr and city.nodeSelected == nullptr){
+		city.nodeSelected = currentSelectedNode;
+		return true;
 	}
+	if (currentSelectedNode == nullptr and city.nodeSelected == nullptr){
+		addNodeBridge(x,y,type);
+		return true;
+	}
+	if (currentSelectedNode == city.nodeSelected and currentSelectedNode != nullptr){
+		//supprimer le noeud
+		return true;
+	}
+	if (currentSelectedNode == nullptr and city.nodeSelected != nullptr){
+		city.nodeSelected = nullptr;
+		cout << city.nodeSelected << " d" << endl;
+		return true;
+	}
+	if (currentSelectedNode != nullptr and city.nodeSelected != nullptr 
+		and currentSelectedNode !=  city.nodeSelected){
+			city.nodeSelected = currentSelectedNode;
+			return true;
+		}
 	return true;
 }
 bool City::addNode(string line, int type){
@@ -196,7 +216,8 @@ bool City::editLink(double posX, double posY){
 	if (currentSelect == nullptr) return false;
 	if (currentSelect == city.nodeSelected) return false;
 
-	sdfgh
+	return true;
+	
 }
 
 void City::showNodeGroup() const {

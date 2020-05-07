@@ -98,7 +98,7 @@ Gui::Gui():
 	m_Label_CI(),
 	m_Label_MTA(),
 	editLink(false),
-	type(0) {	
+	type(HOUSING) {	
 		set_title("Drawing Area and Buttons");
 		set_border_width(0);
 		createBoxStruct();
@@ -320,12 +320,14 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 			
 			if(event->button == 1){ // Left mouse button
-				if (! City::addNodeBridge(pModel.x,pModel.y,type)){
-					Gtk::MessageDialog m_Dialog(*this," ",true);
-					m_Dialog.run();
-					refreshGuiAndDraw();
+				if (editLink){
+
+				} else {
+					if (City::testSelectNode(pModel.x,pModel.y,type)){
+						refreshGuiAndDraw();
+						return true;
+					}
 				}
-				if (editLink)
 			}
 		}
 	}

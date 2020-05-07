@@ -113,7 +113,7 @@ protected:
 
 	MyArea m_Area;
 	bool editLink;
-	int type;
+	Type type;
 	std:: string text;
 };
 
