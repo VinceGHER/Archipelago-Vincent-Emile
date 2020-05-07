@@ -21,6 +21,7 @@ public:
 	static void updateDraw(bool shortestPath);
 	static void emptyNodeGroup();
 	static bool addNodeBridge(double x, double y, int type);
+	static bool testSelectNode(double x, double y);
 	
 	//criteria
 	static std::string criteriaENJ();

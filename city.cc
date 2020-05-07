@@ -129,6 +129,15 @@ bool City::addNodeBridge(double x, double y, int type){
 	
 	return city.addNode(line.str(),type);
 }
+bool City::testSelectNode(double x, double y){
+	Node::selectNode(x,y,city.nodeGroup);
+	
+	if (nodeSelected == nullptr){
+		addLinkBridge(x,y);
+		return false;
+	}
+	return true;
+}
 bool City::addNode(string line, int type){
 	Node* pNode(nullptr);
 	bool success(false);
