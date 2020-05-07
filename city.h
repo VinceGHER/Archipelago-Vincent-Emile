@@ -22,6 +22,7 @@ public:
 	static void emptyNodeGroup();
 	static bool addNodeBridge(double x, double y, int type);
 	static bool editLink(double posX, double posY);
+	static bool testSelectNode(double x, double y);
 	
 	//criteria
 	static std::string criteriaENJ();
