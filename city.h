@@ -47,7 +47,7 @@ private:
 
 	//attributes
 	std::vector<Node*> nodeGroup;
-	Node* nodeSelected;
+	Node* selectedNode;
 };
 
 #endif
