@@ -151,7 +151,7 @@ bool City::testSelectNode(double x, double y, Type type){
 		return true;
 	}
 	if (currentSelectedNode == city.selectedNode and currentSelectedNode != nullptr){
-		city.deleteNode();
+		city.deleteNodeSelected();
 		return true;
 	}
 
@@ -213,16 +213,19 @@ bool City::addLink(string line){
     if(not pNode2->addLink(pNode1)) return false;
     return true;
 }
-void City::deleteNode(){
-	for (unsigned int i(0); i< nodeGroup.size(); ++i){
-		if (nodeGroup[i] == selectedNode){
-			swap(nodeGroup[i],nodeGroup.back());
-			nodeGroup.pop_back();
+void City::deleteNodeSelected(){
+	for (auto& node:nodeGroup) node->deleteLink(selectedNode);
+	for (auto& node:nodeGroup){
+		if (node == selectedNode){			
 			
-		} else nodeGroup[i]->deleteLink(selectedNode);
+			delete selectedNode;
+			selectedNode = nullptr;
+			swap(node,nodeGroup.back());
+			nodeGroup.pop_back();
+			break;
+
+		}
 	}
-	delete selectedNode;
-	selectedNode = nullptr;
 	return;
 }
 void City::showNodeGroup() const {
