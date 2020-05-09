@@ -33,7 +33,7 @@ private:
 	//node gestion
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
-
+	void deleteNode();
 	void showNodeGroup() const;
 	ID findNewUID();
 

@@ -120,9 +120,6 @@ void City::emptyNodeGroup(){
 }
 bool City::addNodeBridge(double x, double y, Type type){
 	
-	cout << "x: " << x << endl;
-	cout << "y: " << y << endl;
-	cout << "type: " << type << endl;
 	ID newUID(city.findNewUID());
 	
 	stringstream line("");
@@ -130,11 +127,16 @@ bool City::addNodeBridge(double x, double y, Type type){
 	
 	return city.addNode(line.str(),type);
 }
+bool City::editLink(double posX, double posY){
+	Node* currentSelect (Node::selectNode(posX,posY, city.nodeGroup));
+	if (currentSelect == nullptr) return false;
+	if (currentSelect == city.selectedNode) return false;
+
+	return true;
+	
+}
 bool City::testSelectNode(double x, double y, Type type){
 	Node* currentSelectedNode (Node::selectNode(x,y,city.nodeGroup));
-	cout << "==" << endl;
-	cout << currentSelectedNode << endl;
-	cout << city.selectedNode << endl;
 
 	if (currentSelectedNode == nullptr and city.selectedNode != nullptr){
 		city.selectedNode = nullptr;
@@ -151,7 +153,7 @@ bool City::testSelectNode(double x, double y, Type type){
 		return true;
 	}
 	if (currentSelectedNode == city.selectedNode and currentSelectedNode != nullptr){
-		//supprimer le noeud
+		city.deleteNode();
 		return true;
 	}
 
@@ -213,15 +215,17 @@ bool City::addLink(string line){
     if(not pNode2->addLink(pNode1)) return false;
     return true;
 }
-bool City::editLink(double posX, double posY){
-	Node* currentSelect (Node::selectNode(posX,posY, city.nodeGroup));
-	if (currentSelect == nullptr) return false;
-	if (currentSelect == city.selectedNode) return false;
-
-	return true;
-	
+void City::deleteNode(){
+	for (unsigned int i(0); i< nodeGroup.size(); ++i){
+		if (nodeGroup[i]==selectedNode){
+			swap(nodeGroup[i],nodeGroup.back());
+			nodeGroup.pop_back();
+		}
+	}
+	selectedNode = nullptr;
+	delete selectedNode;
+	return;
 }
-
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;
     for (auto& node:nodeGroup){
@@ -232,17 +236,16 @@ ID City::findNewUID() {
 
 	ID testedUID(0);
 	size_t index(0);
+	
 	while (index < nodeGroup.size()){
-
-		if (testedUID == city.nodeGroup[index]->getUID()){
+		
+		if (testedUID == nodeGroup[index]->getUID()){
 			index = 0;
 			++testedUID;
-		}
-		++index;
-		
+		} else ++index;
 	}
+	
 	return testedUID;
-
 }
 
 // === criteria ===
