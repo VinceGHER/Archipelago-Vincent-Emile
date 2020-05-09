@@ -216,10 +216,12 @@ bool City::addLink(string line){
     return true;
 }
 void City::deleteNode(){
-	for (unsigned int i(0); i< nodeGroup.size(); ++i){
+	for (unsigned int i(0); i < nodeGroup.size(); ++i){
 		if (nodeGroup[i]==selectedNode){
 			swap(nodeGroup[i],nodeGroup.back());
 			nodeGroup.pop_back();
+		} else {
+
 		}
 	}
 	selectedNode = nullptr;

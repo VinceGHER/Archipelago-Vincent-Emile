@@ -58,7 +58,7 @@ void graphic_gui::updateFrameSize(int width, int height, double zoom){
     } else { // keep xmax and xmin. Adjust ymax and ymin
         current.xmax = initial.xmax ;
         current.xmin = initial.xmin ;
-            
+        
         double delta(initial.ymax - initial.ymin);
         double mid((initial.ymax + initial.ymin)/2);
 
