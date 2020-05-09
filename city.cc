@@ -128,12 +128,21 @@ bool City::addNodeBridge(double x, double y, Type type){
 	return city.addNode(line.str(),type);
 }
 bool City::editLink(double posX, double posY){
+	
 	Node* currentSelect (Node::selectNode(posX,posY, city.nodeGroup));
 	if (currentSelect == nullptr) return false;
 	if (currentSelect == city.selectedNode) return false;
-
+	
+	city.selectedNode->addLink(currentSelect);
 	return true;
 	
+}
+bool City::testEditLink(){
+	if (city.selectedNode == nullptr){
+		cout << "please select first a node to edit" << endl;
+		return false;
+	}
+	return true;
 }
 bool City::testSelectNode(double x, double y, Type type){
 	Node* currentSelectedNode (Node::selectNode(x,y,city.nodeGroup));

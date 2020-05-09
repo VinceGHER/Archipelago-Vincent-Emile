@@ -22,6 +22,7 @@ public:
 	static void emptyNodeGroup();
 	static bool addNodeBridge(double x, double y, Type type);
 	static bool editLink(double posX, double posY);
+	static bool testEditLink();
 	static bool testSelectNode(double x, double y, Type type);
 	
 	//criteria

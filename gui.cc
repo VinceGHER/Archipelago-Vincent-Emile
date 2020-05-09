@@ -248,7 +248,17 @@ void Gui::onResetButtonClicked(){
 	refreshZoom();
 }
 void Gui::onEditButtonClicked(){
+	cout << "xxxxxxxxxx" << endl;
+	cout << editLink << endl;
 	editLink = m_TButton_Edit.get_active();
+	cout << editLink << endl;
+	cout << "---" << endl;
+	if (editLink and not City::testEditLink()){
+		m_TButton_Edit.set_state_flags(Gtk::STATE_FLAG_NORMAL);
+		//~ m_TButton_Edit.set_state_flags(Gtk::STATE_FLAG_CHECKED);
+		editLink = 0;
+		cout << editLink << endl;
+	}
 }
 void Gui::onHousingButtonClicked(){
 	type = HOUSING;
@@ -321,7 +331,10 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 			
 			if(event->button == 1){ // Left mouse button
 				if (editLink){
-
+					if (City::editLink(pModel.x,pModel.y)){
+						refreshGuiAndDraw();
+						return true;
+					}
 				} else {
 					if (City::testSelectNode(pModel.x,pModel.y,type)){
 						refreshGuiAndDraw();
