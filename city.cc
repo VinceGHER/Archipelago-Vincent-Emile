@@ -217,13 +217,14 @@ bool City::addLink(string line){
 }
 void City::deleteNode(){
 	for (unsigned int i(0); i< nodeGroup.size(); ++i){
-		if (nodeGroup[i]==selectedNode){
+		if (nodeGroup[i] == selectedNode){
 			swap(nodeGroup[i],nodeGroup.back());
 			nodeGroup.pop_back();
-		}
+			
+		} else nodeGroup[i]->deleteLink(selectedNode);
 	}
-	selectedNode = nullptr;
 	delete selectedNode;
+	selectedNode = nullptr;
 	return;
 }
 void City::showNodeGroup() const {

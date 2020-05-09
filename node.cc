@@ -74,6 +74,14 @@ bool Node::addLink(Node* nodeToLink){
     links.push_back(nodeToLink);
     return true;
 }
+void Node::deleteLink(Node* node){
+	for (unsigned int i(0); i< links.size(); ++i){
+		if (links[i] == node){
+			swap(links[i],links.back());
+			links.pop_back();
+		}
+	}
+}
 void Node::showNode() const {
     cout <<"UID: " << UID << endl;
     cout << "CenterX: " << nodeCircle.center.x << " " 
@@ -101,7 +109,7 @@ Node* Node::selectNode(double posX, double posY,
         if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)) return node;
     }
     return nullptr;
-} 
+}
 
 // === getter functions ===
 const ID Node::getUID() const {

@@ -28,14 +28,15 @@ public:
 
     static bool readLink(std::string line,ID& UID1,ID& UID2);
     bool addLink(Node* nodeToLink);
-
+    void deleteLink(Node* node);
     virtual void showNode() const;
     
     double dist(Node* node);  
 
     static Node* selectNode(double posX, double posY, 
                             const std::vector<Node*>& nodeGroup); 
-
+    
+    
     //getters
     const ID getUID() const;  
     virtual Type getType() const = 0;
