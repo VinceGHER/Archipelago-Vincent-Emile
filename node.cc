@@ -74,6 +74,16 @@ bool Node::addLink(Node* nodeToLink){
     links.push_back(nodeToLink);
     return true;
 }
+void Node::deleteLink(Node* node){
+	for (unsigned int i(0); i < links.size(); ++i){
+		if (links[i] == node){
+            cout << "Noeuds " << links[i]->UID << "supprimée " << endl;
+			swap(links[i],links.back());
+			links.pop_back();
+            return;
+		}
+	}
+}
 void Node::showNode() const {
     cout <<"UID: " << UID << endl;
     cout << "CenterX: " << nodeCircle.center.x << " " 
@@ -81,15 +91,12 @@ void Node::showNode() const {
             << "Radius: " << nodeCircle.radius << endl;
     cout << "Links: (" << links.size()<< ")" <<  endl;
     for (auto link:links){
-        cout << "   link: " << UID<< " <-> "<<link->UID << endl;
+        cout << "   link: " << UID << " <-> "<<link->UID << endl;
     }
-    cout << "=== Dijkstra === " << endl;
-    cout << "access " << access << endl;
-    cout << "in " << in << endl;
-    if(parent != nullptr) cout << "parent " << parent->UID << endl;
-    else cout << "parent " << "nullptr" << endl;
-    
-    cout << "===" << endl;
+    cout <<  "Dijkstra: (access: " << access << " in: " << in << " parent: ";
+    if(parent != nullptr) cout << parent->UID;
+    else cout << "nullptr";
+    cout << ")" << endl;
 }
 double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
@@ -101,7 +108,7 @@ Node* Node::selectNode(double posX, double posY,
         if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)) return node;
     }
     return nullptr;
-} 
+}
 
 // === getter functions ===
 const ID Node::getUID() const {
