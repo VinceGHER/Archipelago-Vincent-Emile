@@ -140,7 +140,6 @@ bool City::testSelectNode(double x, double y, Type type){
 
 	if (currentSelectedNode == nullptr and city.selectedNode != nullptr){
 		city.selectedNode = nullptr;
-		cout << city.selectedNode << " d" << endl;
 		return true;
 	}
 	if (currentSelectedNode != nullptr and city.selectedNode == nullptr){
@@ -148,7 +147,6 @@ bool City::testSelectNode(double x, double y, Type type){
 		return true;
 	}
 	if (currentSelectedNode == nullptr and city.selectedNode == nullptr){
-		cout << "ajout de noeuds " << endl;
 		addNodeBridge(x,y,type);
 		return true;
 	}
