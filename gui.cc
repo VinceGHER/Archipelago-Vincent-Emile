@@ -248,17 +248,13 @@ void Gui::onResetButtonClicked(){
 	refreshZoom();
 }
 void Gui::onEditButtonClicked(){
-	cout << "xxxxxxxxxx" << endl;
-	cout << editLink << endl;
 	editLink = m_TButton_Edit.get_active();
-	cout << editLink << endl;
-	cout << "---" << endl;
-	if (editLink and not City::testEditLink()){
+	if (editLink and selectedNode == nullptr){
+		cout << "please select first a node to edit" << endl;
 		m_TButton_Edit.set_state_flags(Gtk::STATE_FLAG_NORMAL);
-		//~ m_TButton_Edit.set_state_flags(Gtk::STATE_FLAG_CHECKED);
-		editLink = 0;
-		cout << editLink << endl;
+		editLink = false;
 	}
+	cout << editLink << endl;
 }
 void Gui::onHousingButtonClicked(){
 	type = HOUSING;

@@ -137,13 +137,6 @@ bool City::editLink(double posX, double posY){
 	return true;
 	
 }
-bool City::testEditLink(){
-	if (city.selectedNode == nullptr){
-		cout << "please select first a node to edit" << endl;
-		return false;
-	}
-	return true;
-}
 bool City::testSelectNode(double x, double y, Type type){
 	Node* currentSelectedNode (Node::selectNode(x,y,city.nodeGroup));
 

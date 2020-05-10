@@ -115,6 +115,7 @@ protected:
 	bool editLink;
 	Type type;
 	std:: string text;
+	Node* selectedNode;
 };
 
 #endif
