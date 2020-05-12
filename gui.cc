@@ -18,7 +18,7 @@ using namespace std;
 
 // ========== Class MyArea ==========
 
-MyArea::MyArea():currentZoom(1.),shortestPath(false){};
+MyArea::MyArea(Gui& gui):currentZoom(1.),shortestPath(false),guiRef(gui){};
 void MyArea::setFrame(Frame x){
 	graphic_gui::setFrame(x);
 }
@@ -64,7 +64,7 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 
 	graphic_gui:: graphic_set_context(cr);
 	graphic_gui:: updateFrameSize(width,height,currentZoom);
-	City::updateDraw(shortestPath);
+	City::updateDraw(shortestPath,guiRef.getSelectedNode());
 	return true;
 }
 
@@ -97,8 +97,10 @@ Gui::Gui():
 	m_Label_ENJ(),
 	m_Label_CI(),
 	m_Label_MTA(),
+	m_Area(*this),
 	editLink(false),
-	type(HOUSING) {	
+	type(HOUSING),
+	selectedNode(nullptr) {	
 		set_title("Drawing Area and Buttons");
 		set_border_width(0);
 		createBoxStruct();
@@ -249,12 +251,12 @@ void Gui::onResetButtonClicked(){
 }
 void Gui::onEditButtonClicked(){
 	editLink = m_TButton_Edit.get_active();
+
 	if (editLink and selectedNode == nullptr){
 		cout << "please select first a node to edit" << endl;
 		m_TButton_Edit.set_state_flags(Gtk::STATE_FLAG_NORMAL);
-		editLink = false;
 	}
-	cout << editLink << endl;
+
 }
 void Gui::onHousingButtonClicked(){
 	type = HOUSING;
@@ -326,24 +328,51 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 			
 			if(event->button == 1){ // Left mouse button
-				if (editLink){
-					if (City::editLink(pModel.x,pModel.y)){
-						refreshGuiAndDraw();
-						return true;
-					}
-				} else {
-					if (City::testSelectNode(pModel.x,pModel.y,type)){
-						refreshGuiAndDraw();
-						return true;
-					}
-				}
+
+				if (editLink) clicAreaWithEdit(pModel.x,pModel.y);
+				else clicAreaWithoutEdit(pModel.x,pModel.y);
+				refreshGuiAndDraw();
+
 			}
 		}
 	}
 	return true;
 }
-
-
+void Gui::clicAreaWithoutEdit(double posX, double posY){
+	Node* clickedNode( City::getClickedNode(posX,posY) );
+					
+	if (clickedNode == nullptr and selectedNode != nullptr){
+		selectedNode = nullptr;
+		return;
+	}
+	if (clickedNode != nullptr and selectedNode == nullptr){
+		selectedNode = clickedNode;
+		return;
+	}
+	if (clickedNode == nullptr and selectedNode == nullptr){
+		City::addNode(posX,posY,type);
+		return;
+	}
+	if (clickedNode == selectedNode and clickedNode != nullptr){
+		City::deleteNode(clickedNode);
+		selectedNode = nullptr;
+		return;
+	}
+	if (clickedNode != nullptr and selectedNode != nullptr 
+		and clickedNode !=  selectedNode){
+			selectedNode = clickedNode;
+			return;
+		}
+}
+void Gui::clicAreaWithEdit(double posX, double posY){
+		
+	Node* clickedNode( City::getClickedNode(posX,posY) );
+	if (clickedNode == nullptr or selectedNode == nullptr) return;
+	if (clickedNode == selectedNode) return;
+	
+	City::addLink(selectedNode,clickedNode);
+	return;
+}
 // === keyboard signal handler ===
 bool Gui::on_key_press_event(GdkEventKey * key_event){
 	if(key_event->type == GDK_KEY_PRESS){

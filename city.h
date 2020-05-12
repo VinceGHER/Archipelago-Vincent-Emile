@@ -15,16 +15,16 @@
 class City {
 public:
 	//node gestion
-	City();
 	static bool readFile(std::string data);
 	static bool save(std::string nom);
-	static void updateDraw(bool shortestPath);
+	static void updateDraw(bool shortestPath, Node* selectedNode);
 	static void emptyNodeGroup();
-	static bool addNodeBridge(double x, double y, Type type);
-	static bool editLink(double posX, double posY);
-	static bool testEditLink();
-	static bool testSelectNode(double x, double y, Type type);
-	
+	static bool addNode(double x, double y, Type type);
+	static bool addLink(Node* nodeToLink1, Node* nodeToLink2);
+	static void deleteNode(Node* nodeToDelete);
+	static Node* getClickedNode(double posX, double posY);
+
+
 	//criteria
 	static std::string criteriaENJ();
 	static std::string criteriaCI();
@@ -34,7 +34,6 @@ private:
 	//node gestion
 	bool addNode(std::string line,int type);
 	bool addLink(std::string line);
-	void deleteNodeSelected();
 	void showNodeGroup() const;
 	ID findNewUID();
 
@@ -48,7 +47,6 @@ private:
 
 	//attributes
 	std::vector<Node*> nodeGroup;
-	Node* selectedNode;
 };
 
 #endif

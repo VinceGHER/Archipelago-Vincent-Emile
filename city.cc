@@ -24,7 +24,6 @@ namespace {
 }
 
 // === node gestion ===
-City::City():selectedNode(nullptr){};
 bool City::readFile(string data) {
 	ifstream fichier(data);
 	 	
@@ -88,7 +87,7 @@ bool City::save(string nom){
 	fichier.close();
 	return true;
 }
-void City::updateDraw(bool shortestPath){
+void City::updateDraw(bool shortestPath, Node* selectedNode){
 	tools::setColor(BLACK);
 	//draw links
 	vector<array<Node*,2>> linkCreated;
@@ -98,7 +97,7 @@ void City::updateDraw(bool shortestPath){
 
 	//draw nodes
 	for (auto& node:city.nodeGroup){
-		if (node == city.selectedNode) tools::setColor(RED);
+		if (node == selectedNode) tools::setColor(RED);
 		else tools::setColor(BLACK);
 		node->drawNode();
 	}
@@ -107,9 +106,10 @@ void City::updateDraw(bool shortestPath){
 	//debug
 	
 	tools::setColor(GREEN);
-	if (shortestPath && city.selectedNode != nullptr){
-		city.dijkstra(city.selectedNode->getUID(),TRANSPORT,true);
-		city.dijkstra(city.selectedNode->getUID(),PRODUCTION,true);
+	if (selectedNode == nullptr) return;
+	if (shortestPath && selectedNode->getType() == HOUSING){
+		city.dijkstra(selectedNode->getUID(),TRANSPORT,true);
+		city.dijkstra(selectedNode->getUID(),PRODUCTION,true);
 	}
 }
 void City::emptyNodeGroup(){
@@ -118,51 +118,13 @@ void City::emptyNodeGroup(){
     }
     city.nodeGroup.clear();
 }
-bool City::addNodeBridge(double x, double y, Type type){
-	
+bool City::addNode(double x, double y, Type type){	
 	ID newUID(city.findNewUID());
 	
 	stringstream line("");
 	line << newUID << " " << x << " " << y << " 1000" << endl;
 	
 	return city.addNode(line.str(),type);
-}
-bool City::editLink(double posX, double posY){
-	
-	Node* currentSelect (Node::selectNode(posX,posY, city.nodeGroup));
-	if (currentSelect == nullptr) return false;
-	if (currentSelect == city.selectedNode) return false;
-	
-	city.selectedNode->addLink(currentSelect);
-	return true;
-	
-}
-bool City::testSelectNode(double x, double y, Type type){
-	Node* currentSelectedNode (Node::selectNode(x,y,city.nodeGroup));
-
-	if (currentSelectedNode == nullptr and city.selectedNode != nullptr){
-		city.selectedNode = nullptr;
-		return true;
-	}
-	if (currentSelectedNode != nullptr and city.selectedNode == nullptr){
-		city.selectedNode = currentSelectedNode;
-		return true;
-	}
-	if (currentSelectedNode == nullptr and city.selectedNode == nullptr){
-		addNodeBridge(x,y,type);
-		return true;
-	}
-	if (currentSelectedNode == city.selectedNode and currentSelectedNode != nullptr){
-		city.deleteNodeSelected();
-		return true;
-	}
-
-	if (currentSelectedNode != nullptr and city.selectedNode != nullptr 
-		and currentSelectedNode !=  city.selectedNode){
-			city.selectedNode = currentSelectedNode;
-			return true;
-		}
-	return true;
 }
 bool City::addNode(string line, int type){
 	Node* pNode(nullptr);
@@ -188,6 +150,9 @@ bool City::addNode(string line, int type){
 
 	city.nodeGroup.push_back(pNode);
 	return true;
+}
+Node* City::getClickedNode(double posX, double posY){
+	return Node::selectNode(posX,posY,city.nodeGroup);
 }
 bool City::addLink(string line){
 	ID UID1,UID2;
@@ -215,15 +180,22 @@ bool City::addLink(string line){
     if(not pNode2->addLink(pNode1)) return false;
     return true;
 }
-void City::deleteNodeSelected(){
-	for (auto& node:nodeGroup) node->deleteLink(selectedNode);
-	for (auto& node:nodeGroup){
-		if (node == selectedNode){			
+bool City::addLink(Node* nodeToLink1, Node* nodeToLink2){
+	
+	stringstream line("");
+	line << nodeToLink1->getUID() << " " << nodeToLink2->getUID() << endl;
+	
+	return city.addLink(line.str());
+}
+void City::deleteNode(Node* nodeToDelete){
+	for (auto& node:city.nodeGroup) node->deleteLink(nodeToDelete);
+	for (auto& node:city.nodeGroup){
+		if (node == nodeToDelete){			
 			
-			delete selectedNode;
-			selectedNode = nullptr;
-			swap(node,nodeGroup.back());
-			nodeGroup.pop_back();
+			delete nodeToDelete;
+			nodeToDelete = nullptr;
+			swap(node,city.nodeGroup.back());
+			city.nodeGroup.pop_back();
 			break;
 
 		}

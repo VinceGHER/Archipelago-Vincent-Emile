@@ -18,7 +18,7 @@ class MyArea;
 
 class MyArea : public Gtk:: DrawingArea {
 public:
-	MyArea();
+	MyArea(Gui& gui);
 	virtual ~MyArea(){};
 	void setFrame(Frame x);
 	void zoomFrame(bool zooming);
@@ -30,6 +30,7 @@ public:
 protected:
 	double currentZoom;
 	bool shortestPath;
+	Gui& guiRef;
 	//Override default signal handler:
 	bool on_draw(const Cairo:: RefPtr<Cairo::Context>& cr) override;
 	
@@ -40,6 +41,8 @@ public:
 	Gui();
 	 ~Gui(){};
 	
+	//clic gestion
+	Node* getSelectedNode(){return selectedNode;}
 protected:
 	//initialisation
 	void createBoxStruct();
@@ -64,14 +67,18 @@ protected:
 	std:: string fileSelection(bool open);
 	void refreshGuiAndDraw();
 	void refreshZoom();
-	
+
 	// Mouse event signal handlers:
 	bool on_button_press_event(GdkEventButton * event) override;
 	//bool on_button_release_event(GdkEventButton * event);
 
 	// Keyboard signal handler:
 	bool on_key_press_event(GdkEventKey * key_event) override;
+
 	
+	//Click gestion
+	void clicAreaWithoutEdit(double posX, double posY);
+	void clicAreaWithEdit(double posX, double posY);
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
 	Gtk:: Box m_Box_Drawing;
@@ -114,7 +121,6 @@ protected:
 	MyArea m_Area;
 	bool editLink;
 	Type type;
-	std:: string text;
 	Node* selectedNode;
 };
 
