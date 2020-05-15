@@ -35,8 +35,8 @@ public:
     
     double dist(Node* node);  
 
-    static Node* selectNode(double posX, double posY, 
-                            const std::vector<Node*>& nodeGroup); 
+    static Node* selectNode(Point pos, bool& isOnBorder,Node* selectedNode,
+                            const std::vector<Node*>& nodeGroup);
     
     
     //getters

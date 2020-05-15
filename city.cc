@@ -150,8 +150,8 @@ bool City::addNode(string line, int type){
 	city.nodeGroup.push_back(pNode);
 	return true;
 }
-Node* City::getClickedNode(double posX, double posY){
-	return Node::selectNode(posX,posY,city.nodeGroup);
+Node* City::getClickedNode(Point pos, bool& isOnBorder,Node* selectedNode){
+	return Node::selectNode(pos,isOnBorder,selectedNode,city.nodeGroup);
 }
 bool City::addLink(string line){
 	ID UID1,UID2;
@@ -186,8 +186,6 @@ bool City::addLink(Node* nodeToLink1, Node* nodeToLink2){
 	
 	return city.addLink(line.str());
 }
-
-
 void City::deleteNode(Node* nodeToDelete){
 	for (auto& node:city.nodeGroup) node->deleteLink(nodeToDelete);
 	for (auto& node:city.nodeGroup){
@@ -216,7 +214,7 @@ void City::showNodeGroup() const {
        node->showNode();
 	}
 }
-ID City::findNewUID() {
+ID City::findNewUID(){
 
 	ID testedUID(0);
 	size_t index(0);

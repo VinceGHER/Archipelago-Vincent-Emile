@@ -129,6 +129,7 @@ void Gui::refreshZoom(){
 	balance << "zoom: x" << fixed << setprecision(2) << m_Area.getZoom();
 	m_Label_Zoom.set_text(balance.str());
 }
+
 // === initialisation ===
 void Gui::createBoxStruct(){
 
@@ -340,36 +341,72 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 	}
 	return true;
 }
+bool Gui::on_button_release_event(GdkEventButton * event){
+	if(event->type == GDK_BUTTON_RELEASE){
+		// raw mouse coordinates in the window frame
+		double clicX = event->x ;
+		double clicY= event->y ;
+
+		// origin of the drawing area
+		double originX = m_Area.get_allocation().get_x();
+		double originY = m_Area.get_allocation().get_y();
+		
+		// get width and height of drawing area
+		double width = m_Area.get_allocation().get_width();
+		double height= m_Area.get_allocation().get_height();
+		
+		// retain only mouse events located within the drawing area
+		if(clicX >= originX && clicX <= originX + width &&
+		   clicY >= originY && clicY <= originY + height){ 
+			Point p({clicX - originX, clicY - originY});
+			
+			if(event->button == 3) // Right mouse button
+			{
+				return true;
+			}
+		}
+	}
+	return true;
+}
 void Gui::clicAreaWithoutEdit(double posX, double posY){
 	bool isOnBorder(false);
-	Node* clickedNode( City::getClickedNode(posX,posY) );
-					
-	if (clickedNode == nullptr and selectedNode != nullptr){
-		selectedNode = nullptr;
+	Node* clickedNode( City::getClickedNode({posX,posY},isOnBorder,
+											selectedNode) );
+	
+	if (isOnBorder){
+		
 		return;
-	}
-	if (clickedNode != nullptr and selectedNode == nullptr){
-		selectedNode = clickedNode;
-		return;
-	}
-	if (clickedNode == nullptr and selectedNode == nullptr){
-		City::addNode(posX,posY,type);
-		return;
-	}
-	if (clickedNode == selectedNode and clickedNode != nullptr){
-		City::deleteNode(clickedNode);
-		selectedNode = nullptr;
-		return;
-	}
-	if (clickedNode != nullptr and selectedNode != nullptr 
-		and clickedNode !=  selectedNode){
+	} else {
+		if (clickedNode == nullptr and selectedNode != nullptr){
+			selectedNode = nullptr;
+			return;
+		}
+		if (clickedNode != nullptr and selectedNode == nullptr){
 			selectedNode = clickedNode;
 			return;
 		}
+		if (clickedNode == nullptr and selectedNode == nullptr){
+			City::addNode(posX,posY,type);
+			return;
+		}
+		if (clickedNode == selectedNode and clickedNode != nullptr){
+			City::deleteNode(clickedNode);
+			selectedNode = nullptr;
+			return;
+		}
+		if (clickedNode != nullptr and selectedNode != nullptr 
+			and clickedNode !=  selectedNode){
+				selectedNode = clickedNode;
+				return;
+			}
+	}
 }
 void Gui::clicAreaWithEdit(double posX, double posY){
-		
-	Node* clickedNode( City::getClickedNode(posX,posY) );
+	
+	bool isOnBorder(false);
+	Node* clickedNode( City::getClickedNode({posX,posY},isOnBorder,
+											selectedNode) );
+	isOnBorder = false;
 	if (clickedNode == nullptr or selectedNode == nullptr) return;
 	if (clickedNode == selectedNode) return;
 	

@@ -105,12 +105,16 @@ void Node::showNode() const {
 double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
-Node* Node::selectNode(double posX, double posY, 
+Node* Node::selectNode(Point pos, bool& isOnBorder, Node* selectedNode,
                       const std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
-        Point pos = {posX,posY};
-        if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)) return node;
-    }
+        if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)){
+			if (pos.x*pos.x+pos.y*pos.y >= selectedNode->getNbp())
+				isOnBorder = true;
+			else isOnBorder = false;
+			return node;
+		}
+	}
     return nullptr;
 }
 
