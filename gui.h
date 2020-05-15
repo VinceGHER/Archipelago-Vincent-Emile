@@ -68,15 +68,15 @@ protected:
 	void refreshGuiAndDraw();
 	void refreshZoom();
 
-	// Mouse event signal handlers:
+	//mouse event signal handlers:
 	bool on_button_press_event(GdkEventButton * event) override;
-	//bool on_button_release_event(GdkEventButton * event);
+	bool on_button_release_event(GdkEventButton * event) override;
 
-	// Keyboard signal handler:
+	//keyboard signal handler:
 	bool on_key_press_event(GdkEventKey * key_event) override;
 
 	
-	//Click gestion
+	//click gestion
 	void clicAreaWithoutEdit(double posX, double posY);
 	void clicAreaWithEdit(double posX, double posY);
 	Gtk:: Box m_Box;
