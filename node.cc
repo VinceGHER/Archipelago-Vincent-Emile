@@ -88,6 +88,9 @@ void Node::deleteLink(Node* node){
 void Node::changeNodeCoordinates(Point newPos){
 	nodeCircle.center = newPos;
 }
+void Node::changeNodeNbp(double newNbp){
+	nbp += newNbp;
+}
 void Node::showNode() const {
     cout << "UID: " << UID << endl;
     cout << "CenterX: " << nodeCircle.center.x << " " 
@@ -105,16 +108,17 @@ void Node::showNode() const {
 double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
-Node* Node::selectNode(Point pos, bool& isOnBorder, Node* selectedNode,
+Node* Node::selectNode(Point pos, bool& isResizingNode, Node* selectedNode,
                       const std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
         if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)){
-			if (pos.x*pos.x+pos.y*pos.y >= selectedNode->getNbp())
-				isOnBorder = true;
-			else isOnBorder = false;
+			isResizingNode = false;
 			return node;
 		}
 	}
+	if (selectedNode == nullptr) isResizingNode = false;
+	else isResizingNode = true;
+	
     return nullptr;
 }
 

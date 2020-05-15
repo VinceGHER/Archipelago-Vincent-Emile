@@ -118,7 +118,7 @@ void City::emptyNodeGroup(){
     }
     city.nodeGroup.clear();
 }
-bool City::addNode(double x, double y, Type type){	
+bool City::addNode(double x, double y, Type type){
 	ID newUID(city.findNewUID());
 	
 	stringstream line("");
@@ -150,8 +150,8 @@ bool City::addNode(string line, int type){
 	city.nodeGroup.push_back(pNode);
 	return true;
 }
-Node* City::getClickedNode(Point pos, bool& isOnBorder,Node* selectedNode){
-	return Node::selectNode(pos,isOnBorder,selectedNode,city.nodeGroup);
+Node* City::getClickedNode(Point pos, bool& isResizingNode,Node* selectedNode){
+	return Node::selectNode(pos,isResizingNode,selectedNode,city.nodeGroup);
 }
 bool City::addLink(string line){
 	ID UID1,UID2;
@@ -202,11 +202,20 @@ void City::deleteNode(Node* nodeToDelete){
 	return;
 }
 void City::moveNode(Point newPos, Node* nodeToMove){
-	Point oldPos(nodeToMove->getPos());
+	if (nodeToMove == nullptr) return;
+	
+	Point formerPos(nodeToMove->getPos());
 	nodeToMove->changeNodeCoordinates(newPos);
-	if (not nodeToMove->checkNodeMoveOverlap(city.nodeGroup)){
-		nodeToMove->changeNodeCoordinates(oldPos);
-	}	
+	if (not nodeToMove->checkNodeMoveOverlap(city.nodeGroup))
+		nodeToMove->changeNodeCoordinates(formerPos);
+}
+void City::resizeNode(double newNbp, Node* nodeToResize){
+	if (nodeToResize == nullptr) return;
+	
+	double formerNbp(nodeToResize->getNbp());
+	nodeToResize->changeNodeNbp(newNbp);
+	if (not nodeToResize->checkNodeMoveOverlap(city.nodeGroup))
+		nodeToResize->changeNodeNbp(formerNbp);
 }
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;

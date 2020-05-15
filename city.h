@@ -23,7 +23,8 @@ public:
 	static bool addLink(Node* nodeToLink1, Node* nodeToLink2);
 	static void deleteNode(Node* nodeToDelete);
 	static void moveNode(Point newPos, Node* nodeToMove);
-	static Node* getClickedNode(Point pos, bool& isOnBorder,Node* selectedNode);
+	static void resizeNode(double newNbp, Node* nodeToResize);
+	static Node* getClickedNode(Point pos, bool& isResizingNode,Node* selectedNode);
 
 	//criteria
 	static std::string criteriaENJ();

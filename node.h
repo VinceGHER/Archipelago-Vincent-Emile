@@ -30,12 +30,13 @@ public:
     bool addLink(Node* nodeToLink);
     void deleteLink(Node* node);
     void changeNodeCoordinates(Point newPos);
+    void changeNodeNbp(double newNbp);
     
     virtual void showNode() const;
     
     double dist(Node* node);  
 
-    static Node* selectNode(Point pos, bool& isOnBorder,Node* selectedNode,
+    static Node* selectNode(Point pos, bool& isResizingNode,Node* selectedNode,
                             const std::vector<Node*>& nodeGroup);
     
     

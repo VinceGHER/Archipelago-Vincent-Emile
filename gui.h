@@ -117,9 +117,12 @@ protected:
 	Gtk:: Box m_Box_Open;
 	Gtk:: Button m_Button_File;
 	Gtk:: Label m_Label_Open;
+	
+	Point p;
 
 	MyArea m_Area;
 	bool editLink;
+	bool isResizingNode;
 	Type type;
 	Node* selectedNode;
 };
