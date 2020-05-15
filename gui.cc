@@ -17,8 +17,8 @@ using namespace std;
 
 // ========== Class MyArea ==========
 
-MyArea::MyArea(Gui& gui):currentZoom(1.),shortestPath(false),
-ptrSelectedNode(&gui.getSelectedNode()){};
+MyArea::MyArea(Gui& gui):
+	currentZoom(1.),shortestPath(false),ptrSelectedNode(&gui.getSelectedNode()){};
 void MyArea::setFrame(Frame x){
 	graphic_gui::setFrame(x);
 }
@@ -62,8 +62,8 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 	cr->rectangle(0,0,get_allocation().get_width(),get_allocation().get_height());
 	cr->stroke();
 
-	graphic_gui:: graphic_set_context(cr);
-	graphic_gui:: updateFrameSize(width,height,currentZoom);
+	graphic_gui::graphic_set_context(cr);
+	graphic_gui::updateFrameSize(width,height,currentZoom);
 	City::updateDraw(shortestPath,*ptrSelectedNode);
 	return true;
 }
@@ -80,7 +80,7 @@ Gui::Gui():
 	m_Frame_General("General"),
 	m_Frame_Display("Display"),
 	m_Frame_Editor("Editor"),
-	m_Frame_Informations("Informations"),
+	m_Frame_Informations("Informations Critères"),
 	m_Button_Exit("exit"),         
 	m_Button_New("new"),
     m_Button_Open("open"),
@@ -134,13 +134,14 @@ void Gui::createBoxStruct(){
 
 	add(m_Box);
 	
+
 	m_Box.pack_start(m_Box_Buttons,false,false);
 	m_Box.pack_start(m_Box_Drawing,true,true);
 
 	m_Box_Buttons.pack_start(m_Frame_General,false,false);
 	m_Box_Buttons.pack_start(m_Frame_Display,false,false);
 	m_Box_Buttons.pack_start(m_Frame_Editor,false,false);
-	m_Box_Buttons.pack_start(m_Frame_Informations,false,false);
+	m_Box_Buttons.pack_start(m_Frame_Informations,true,true);
 	
 	m_Frame_General.add(m_Box_General);
 	m_Frame_Display.add(m_Box_Display);

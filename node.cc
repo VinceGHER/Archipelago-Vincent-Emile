@@ -340,8 +340,8 @@ bool Node::checkNodeMoveOverlap(const vector<Node*>& nodeGroup) const{
 }
 //================= NodeHousing =================
 NodeHousing::NodeHousing(string line,int type, bool& success,
-                         const vector<Node*>& nodeGroup)
-:Node(line,type,success,nodeGroup){}
+                         const vector<Node*>& nodeGroup):
+    Node(line,type,success,nodeGroup){}
 
 void NodeHousing::showNode() const {
     this->Node::showNode();
@@ -364,8 +364,8 @@ Type NodeHousing::getType() const {
 
 //================= NodeTransport =================
 NodeTransport::NodeTransport(string line,int type, bool& success,
-                             const vector<Node*>& nodeGroup)
-:Node(line,type,success,nodeGroup){}
+                             const vector<Node*>& nodeGroup):
+    Node(line,type,success,nodeGroup){}
 
 void NodeTransport::showNode() const {
     this->Node::showNode();
@@ -391,8 +391,8 @@ Type NodeTransport::getType() const {
 
 //================= NodeProduction =================
 NodeProduction::NodeProduction(string line,int type, bool& success,
-                               const vector<Node*>& nodeGroup)
-:Node(line,type,success,nodeGroup){}
+                               const vector<Node*>& nodeGroup):
+    Node(line,type,success,nodeGroup){}
 
 void NodeProduction::showNode() const {
     this->Node::showNode();
