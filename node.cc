@@ -118,8 +118,6 @@ Node* Node::selectNode(Point pos, bool& isOnBorder, Node* selectedNode,
     return nullptr;
 }
 
-
-
 // === getter functions ===
 const ID Node::getUID() const {
     return UID;
