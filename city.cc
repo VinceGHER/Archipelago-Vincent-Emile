@@ -187,6 +187,10 @@ bool City::addLink(Node* nodeToLink1, Node* nodeToLink2){
 	
 	return city.addLink(line.str());
 }
+
+void City::moveSelectedNode(double x, double y, Node* selectedNode){
+	
+}
 void City::deleteNode(Node* nodeToDelete){
 	for (auto& node:city.nodeGroup) node->deleteLink(nodeToDelete);
 	for (auto& node:city.nodeGroup){

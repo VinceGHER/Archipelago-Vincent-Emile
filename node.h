@@ -36,6 +36,7 @@ public:
     static Node* selectNode(double posX, double posY, 
                             const std::vector<Node*>& nodeGroup); 
     
+    Node* changeNodeCoordinates(double x, double y, Node* selectedNode);
     
     //getters
     const ID getUID() const;  

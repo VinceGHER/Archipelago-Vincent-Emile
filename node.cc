@@ -110,6 +110,10 @@ Node* Node::selectNode(double posX, double posY,
     return nullptr;
 }
 
+Node* Node::changeNodeCoordinates(double x, double y, Node* selectedNode){
+	
+}
+
 // === getter functions ===
 const ID Node::getUID() const {
     return UID;
