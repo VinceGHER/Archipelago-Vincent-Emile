@@ -131,20 +131,19 @@ bool City::addNode(string line, int type){
 	bool success(false);
 	
 	switch (type){
-		case 0:
-			pNode = new NodeHousing(line,type,success,nodeGroup);
-			break;
-		case 1:
-			pNode = new NodeTransport(line,type,success,nodeGroup);
-			break;
-		case 2:
-			pNode = new NodeProduction(line,type,success,nodeGroup);
-			break;
+	case 0:
+		pNode = new NodeHousing(line,type,success,nodeGroup);
+		break;
+	case 1:
+		pNode = new NodeTransport(line,type,success,nodeGroup);
+		break;
+	case 2:
+		pNode = new NodeProduction(line,type,success,nodeGroup);
+		break;
 	}
 	if (pNode == nullptr) return false;
 	if (not success){
 		delete pNode;
-		pNode = nullptr;
 		return false;
 	}
 

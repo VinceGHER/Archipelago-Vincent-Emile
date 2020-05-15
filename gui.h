@@ -30,7 +30,7 @@ public:
 protected:
 	double currentZoom;
 	bool shortestPath;
-	Gui& guiRef;
+	Node** ptrSelectedNode;
 	//Override default signal handler:
 	bool on_draw(const Cairo:: RefPtr<Cairo::Context>& cr) override;
 	
@@ -42,7 +42,7 @@ public:
 	 ~Gui(){};
 	
 	//clic gestion
-	Node* getSelectedNode(){return selectedNode;}
+	Node*& getSelectedNode(){return selectedNode;}
 protected:
 	//initialisation
 	void createBoxStruct();

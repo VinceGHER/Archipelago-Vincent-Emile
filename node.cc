@@ -85,10 +85,10 @@ void Node::deleteLink(Node* node){
 	}
 }
 void Node::showNode() const {
-    cout <<"UID: " << UID << endl;
+    cout << "UID: " << UID << endl;
     cout << "CenterX: " << nodeCircle.center.x << " " 
-            << "CenterY: " << nodeCircle.center.y << " "
-            << "Radius: " << nodeCircle.radius << endl;
+         << "CenterY: " << nodeCircle.center.y << " "
+         << "Radius: " << nodeCircle.radius << endl;
     cout << "Links: (" << links.size()<< ")" <<  endl;
     for (auto link:links){
         cout << "   link: " << UID << " <-> "<<link->UID << endl;

@@ -4,7 +4,6 @@
 // Architecture b1
 
 #include <iostream>
-#include <gtkmm.h>
 #include <string>
 
 #include "city.h"

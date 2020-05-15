@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <string>
-#include <gtkmm.h>
 #include <sstream>
 #include <iomanip>
 
@@ -18,7 +17,8 @@ using namespace std;
 
 // ========== Class MyArea ==========
 
-MyArea::MyArea(Gui& gui):currentZoom(1.),shortestPath(false),guiRef(gui){};
+MyArea::MyArea(Gui& gui):currentZoom(1.),shortestPath(false),
+ptrSelectedNode(&gui.getSelectedNode()){};
 void MyArea::setFrame(Frame x){
 	graphic_gui::setFrame(x);
 }
@@ -64,7 +64,7 @@ bool MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr){
 
 	graphic_gui:: graphic_set_context(cr);
 	graphic_gui:: updateFrameSize(width,height,currentZoom);
-	City::updateDraw(shortestPath,guiRef.getSelectedNode());
+	City::updateDraw(shortestPath,*ptrSelectedNode);
 	return true;
 }
 
@@ -291,14 +291,14 @@ string Gui::fileSelection(bool open){
 	string filename("");
 	
 	switch(result){	
-		case(Gtk::RESPONSE_OK):
-			filename = dialog.get_filename(); 
-			break;
-		case(Gtk::RESPONSE_CANCEL) :
-			break;
-		default:
-		    cout << "Unexpected button clicked." << endl;
-		    break;
+	case(Gtk::RESPONSE_OK):
+		filename = dialog.get_filename(); 
+		break;
+	case(Gtk::RESPONSE_CANCEL) :
+		break;
+	default:
+		cout << "Unexpected button clicked." << endl;
+		break;
 	}
 	return filename;
 }
@@ -377,15 +377,15 @@ void Gui::clicAreaWithEdit(double posX, double posY){
 bool Gui::on_key_press_event(GdkEventKey * key_event){
 	if(key_event->type == GDK_KEY_PRESS){
 		switch(gdk_keyval_to_unicode(key_event->keyval)){
-			case 'i':
-				m_Area.zoomFrame(true);	
-				break;
-			case 'o':
-				m_Area.zoomFrame(false);
-				break;
-			case 'r':
-				m_Area.zoomReset();
-				break;
+		case 'i':
+			m_Area.zoomFrame(true);	
+			break;
+		case 'o':
+			m_Area.zoomFrame(false);
+			break;
+		case 'r':
+			m_Area.zoomReset();
+			break;
 		}
 	}
 	return Gtk::Window::on_key_press_event(key_event);
