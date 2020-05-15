@@ -186,6 +186,8 @@ bool City::addLink(Node* nodeToLink1, Node* nodeToLink2){
 	
 	return city.addLink(line.str());
 }
+
+
 void City::deleteNode(Node* nodeToDelete){
 	for (auto& node:city.nodeGroup) node->deleteLink(nodeToDelete);
 	for (auto& node:city.nodeGroup){
@@ -200,6 +202,13 @@ void City::deleteNode(Node* nodeToDelete){
 		}
 	}
 	return;
+}
+void City::moveNode(Point newPos, Node* nodeToMove){
+	Point oldPos(nodeToMove->getPos());
+	nodeToMove->changeNodeCoordinates(newPos);
+	if (not nodeToMove->checkNodeMoveOverlap(city.nodeGroup)){
+		nodeToMove->changeNodeCoordinates(oldPos);
+	}	
 }
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;

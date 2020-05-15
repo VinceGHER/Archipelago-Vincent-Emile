@@ -328,17 +328,20 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 			
 			if(event->button == 1){ // Left mouse button
-
 				if (editLink) clicAreaWithEdit(pModel.x,pModel.y);
 				else clicAreaWithoutEdit(pModel.x,pModel.y);
-				refreshGuiAndDraw();
-
+				
+			} else if (event->button == 3){ // Right mouse button
+				if (selectedNode != nullptr) 
+					City::moveNode(pModel,selectedNode);
 			}
+			refreshGuiAndDraw();
 		}
 	}
 	return true;
 }
 void Gui::clicAreaWithoutEdit(double posX, double posY){
+	bool isOnBorder(false);
 	Node* clickedNode( City::getClickedNode(posX,posY) );
 					
 	if (clickedNode == nullptr and selectedNode != nullptr){

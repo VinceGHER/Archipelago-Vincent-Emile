@@ -16,7 +16,8 @@
 #include "constantes.h"
 
 using namespace std;
-
+// === Distmin on readfile
+#define distMinWhenReadFile 0.
 // === rectange of production node ===
 #define ratioRectangleWidth 0.75
 #define ratioRectangleHeight 0.125 // (1/8) 
@@ -84,6 +85,9 @@ void Node::deleteLink(Node* node){
 		}
 	}
 }
+void Node::changeNodeCoordinates(Point newPos){
+	nodeCircle.center = newPos;
+}
 void Node::showNode() const {
     cout << "UID: " << UID << endl;
     cout << "CenterX: " << nodeCircle.center.x << " " 
@@ -102,13 +106,15 @@ double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
 Node* Node::selectNode(double posX, double posY, 
-                            const std::vector<Node*>& nodeGroup){
+                      const std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
         Point pos = {posX,posY};
         if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)) return node;
     }
     return nullptr;
 }
+
+
 
 // === getter functions ===
 const ID Node::getUID() const {
@@ -120,6 +126,9 @@ double Node::getNbp() const {
 double Node::getAccess() const{
     return access;
 };
+Point Node::getPos() const {
+    return nodeCircle.center;
+}
 // === save functions ===
 ostream& Node::saveNode(ostream& fichier) const{
     return fichier << "\t" 
@@ -277,8 +286,9 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
             cout<<error::identical_uid(identifier);
             return false;
         }
-        if(tools::overlapBetweenCircles(circle, node->nodeCircle, dist_min)){
-           cout<< error::node_node_superposition(identifier,node->UID);
+        if(tools::overlapBetweenCircles(circle, node->nodeCircle, 
+                                        distMinWhenReadFile)){
+            cout<< error::node_node_superposition(identifier,node->UID);
             return false;
         }
     } 
@@ -293,7 +303,7 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
 
     return true;
 }
-bool Node::checkCollisionNodeLink(Node* pNode1,Node* pNode2) const{
+bool Node::checkCollisionNodeLink(const Node* pNode1, const Node* pNode2) const{
     Segment currentSegment = {pNode1->nodeCircle.center, pNode2->nodeCircle.center};
     if (UID != pNode1->UID
         and UID != pNode2->UID
@@ -313,7 +323,21 @@ bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
     }
     return false;
 }
-
+bool Node::checkNodeMoveOverlap(const vector<Node*>& nodeGroup) const{
+    for (auto link:links){
+        for (auto& node:nodeGroup){
+            if (not (node->checkCollisionNodeLink(this,link))) return false;
+        }
+    }
+    for (auto& node:nodeGroup){
+        if(node->UID != UID 
+           and tools::overlapBetweenCircles(nodeCircle, node->nodeCircle, dist_min)){
+            cout<< error::node_node_superposition(UID,node->UID);
+            return false;
+        }
+    }
+    return true;
+}
 //================= NodeHousing =================
 NodeHousing::NodeHousing(string line,int type, bool& success,
                          const vector<Node*>& nodeGroup)

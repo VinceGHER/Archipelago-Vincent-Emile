@@ -22,8 +22,8 @@ public:
 	static bool addNode(double x, double y, Type type);
 	static bool addLink(Node* nodeToLink1, Node* nodeToLink2);
 	static void deleteNode(Node* nodeToDelete);
+	static void moveNode(Point newPos, Node* nodeToMove);
 	static Node* getClickedNode(double posX, double posY);
-
 
 	//criteria
 	static std::string criteriaENJ();

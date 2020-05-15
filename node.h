@@ -29,6 +29,8 @@ public:
     static bool readLink(std::string line,ID& UID1,ID& UID2);
     bool addLink(Node* nodeToLink);
     void deleteLink(Node* node);
+    void changeNodeCoordinates(Point newPos);
+    
     virtual void showNode() const;
     
     double dist(Node* node);  
@@ -42,6 +44,7 @@ public:
     virtual Type getType() const = 0;
     double getNbp() const;
     double getAccess() const;
+    Point getPos() const;
 
     //save functions
     std::ostream& saveNode(std::ostream& fichier) const;
@@ -59,9 +62,10 @@ public:
     static void showdijkstra(const std::vector<Node*>& nodeGroup);
     
     //verification functions
-    bool checkCollisionNodeLink(Node* pNode1,Node* pNode2) const;
+    bool checkCollisionNodeLink(const Node* pNode1,const Node* pNode2) const;
     bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
     virtual bool checkLinksLimit() const = 0;
+    bool checkNodeMoveOverlap(const std::vector<Node*>& nodeGroup) const;
 
 protected:
     //diastra
@@ -71,7 +75,6 @@ protected:
     //verification functions
     bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
                              ID identifier,const std::vector<Node*>& nodeGroup);
-
     Circle nodeCircle;
     unsigned int nbp;
     ID UID;
