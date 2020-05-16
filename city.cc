@@ -19,6 +19,9 @@
 
 using namespace std;
 
+// === Distmin on readfile
+#define distMinWhenReadFile 0. 
+
 namespace {
 	City city;
 }
@@ -40,11 +43,11 @@ bool City::readFile(string data) {
 				continue;
 			}
 			if (compteur > 0){
-				if (type == 3 && not city.addLink(line)) {
+				if (type == 3 && not city.addLink(line, distMinWhenReadFile)) {
 					city.emptyNodeGroup(); 
 					return false;
 				}
-				if (type < 3 && not city.addNode(line,type)){
+				if (type < 3 && not city.addNode(line,type,distMinWhenReadFile)){
 					city.emptyNodeGroup(); 
 					return false;
 				}
@@ -118,42 +121,39 @@ void City::emptyNodeGroup(){
     }
     city.nodeGroup.clear();
 }
-bool City::addNode(double x, double y, Type type){	
+bool City::addNode(Point pos, Type type, double distMin){
 	ID newUID(city.findNewUID());
 	
 	stringstream line("");
-	line << newUID << " " << x << " " << y << " 1000" << endl;
+	line << newUID << " " << pos.x << " " << pos.y << " 1000" << endl;
 	
-	return city.addNode(line.str(),type);
+	return city.addNode(line.str(),type, dist_min);
 }
-bool City::addNode(string line, int type){
+bool City::addNode(string line, int type, double distMin){
 	Node* pNode(nullptr);
 	bool success(false);
 	
 	switch (type){
 	case 0:
-		pNode = new NodeHousing(line,type,success,nodeGroup);
+		pNode = new NodeHousing(line,type,success,nodeGroup, distMin);
 		break;
 	case 1:
-		pNode = new NodeTransport(line,type,success,nodeGroup);
+		pNode = new NodeTransport(line,type,success,nodeGroup, distMin);
 		break;
 	case 2:
-		pNode = new NodeProduction(line,type,success,nodeGroup);
+		pNode = new NodeProduction(line,type,success,nodeGroup, distMin);
 		break;
 	}
 	if (pNode == nullptr) return false;
-	if (not success){
+	if (not success or not pNode->checkOneNodeCollisionNodesAndLinks(pNode,
+																	 city.nodeGroup)){
 		delete pNode;
 		return false;
 	}
-
 	city.nodeGroup.push_back(pNode);
 	return true;
 }
-Node* City::getClickedNode(Point pos, bool& isOnBorder,Node* selectedNode){
-	return Node::selectNode(pos,isOnBorder,selectedNode,city.nodeGroup);
-}
-bool City::addLink(string line){
+bool City::addLink(string line, double distMin){
 	ID UID1,UID2;
 	
 	if (not Node::readLink(line,UID1,UID2)) return false;
@@ -167,7 +167,8 @@ bool City::addLink(string line){
         return false;
     }   
     for (auto& node:nodeGroup){
-        if (not (node->checkCollisionNodeLink(pNode1,pNode2))) return false;
+        if (not (node->checkCollisionNodeLink(pNode1,pNode2,distMin))) 
+			return false;
     }
     if(pNode1->checkIfNodeIsAlreadyLinked(pNode2)) return false;
     if(pNode2->checkIfNodeIsAlreadyLinked(pNode1)) return false;
@@ -179,12 +180,12 @@ bool City::addLink(string line){
     if(not pNode2->addLink(pNode1)) return false;
     return true;
 }
-bool City::addLink(Node* nodeToLink1, Node* nodeToLink2){
+bool City::addLink(Node* nodeToLink1, Node* nodeToLink2, double distMin){
 	
 	stringstream line("");
 	line << nodeToLink1->getUID() << " " << nodeToLink2->getUID() << endl;
 	
-	return city.addLink(line.str());
+	return city.addLink(line.str(), distMin);
 }
 void City::deleteNode(Node* nodeToDelete){
 	for (auto& node:city.nodeGroup) node->deleteLink(nodeToDelete);
@@ -202,17 +203,33 @@ void City::deleteNode(Node* nodeToDelete){
 	return;
 }
 void City::moveNode(Point newPos, Node* nodeToMove){
-	Point oldPos(nodeToMove->getPos());
+	if (nodeToMove == nullptr) return;
+	
+	//change position to perform tests
+	Point formerPos(nodeToMove->getPos());
 	nodeToMove->changeNodeCoordinates(newPos);
-	if (not nodeToMove->checkNodeMoveOverlap(city.nodeGroup)){
-		nodeToMove->changeNodeCoordinates(oldPos);
-	}	
+
+	if (not nodeToMove->checkOneNodeCollisionNodesAndLinks(nodeToMove,city.nodeGroup)
+		or not nodeToMove->checkLinksOfNodeOverlap(nodeToMove, city.nodeGroup))
+		nodeToMove->changeNodeCoordinates(formerPos);
+}
+void City::resizeNode(double newNbp, Node* nodeToResize){
+	if (nodeToResize == nullptr) return;
+	
+	double formerNbp(nodeToResize->getNbp());
+	nodeToResize->changeNodeNbp(newNbp);
+	if (not nodeToResize->checkOneNodeCollisionNodesAndLinks(nodeToResize,
+															 city.nodeGroup))
+		nodeToResize->changeNodeNbp(formerNbp);
 }
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;
     for (auto& node:nodeGroup){
        node->showNode();
 	}
+}
+Node* City::getClickedNode(Point pos,Node* selectedNode){
+	return Node::selectNode(pos,selectedNode,city.nodeGroup);
 }
 ID City::findNewUID(){
 

@@ -23,19 +23,21 @@ class NodeProduction;
 class Node {
 public:
 
-    Node(std::string line,int type,bool& success,const std::vector<Node*>& nodeGroup);
+    Node(std::string line,int type,bool& success,const std::vector<Node*>& nodeGroup,
+         double distMin);
     virtual ~Node(){};
 
     static bool readLink(std::string line,ID& UID1,ID& UID2);
     bool addLink(Node* nodeToLink);
     void deleteLink(Node* node);
     void changeNodeCoordinates(Point newPos);
+    void changeNodeNbp(double newNbp);
     
     virtual void showNode() const;
     
     double dist(Node* node);  
 
-    static Node* selectNode(Point pos, bool& isOnBorder,Node* selectedNode,
+    static Node* selectNode(Point pos,Node* selectedNode,
                             const std::vector<Node*>& nodeGroup);
     
     
@@ -62,11 +64,14 @@ public:
     static void showdijkstra(const std::vector<Node*>& nodeGroup);
     
     //verification functions
-    bool checkCollisionNodeLink(const Node* pNode1,const Node* pNode2) const;
+    bool checkCollisionNodeLink(const Node* pNode1,const Node* pNode2, 
+                                double distMin) const;
     bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
     virtual bool checkLinksLimit() const = 0;
-    bool checkNodeMoveOverlap(const std::vector<Node*>& nodeGroup) const;
-
+    bool checkOneNodeCollisionNodesAndLinks(Node* nodeToCheck,
+                                            const std::vector<Node*>& nodeGroup)const;
+    bool checkLinksOfNodeOverlap(Node* nodeToCheck,
+                                 const std::vector<Node*>& nodeGroup) const;
 protected:
     //diastra
     static size_t findMinAccess(const std::vector<Node*>& nodeGroup);
@@ -74,7 +79,8 @@ protected:
 
     //verification functions
     bool verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
-                             ID identifier,const std::vector<Node*>& nodeGroup);
+                             ID identifier,const std::vector<Node*>& nodeGroup,
+                             double distMin);
     Circle nodeCircle;
     unsigned int nbp;
     ID UID;
@@ -88,7 +94,7 @@ protected:
 class NodeHousing: public Node {
 public:
     NodeHousing(std::string line,int type,bool& success,
-                const std::vector<Node*>& nodeGroup);
+                const std::vector<Node*>& nodeGroup, double distMin);
     virtual ~NodeHousing(){}
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
@@ -99,7 +105,7 @@ public:
 class NodeTransport: public Node {
 public:
     NodeTransport(std::string line,int type,bool& success,
-                  const std::vector<Node*>& nodeGroup);
+                  const std::vector<Node*>& nodeGroup, double distMin);
     virtual ~NodeTransport(){}
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;
@@ -110,7 +116,7 @@ public:
 class NodeProduction: public Node {
 public:
     NodeProduction(std::string line,int type,bool& success,
-                   const std::vector<Node*>& nodeGroup);
+                   const std::vector<Node*>& nodeGroup, double distMin);
     virtual ~NodeProduction(){}
     virtual void showNode() const override;
     virtual bool checkLinksLimit() const override;

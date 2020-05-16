@@ -77,8 +77,8 @@ protected:
 
 	
 	//click gestion
-	void clicAreaWithoutEdit(double posX, double posY);
-	void clicAreaWithEdit(double posX, double posY);
+	void clicAreaWithoutEdit(Point pos);
+	void clicAreaWithEdit(Point pos);
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
 	Gtk:: Box m_Box_Drawing;
@@ -117,7 +117,12 @@ protected:
 	Gtk:: Box m_Box_Open;
 	Gtk:: Button m_Button_File;
 	Gtk:: Label m_Label_Open;
+	
+	//resize node
+	Point firstClickPosition;
+	bool isResizingNode;
 
+	//others attributs
 	MyArea m_Area;
 	bool editLink;
 	Type type;

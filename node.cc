@@ -16,14 +16,14 @@
 #include "constantes.h"
 
 using namespace std;
-// === Distmin on readfile
-#define distMinWhenReadFile 0.
+
 // === rectange of production node ===
 #define ratioRectangleWidth 0.75
 #define ratioRectangleHeight 0.125 // (1/8) 
 
 // ========== node methods ==========
-Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
+Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup, 
+           double distMin){
     istringstream data(line);
     ID UID; 
     Circle nodeCircle; 
@@ -49,7 +49,7 @@ Node::Node(string line,int type,bool& success,const vector<Node*>& nodeGroup){
         return;
     }
     nodeCircle.radius = sqrt(nbp);
-    if (not verifyNodeParameter(nodeCircle,nbp,UID, nodeGroup)){
+    if (not verifyNodeParameter(nodeCircle,nbp,UID, nodeGroup, distMin)){
         success = false;
         return;
     }
@@ -88,6 +88,18 @@ void Node::deleteLink(Node* node){
 void Node::changeNodeCoordinates(Point newPos){
 	nodeCircle.center = newPos;
 }
+void Node::changeNodeNbp(double newNbp){
+    if (newNbp < min_capacity){
+        cout<< error:: too_little_capacity(newNbp);
+        return;
+    }
+    if (newNbp > max_capacity){
+        cout<<error:: too_much_capacity(newNbp);
+        return;
+    }
+	nbp = newNbp;
+    nodeCircle.radius = sqrt(newNbp);
+}
 void Node::showNode() const {
     cout << "UID: " << UID << endl;
     cout << "CenterX: " << nodeCircle.center.x << " " 
@@ -105,20 +117,16 @@ void Node::showNode() const {
 double Node::dist(Node* node){
 	return tools::distance(nodeCircle.center, node->nodeCircle.center);
 }
-Node* Node::selectNode(Point pos, bool& isOnBorder, Node* selectedNode,
+Node* Node::selectNode(Point pos, Node* selectedNode,
                       const std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
         if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)){
-			if (pos.x*pos.x+pos.y*pos.y >= selectedNode->getNbp())
-				isOnBorder = true;
-			else isOnBorder = false;
 			return node;
 		}
 	}
+	
     return nullptr;
 }
-
-
 
 // === getter functions ===
 const ID Node::getUID() const {
@@ -271,7 +279,8 @@ void Node::showdijkstra(const std::vector<Node*>& nodeGroup){
 
 //=== Verification method ===
 bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation, 
-                               ID identifier, const vector<Node*>& nodeGroup){
+                               ID identifier, const vector<Node*>& nodeGroup, 
+                               double distMin){
     // Check validity of argument
     if (identifier == no_link) {
         cout<< error::reserved_uid(); 
@@ -291,7 +300,7 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
             return false;
         }
         if(tools::overlapBetweenCircles(circle, node->nodeCircle, 
-                                        distMinWhenReadFile)){
+                                        distMin)){
             cout<< error::node_node_superposition(identifier,node->UID);
             return false;
         }
@@ -307,12 +316,13 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
 
     return true;
 }
-bool Node::checkCollisionNodeLink(const Node* pNode1, const Node* pNode2) const{
+bool Node::checkCollisionNodeLink(const Node* pNode1, const Node* pNode2,
+                                  double distMin) const{
     Segment currentSegment = {pNode1->nodeCircle.center, pNode2->nodeCircle.center};
     if (UID != pNode1->UID
         and UID != pNode2->UID
         and tools::overlapBetweenCircleSegment(nodeCircle,currentSegment, 
-                                                dist_min)){
+                                                distMin)){
             cout << error::node_link_superposition(UID);
             return false;
         }
@@ -327,12 +337,8 @@ bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
     }
     return false;
 }
-bool Node::checkNodeMoveOverlap(const vector<Node*>& nodeGroup) const{
-    for (auto link:links){
-        for (auto& node:nodeGroup){
-            if (not (node->checkCollisionNodeLink(this,link))) return false;
-        }
-    }
+bool Node::checkOneNodeCollisionNodesAndLinks(Node* nodeToCheck,
+                                              const vector<Node*>& nodeGroup) const{
     for (auto& node:nodeGroup){
         if(node->UID != UID 
            and tools::overlapBetweenCircles(nodeCircle, node->nodeCircle, dist_min)){
@@ -340,12 +346,28 @@ bool Node::checkNodeMoveOverlap(const vector<Node*>& nodeGroup) const{
             return false;
         }
     }
+    for (auto& node:nodeGroup){
+        if (node != nodeToCheck)
+            for (auto& link:node->links){
+                if (not (this->checkCollisionNodeLink(node,link, dist_min))) 
+                return false;
+            }
+    }
+    return true;
+}
+bool Node::checkLinksOfNodeOverlap(Node* nodeToCheck,
+                                   const std::vector<Node*>& nodeGroup) const{                          
+    for (auto link:links){
+        for (auto& node:nodeGroup){
+            if (not (node->checkCollisionNodeLink(this,link, dist_min))) return false;
+        }
+    }
     return true;
 }
 //================= NodeHousing =================
 NodeHousing::NodeHousing(string line,int type, bool& success,
-                         const vector<Node*>& nodeGroup):
-    Node(line,type,success,nodeGroup){}
+                         const vector<Node*>& nodeGroup, double distMin):
+    Node(line,type,success,nodeGroup, distMin){}
 
 void NodeHousing::showNode() const {
     this->Node::showNode();
@@ -368,8 +390,8 @@ Type NodeHousing::getType() const {
 
 //================= NodeTransport =================
 NodeTransport::NodeTransport(string line,int type, bool& success,
-                             const vector<Node*>& nodeGroup):
-    Node(line,type,success,nodeGroup){}
+                             const vector<Node*>& nodeGroup, double distMin):
+    Node(line,type,success,nodeGroup, distMin){}
 
 void NodeTransport::showNode() const {
     this->Node::showNode();
@@ -395,8 +417,8 @@ Type NodeTransport::getType() const {
 
 //================= NodeProduction =================
 NodeProduction::NodeProduction(string line,int type, bool& success,
-                               const vector<Node*>& nodeGroup):
-    Node(line,type,success,nodeGroup){}
+                               const vector<Node*>& nodeGroup, double distMin):
+    Node(line,type,success,nodeGroup, distMin){}
 
 void NodeProduction::showNode() const {
     this->Node::showNode();
