@@ -426,4 +426,5 @@ void NodeProduction::drawNode() const {
 }
 Type NodeProduction::getType() const {
     return PRODUCTION;
+
 }
