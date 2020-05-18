@@ -76,7 +76,7 @@ Gui::Gui():
 	m_Frame_General("General"),
 	m_Frame_Display("Display"),
 	m_Frame_Editor("Editor"),
-	m_Frame_Informations("Informations Critères"),
+	m_Frame_Informations("Informations - criteria"),
 	m_Button_Exit("exit"),         
 	m_Button_New("new"),
     m_Button_Open("open"),
@@ -225,7 +225,6 @@ void Gui::onOpenButtonClicked(){
 		emptyCity();
 		City::readFile(filename);
 		refreshGuiAndDraw();
-		m_Area.zoomReset();
 		refreshZoom();
 	}
 }
