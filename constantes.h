@@ -2,7 +2,7 @@
 #define CONSTANTES_HEADER_H
 
 constexpr double dim_max(1000.);
-constexpr double dist_min(10.);
+constexpr double dist_min(100.);
 constexpr double default_speed(5.);
 constexpr double fast_speed(20.);
 

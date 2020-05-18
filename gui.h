@@ -79,6 +79,10 @@ protected:
 	//click gestion
 	void clicAreaWithoutEdit(Point pos);
 	void clicAreaWithEdit(Point pos);
+
+	//empty
+	void emptyCity();
+
 	Gtk:: Box m_Box;
 	Gtk:: Box m_Box_Buttons;
 	Gtk:: Box m_Box_Drawing;

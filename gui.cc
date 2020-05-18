@@ -217,17 +217,17 @@ void Gui::createDrawingArea(){
 
 // === buttons functions ===
 void Gui::onExitButtonClicked(){
-	City::emptyNodeGroup();
+	emptyCity();
 	exit(0);
 }
 void Gui::onNewButtonClicked(){
-	City::emptyNodeGroup();
+	emptyCity();
 	refreshGuiAndDraw();
 }
 void Gui::onOpenButtonClicked(){
 	string filename ( fileSelection(true) );
 	if (not (filename == "")){
-		City::emptyNodeGroup();
+		emptyCity();
 		City::readFile(filename);
 		refreshGuiAndDraw();
 		m_Area.zoomReset();
@@ -368,18 +368,18 @@ bool Gui::on_button_release_event(GdkEventButton * event){
 			Point pModel = {graphic_gui::convertWindowToModelX(pWindow.x),
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 
-			if(event->button == 1 and isResizingNode){ //left mouse button
+			if(event->button == 1 and isResizingNode and selectedNode != nullptr){ 
+				//left mouse button
 
 				double endRadius( tools::distance(selectedNode->getPos(),pModel) );
 				double startRadius( tools::distance(selectedNode->getPos(),
-											 		firstClickPosition) );///demander vincent indentation
+											 		firstClickPosition) );
+				///demander vincent indentation
 				double currentRadius( sqrt(selectedNode->getNbp()) );
 
 				double newNbp( pow( currentRadius +(endRadius-startRadius) ,2) );
 				City::resizeNode(newNbp,selectedNode);
-				//~ Node* clickedNode( City::getClickedNode({p2.x,p2.y},isResizingNode,
-											//~ selectedNode) );			
-				//~ if (clickedNode == nullptr and selectedNode != nullptr)
+				
 				selectedNode = nullptr;
 				isResizingNode = false;
 				refreshGuiAndDraw();
@@ -449,3 +449,11 @@ bool Gui::on_key_press_event(GdkEventKey * key_event){
 	return Gtk::Window::on_key_press_event(key_event);
 }
 
+// === empty city ===
+void Gui::emptyCity(){
+	m_TButton_Path.set_active(false);
+	m_TButton_Edit.set_active(false);
+	m_Area.zoomReset();
+	selectedNode = nullptr;
+	City::emptyNodeGroup();
+}

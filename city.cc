@@ -127,7 +127,7 @@ bool City::addNode(Point pos, Type type, double distMin){
 	stringstream line("");
 	line << newUID << " " << pos.x << " " << pos.y << " 1000" << endl;
 	
-	return city.addNode(line.str(),type, dist_min);
+	return city.addNode(line.str(),type, distMin);
 }
 bool City::addNode(string line, int type, double distMin){
 	Node* pNode(nullptr);
