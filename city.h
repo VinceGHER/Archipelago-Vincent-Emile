@@ -20,9 +20,10 @@ public:
 	static void updateDraw(bool shortestPath, Node* selectedNode);
 	static void emptyNodeGroup();
 	static bool addNode(Point pos, Type type, double distMin);
-	static bool addLink(Node* nodeToLink1, Node* nodeToLink2, double distMin);
+	static void updateLink(Node* nodeToLink1, Node* nodeToLink2, double distMin);
 	static void deleteNode(Node* nodeToDelete);
 	static void moveNode(Point newPos, Node* nodeToMove);
+	static void resizeNode(Node* node, Point firstPos, Point lastPos);
 	static void resizeNode(double newNbp, Node* nodeToResize);
 	static Node* getClickedNode(Point pos, Node* selectedNode);
 

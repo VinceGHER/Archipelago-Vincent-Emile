@@ -10,6 +10,7 @@
 #include <string>
 #include <array>
 #include <iomanip>
+#include <cmath>
 
 #include "city.h"
 #include "node.h"
@@ -91,29 +92,30 @@ bool City::save(string nom){
 	return true;
 }
 void City::updateDraw(bool shortestPath, Node* selectedNode){
-	tools::setColor(BLACK);
 	//draw links
+	tools::setColor(BLACK);
 	vector<array<Node*,2>> linkCreated;
     for (auto& node:city.nodeGroup){
         node->drawLink(linkCreated,node,true);
     }
 
-	//draw nodes
+	//draw nodes that are not selected
+	tools::setColor(BLACK);
 	for (auto& node:city.nodeGroup){
-		if (node == selectedNode) tools::setColor(RED);
-		else tools::setColor(BLACK);
-		node->drawNode();
+		if (node != selectedNode) node->drawNode();
 	}
-
-	//draw shortestPath to selected node
-	//debug
 	
+	//draw shortestPath to selected node
 	tools::setColor(GREEN);
-	if (selectedNode == nullptr) return;
-	if (shortestPath && selectedNode->getType() == HOUSING){
+	if (   selectedNode != nullptr 
+		&& shortestPath
+		&& selectedNode->getType() == HOUSING){
 		city.dijkstra(selectedNode->getUID(),TRANSPORT,true);
 		city.dijkstra(selectedNode->getUID(),PRODUCTION,true);
 	}
+	//draw SelectedNode
+	tools::setColor(RED);
+	if (selectedNode != nullptr) selectedNode->drawNode();
 }
 void City::emptyNodeGroup(){
     for (auto& node:city.nodeGroup){
@@ -170,8 +172,14 @@ bool City::addLink(string line, double distMin){
         if (not (node->checkCollisionNodeLink(pNode1,pNode2,distMin))) 
 			return false;
     }
-    if(pNode1->checkIfNodeIsAlreadyLinked(pNode2)) return false;
-    if(pNode2->checkIfNodeIsAlreadyLinked(pNode1)) return false;
+    if (pNode1->checkIfNodeIsAlreadyLinked(pNode2)){
+		cout << error::multiple_same_link(pNode1->getUID(),pNode2->getUID());
+		return false;
+	}
+	if (pNode2->checkIfNodeIsAlreadyLinked(pNode1)){
+		cout << error::multiple_same_link(pNode2->getUID(),pNode1->getUID());
+		return false;	
+	}
 	
     if(pNode1->checkLinksLimit()) return false;
     if(pNode2->checkLinksLimit()) return false;
@@ -180,12 +188,15 @@ bool City::addLink(string line, double distMin){
     if(not pNode2->addLink(pNode1)) return false;
     return true;
 }
-bool City::addLink(Node* nodeToLink1, Node* nodeToLink2, double distMin){
-	
+void City::updateLink(Node* nodeToLink1, Node* nodeToLink2, double distMin){
+	if (nodeToLink1->checkIfNodeIsAlreadyLinked(nodeToLink2)){	
+		nodeToLink1->deleteLink(nodeToLink2);
+		nodeToLink2->deleteLink(nodeToLink1);
+		return;
+	}
 	stringstream line("");
 	line << nodeToLink1->getUID() << " " << nodeToLink2->getUID() << endl;
-	
-	return city.addLink(line.str(), distMin);
+	city.addLink(line.str(), distMin);
 }
 void City::deleteNode(Node* nodeToDelete){
 	for (auto& node:city.nodeGroup) node->deleteLink(nodeToDelete);
@@ -212,6 +223,17 @@ void City::moveNode(Point newPos, Node* nodeToMove){
 	if (not nodeToMove->checkOneNodeCollisionNodesAndLinks(nodeToMove,city.nodeGroup)
 		or not nodeToMove->checkLinksOfNodeOverlap(nodeToMove, city.nodeGroup))
 		nodeToMove->changeNodeCoordinates(formerPos);
+}
+void City::resizeNode(Node* node, Point firstPos, Point lastPos){
+	
+	double startRadius( tools::distance(node->getPos(), firstPos) );
+	double endRadius( tools::distance(node->getPos(),lastPos) );
+
+	///demander vincent indentation
+	double currentRadius( sqrt(node->getNbp()) );
+
+	double newNbp( pow( currentRadius +(endRadius-startRadius) ,2) );
+	City::resizeNode(newNbp,node);
 }
 void City::resizeNode(double newNbp, Node* nodeToResize){
 	if (nodeToResize == nullptr) return;

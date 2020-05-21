@@ -77,8 +77,9 @@ protected:
 
 	
 	//click gestion
-	void clicAreaWithoutEdit(Point pos);
-	void clicAreaWithEdit(Point pos);
+	void clicPressAreaWithoutEdit(Point pos);
+	void clicPressAreaWithEdit(Point pos);
+	void clicReleaseAreaWithEdit(Point pos);
 
 	//empty
 	void emptyCity();

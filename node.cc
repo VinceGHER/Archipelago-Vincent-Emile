@@ -78,7 +78,6 @@ bool Node::addLink(Node* nodeToLink){
 void Node::deleteLink(Node* node){
 	for (unsigned int i(0); i < links.size(); ++i){
 		if (links[i] == node){
-            cout << "Noeuds " << links[i]->UID << "supprimée " << endl;
 			swap(links[i],links.back());
 			links.pop_back();
             return;
@@ -331,7 +330,6 @@ bool Node::checkCollisionNodeLink(const Node* pNode1, const Node* pNode2,
 bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
     for (size_t i(0); i < links.size(); ++i){
         if (links[i]->UID == nodeToCheck->UID){
-            cout << error::multiple_same_link(UID,nodeToCheck->UID);
             return true;
         }
     }

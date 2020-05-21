@@ -326,8 +326,8 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 			
 			if(event->button == 1){ //left mouse button
-				if (editLink) clicAreaWithEdit(pModel);
-				else clicAreaWithoutEdit(pModel);
+				if (editLink) clicPressAreaWithEdit(pModel);
+				else clicPressAreaWithoutEdit(pModel);
 				
 			} else if (event->button == 3){ //right mouse button
 				if (selectedNode != nullptr) 
@@ -364,26 +364,13 @@ bool Gui::on_button_release_event(GdkEventButton * event){
 
 			if(event->button == 1 and isResizingNode and selectedNode != nullptr){ 
 				//left mouse button
-
-				double endRadius( tools::distance(selectedNode->getPos(),pModel) );
-				double startRadius( tools::distance(selectedNode->getPos(),
-											 		firstClickPosition) );
-				///demander vincent indentation
-				double currentRadius( sqrt(selectedNode->getNbp()) );
-
-				double newNbp( pow( currentRadius +(endRadius-startRadius) ,2) );
-				City::resizeNode(newNbp,selectedNode);
-				
-				selectedNode = nullptr;
-				isResizingNode = false;
-				refreshGuiAndDraw();
-				
+				clicReleaseAreaWithEdit(pModel);
 			}
 		}
 	}
 	return true;
 }
-void Gui::clicAreaWithoutEdit(Point pos){
+void Gui::clicPressAreaWithoutEdit(Point pos){
 	Node* clickedNode( City::getClickedNode(pos,selectedNode) );
 
 	//resizing node
@@ -416,15 +403,24 @@ void Gui::clicAreaWithoutEdit(Point pos){
 		}
 
 }
-void Gui::clicAreaWithEdit(Point pos){
+void Gui::clicPressAreaWithEdit(Point pos){
 
 	Node* clickedNode( City::getClickedNode(pos, selectedNode) );
 	if (clickedNode == nullptr or selectedNode == nullptr) return;
 	if (clickedNode == selectedNode) return;
 	
-	City::addLink(selectedNode,clickedNode, dist_min);
+	City::updateLink(selectedNode,clickedNode, dist_min);
 	return;
 }
+void Gui::clicReleaseAreaWithEdit(Point pos){
+
+	City::resizeNode(selectedNode,firstClickPosition,pos);
+	selectedNode = nullptr;
+	isResizingNode = false;
+	refreshGuiAndDraw();
+				
+}
+
 // === keyboard signal handler ===
 bool Gui::on_key_press_event(GdkEventKey * key_event){
 	if(key_event->type == GDK_KEY_PRESS){
