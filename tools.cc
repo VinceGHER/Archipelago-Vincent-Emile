@@ -23,7 +23,7 @@ bool tools::overlapBetweenCircles(Circle circle1, Circle circle2, double dist_mi
     return false;
 }
 bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment, 
-                                        double dist_min){
+										double dist_min){
     Vector segmentToCircle = {circle.center.x - segment.start.x, 
                               circle.center.y - segment.start.y};
     Vector segmentVector = {segment.end.x - segment.start.x,
@@ -32,18 +32,21 @@ bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment,
     double segmentLength (distance(segment.start,segment.end));
     double distScal (scalarProduct(segmentVector, segmentToCircle)/segmentLength);
 
-    if (distScal < 0 or distScal > segmentLength) return false;
+    if (distScal < 0 or distScal > segmentLength) 
+		return false;
   
     double distTest ( sqrt( pow(distance(segmentToCircle),2) - pow(distScal,2) ) );
     
     double distCercleTest (distTest - circle.radius);
   
-    if (distCercleTest >= dist_min) return false;
+    if (distCercleTest >= dist_min) 
+		return false;
 
     return true;
 }
 bool tools::overlapBetweenCirclePoint(Circle circle, Point point){
-    if (tools::distance(circle.center,point) <= circle.radius) return true;
+    if (tools::distance(circle.center,point) <= circle.radius) 
+		return true;
     return false;
 }
 double tools::distance(Vector vector){
