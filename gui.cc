@@ -19,17 +19,21 @@ using namespace std;
 // ========== Class MyArea ==========
 
 MyArea::MyArea(Gui& gui):
-	currentZoom(1.),shortestPath(false),ptrSelectedNode(&gui.getSelectedNode()){}
+	currentZoom(1.),
+	shortestPath(false),
+	ptrSelectedNode(&gui.getSelectedNode()){};
 void MyArea::setFrame(Frame x){
 	graphic_gui::setFrame(x);
 }
 void MyArea::zoomFrame(bool zooming){
 	double newZoom(currentZoom);
 
-	if (zooming) newZoom+=delta_zoom;
+	if (zooming) 
+		newZoom+=delta_zoom;
 	else newZoom-=delta_zoom;
 
-	if (newZoom <= (max_zoom+epsil_zero) and newZoom >= (min_zoom-epsil_zero)){
+	if (newZoom <= (max_zoom+epsil_zero) and
+		newZoom >= (min_zoom-epsil_zero)){
 		currentZoom = newZoom;
 		refresh();
 	}
@@ -326,7 +330,8 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 			
 			if(event->button == 1){ //left mouse button
-				if (editLink) clicPressAreaWithEdit(pModel);
+				if (editLink) 
+					clicPressAreaWithEdit(pModel);
 				else clicPressAreaWithoutEdit(pModel);
 				
 			} else if (event->button == 3){ //right mouse button
@@ -362,10 +367,10 @@ bool Gui::on_button_release_event(GdkEventButton * event){
 			Point pModel = {graphic_gui::convertWindowToModelX(pWindow.x),
 							graphic_gui::convertWindowToModelY(pWindow.y)};
 
-			if(event->button == 1 and isResizingNode and selectedNode != nullptr){ 
-				//left mouse button
+			if (event->button == 1 and 
+				isResizingNode and
+				selectedNode != nullptr) //left mouse button
 				clicReleaseAreaWithEdit(pModel);
-			}
 		}
 	}
 	return true;
@@ -396,18 +401,21 @@ void Gui::clicPressAreaWithoutEdit(Point pos){
 		return;
 	}
 	//switch selected node
-	if (clickedNode != nullptr and selectedNode != nullptr 
-		and clickedNode !=  selectedNode){
-			selectedNode = clickedNode;
-			return;
+	if (clickedNode != nullptr and selectedNode != nullptr and
+		clickedNode !=  selectedNode){
+		selectedNode = clickedNode;
+		return;
 		}
 
 }
 void Gui::clicPressAreaWithEdit(Point pos){
 
 	Node* clickedNode( City::getClickedNode(pos, selectedNode) );
-	if (clickedNode == nullptr or selectedNode == nullptr) return;
-	if (clickedNode == selectedNode) return;
+	if (clickedNode == nullptr or
+		selectedNode == nullptr) 
+		return;
+	if (clickedNode == selectedNode) 
+		return;
 	
 	City::updateLink(selectedNode,clickedNode, dist_min);
 	return;

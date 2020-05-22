@@ -233,8 +233,7 @@ void City::resizeNode(Node* node, Point firstPos, Point lastPos){
 	
 	double startRadius( tools::distance(node->getPos(), firstPos) );
 	double endRadius( tools::distance(node->getPos(),lastPos) );
-
-	///demander vincent indentation
+	
 	double currentRadius( sqrt(node->getNbp()) );
 
 	double newNbp( pow( currentRadius +(endRadius-startRadius) ,2) );
@@ -270,7 +269,6 @@ ID City::findNewUID(){
 			++testedUID;
 		} else ++index;
 	}
-	
 	return testedUID;
 }
 
@@ -278,13 +276,15 @@ ID City::findNewUID(){
 string City::criteriaENJ(){
 	double dayNbpTotal(0);
 	double restNbpTotal(0);
-	if (city.nodeGroup.empty()) return to_string(dayNbpTotal);
+	if (city.nodeGroup.empty()) 
+		return to_string(dayNbpTotal);
 	
 	for (size_t i(0); i < city.nodeGroup.size(); ++i){
 		double currentNbp (city.nodeGroup[i]->getNbp());
 		Type currentType (city.nodeGroup[i]->getType());
 		dayNbpTotal += currentNbp;
-		if (currentType == HOUSING) restNbpTotal += currentNbp;
+		if (currentType == HOUSING) 
+			restNbpTotal += currentNbp;
 		else restNbpTotal -= currentNbp;
 	}
 	stringstream balance("");
@@ -292,7 +292,8 @@ string City::criteriaENJ(){
 	return balance.str();
 }
 string City::criteriaCI(){
-	if (city.nodeGroup.empty()) return "0";
+	if (city.nodeGroup.empty()) 
+		return "0";
 	vector<array<Node*,2>> linkCreated(city.getLinkGroup());
 	
 	double cost(0);
@@ -304,9 +305,9 @@ string City::criteriaCI(){
 				(linkCreated[i][1]->getNbp())) );
 				
 		double speed(1);
-		if (linkCreated[i][0]->getType() == TRANSPORT
-			and linkCreated[i][1]->getType() == TRANSPORT)
-				speed = fast_speed;
+		if (linkCreated[i][0]->getType() == TRANSPORT and
+			linkCreated[i][1]->getType() == TRANSPORT)
+			speed = fast_speed;
 		else speed = default_speed;
 		
 		cost += (distance*capacity*speed);
@@ -316,7 +317,8 @@ string City::criteriaCI(){
 	return value.str();
 }
 string City::criteriaMTA(){
-	if (city.nodeGroup.empty()) return "0";
+	if (city.nodeGroup.empty()) 
+		return "0";
 	int sizeHousing(0);
 	double accessTime(0);
 
@@ -327,7 +329,8 @@ string City::criteriaMTA(){
 			accessTime += city.dijkstra(node->getUID(),PRODUCTION,false);
 		}
 	}
-	if (sizeHousing == 0) return "0";
+	if (sizeHousing == 0)
+		return "0";
 
 	stringstream mean("");
 	mean << accessTime/sizeHousing;
@@ -348,9 +351,8 @@ double City::dijkstra(ID startNodeID, Type type, bool showPath){
 	Node* findedNode(Node::dijkstra(nodeGroupMTA, type));
 
 	if (findedNode != nullptr){
-		if (showPath){
+		if (showPath)
 			Node::drawSortestPath(findedNode);
-		}
 		return findedNode->getAccess();
 	}
 	return infinite_time;
@@ -359,9 +361,8 @@ double City::dijkstra(ID startNodeID, Type type, bool showPath){
 // === tools functions ===
 Node* City::pickNodeByUID(ID UID) const {
     for (size_t i(0); i < nodeGroup.size(); ++i){
-        if ( nodeGroup[i]->getUID() == UID){
+        if ( nodeGroup[i]->getUID() == UID)
             return nodeGroup[i];
-        }
     }
     cout << error::link_vacuum(UID);
     return nullptr;
@@ -369,7 +370,8 @@ Node* City::pickNodeByUID(ID UID) const {
 vector<Node*> City::getType(Type type) const{
 	vector<Node*> output;
 	for (auto& node:city.nodeGroup){
-		if (node->getType() == type) output.push_back(node);
+		if (node->getType() == type) 
+			output.push_back(node);
 	}
 	return output;
 }

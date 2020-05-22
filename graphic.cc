@@ -54,7 +54,7 @@ void graphic_gui::updateFrameSize(int width, int height, double zoom){
 
         current.xmax = mid + 0.5*(newFactor/initial.ratio)*delta;
         current.xmin = mid - 0.5*(newFactor/initial.ratio)*delta;		  	  
-
+        
     } else { // keep xmax and xmin. Adjust ymax and ymin
         current.xmax = initial.xmax ;
         current.xmin = initial.xmin ;
@@ -77,12 +77,14 @@ void graphic_gui::updateFrameSize(int width, int height, double zoom){
 
 double graphic_gui::convertWindowToModelX(double x){
     double prefactor = current.width / ( current.xmax - current.xmin );
-    if (prefactor == 0) return 0;
+    if (prefactor == 0) 
+		return 0;
     return (x/prefactor)+current.xmin;
 }
 double graphic_gui::convertWindowToModelY(double y){
     double prefactor = current.height / ( current.ymax - current.ymin ); 
-    if (prefactor == 0) return 0;
+    if (prefactor == 0) 
+		return 0;
     return -((y/prefactor)-current.ymax);
 }
 

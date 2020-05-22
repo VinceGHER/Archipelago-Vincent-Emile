@@ -71,7 +71,8 @@ bool Node::readLink(string line,ID& UID1,ID& UID2){
     return true;
 }
 bool Node::addLink(Node* nodeToLink){
-    if (nodeToLink == nullptr) return false;
+    if (nodeToLink == nullptr) 
+		return false;
     links.push_back(nodeToLink);
     return true;
 }
@@ -106,10 +107,13 @@ void Node::showNode() const {
          << "Radius: " << nodeCircle.radius << endl;
     cout << "Links: (" << links.size()<< ")" <<  endl;
     for (auto link:links){
-        cout << "   link: " << UID << " <-> "<<link->UID << endl;
+        cout << "   link: " << UID << " <-> " << link->UID << endl;
     }
-    cout <<  "Dijkstra: (access: " << access << " in: " << in << " parent: ";
-    if(parent != nullptr) cout << parent->UID;
+    cout <<  "Dijkstra: (access: "
+		 << access << " in: "
+		 << in << " parent: ";
+    if(parent != nullptr)
+		cout << parent->UID;
     else cout << "nullptr";
     cout << ")" << endl;
 }
@@ -119,9 +123,8 @@ double Node::dist(Node* node){
 Node* Node::selectNode(Point pos, Node* selectedNode,
                       const std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
-        if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos)){
+        if (tools::overlapBetweenCirclePoint(node->nodeCircle, pos))
 			return node;
-		}
 	}
 	
     return nullptr;
@@ -162,8 +165,8 @@ void Node::drawLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr,
 
         //test if link1 or link2 already exists
         if (not (std::find(linkCreated.begin(), linkCreated.end(), link1)
-            != linkCreated.end())
-        && not (std::find(linkCreated.begin(), linkCreated.end(), link2)
+            != linkCreated.end()) && 
+            not (std::find(linkCreated.begin(), linkCreated.end(), link2)
             != linkCreated.end()) ){
             
             if (drawing){
@@ -185,13 +188,12 @@ Node* Node::dijkstra(vector<Node*>& nodeGroup, Type type){
        
         size_t nodeIndex(Node::findMinAccess(nodeGroup));
        
-        if (nodeGroup[nodeIndex]->getType() == type){
-            	
+        if (nodeGroup[nodeIndex]->getType() == type)
             return nodeGroup[nodeIndex];
-        }
 
         nodeGroup[nodeIndex]->in = false;
-        if (nodeGroup[nodeIndex]->getType()==PRODUCTION) continue;
+        if (nodeGroup[nodeIndex]->getType()==PRODUCTION) 
+			continue;
         vector<Node*> currentLinks(nodeGroup[nodeIndex]->links);
   
         for (size_t lv(0); lv < currentLinks.size(); ++lv){
@@ -272,7 +274,9 @@ void Node::drawSortestPath(Node* nodeFinish){
 void Node::showdijkstra(const std::vector<Node*>& nodeGroup){
     for (auto node:nodeGroup){
         cout << "---" << endl;
-        cout << "UID: " << node->UID << " In: " << node->in << " access " << node->access << endl;
+        cout << "UID: " << node->UID 
+			 << " In: " << node->in
+			 << " access " << node->access << endl;
     }
 }
 
@@ -318,28 +322,28 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
 bool Node::checkCollisionNodeLink(const Node* pNode1, const Node* pNode2,
                                   double distMin) const{
     Segment currentSegment = {pNode1->nodeCircle.center, pNode2->nodeCircle.center};
-    if (UID != pNode1->UID
-        and UID != pNode2->UID
-        and tools::overlapBetweenCircleSegment(nodeCircle,currentSegment, 
-                                                distMin)){
-            cout << error::node_link_superposition(UID);
-            return false;
+    if (UID != pNode1->UID and
+        UID != pNode2->UID and
+        tools::overlapBetweenCircleSegment(nodeCircle,currentSegment, 
+                                           distMin)){
+        cout << error::node_link_superposition(UID);
+        return false;
         }
     return true;
 }
 bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
     for (size_t i(0); i < links.size(); ++i){
-        if (links[i]->UID == nodeToCheck->UID){
+        if (links[i]->UID == nodeToCheck->UID)
             return true;
-        }
     }
     return false;
 }
 bool Node::checkOneNodeCollisionNodesAndLinks(Node* nodeToCheck,
-                                              const vector<Node*>& nodeGroup) const{
+											  const vector<Node*>& nodeGroup) const{
     for (auto& node:nodeGroup){
-        if(node->UID != UID 
-           and tools::overlapBetweenCircles(nodeCircle, node->nodeCircle, dist_min)){
+        if (node->UID != UID and
+		    tools::overlapBetweenCircles(nodeCircle, node->nodeCircle,
+										 dist_min)){
             cout<< error::node_node_superposition(UID,node->UID);
             return false;
         }
@@ -348,7 +352,7 @@ bool Node::checkOneNodeCollisionNodesAndLinks(Node* nodeToCheck,
         if (node != nodeToCheck)
             for (auto& link:node->links){
                 if (not (this->checkCollisionNodeLink(node,link, dist_min))) 
-                return false;
+					return false;
             }
     }
     return true;
@@ -357,7 +361,8 @@ bool Node::checkLinksOfNodeOverlap(Node* nodeToCheck,
                                    const std::vector<Node*>& nodeGroup) const{                          
     for (auto link:links){
         for (auto& node:nodeGroup){
-            if (not (node->checkCollisionNodeLink(this,link, dist_min))) return false;
+            if (not (node->checkCollisionNodeLink(this,link, dist_min))) 
+				return false;
         }
     }
     return true;
