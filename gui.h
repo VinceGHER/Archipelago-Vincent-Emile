@@ -64,7 +64,10 @@ protected:
 	void onTransportButtonClicked();
 	void onProductionButtonClicked();
 	
+	//select file
 	std:: string fileSelection(bool open);
+
+	//refresh function
 	void refreshGuiAndDraw();
 	void refreshZoom();
 
@@ -72,15 +75,14 @@ protected:
 	bool on_button_press_event(GdkEventButton * event) override;
 	bool on_button_release_event(GdkEventButton * event) override;
 
-	//keyboard signal handler:
-	bool on_key_press_event(GdkEventKey * key_event) override;
-
-	
-	//click gestion
+	//clic gestion
 	void clicPressAreaWithoutEdit(Point pos);
 	void clicPressAreaWithEdit(Point pos);
 	void clicReleaseAreaWithEdit(Point pos);
 
+	//keyboard signal handler:
+	bool on_key_press_event(GdkEventKey * key_event) override;
+	
 	//empty
 	void emptyCity();
 

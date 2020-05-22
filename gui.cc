@@ -113,30 +113,10 @@ Gui::Gui():
 		show_all_children();
 }
 
-void Gui::refreshGuiAndDraw(){
-
-	m_Area.refresh();
-
-	string ENJText ("ENJ: " + (City::criteriaENJ()));
-	string CIText ("CI: " + (City::criteriaCI()));
-	string MTAText ("MTA: " + (City::criteriaMTA()));
-
-	m_Label_ENJ.set_text(ENJText);
-	m_Label_CI.set_text(CIText);
-	m_Label_MTA.set_text(MTAText);
-	
-}
-void Gui::refreshZoom(){
-	stringstream balance("");
-	balance << "zoom: x" << fixed << setprecision(2) << m_Area.getZoom();
-	m_Label_Zoom.set_text(balance.str());
-}
-
 // === initialisation ===
 void Gui::createBoxStruct(){
 
 	add(m_Box);
-	
 
 	m_Box.pack_start(m_Box_Buttons,false,false);
 	m_Box.pack_start(m_Box_Drawing,true,true);
@@ -200,7 +180,6 @@ void Gui::linkFunctionButtons(){
 	m_Radio_Production.signal_clicked().connect(sigc::mem_fun(*this,
 			  &Gui:: onProductionButtonClicked) );		  
 }
-
 void Gui::createDrawingArea(){
 	Frame wd = {-dim_max,dim_max,-dim_max,dim_max};
 	wd.ratio = (wd.xmax-wd.xmin)/(wd.ymax-wd.ymin);
@@ -234,7 +213,8 @@ void Gui::onOpenButtonClicked(){
 }
 void Gui::onSaveButtonClicked(){
 	string filename ( fileSelection(false) );
-	if (not (filename == "")) City::save(filename);
+	if (not (filename == "")) 
+		City::save(filename);
 }
 void Gui::onPathButtonClicked(){
 	m_Area.setShortestPath(m_TButton_Path.get_active());
@@ -305,22 +285,39 @@ string Gui::fileSelection(bool open){
 	return filename;
 }
 
+// === refresh functions ===
+void Gui::refreshGuiAndDraw(){
+
+	m_Area.refresh();
+
+	string ENJText ("ENJ: " + (City::criteriaENJ()));
+	string CIText ("CI: " + (City::criteriaCI()));
+	string MTAText ("MTA: " + (City::criteriaMTA()));
+
+	m_Label_ENJ.set_text(ENJText);
+	m_Label_CI.set_text(CIText);
+	m_Label_MTA.set_text(MTAText);
+	
+}
+void Gui::refreshZoom(){
+	stringstream balance("");
+	balance << "zoom: x" << fixed << setprecision(2) << m_Area.getZoom();
+	m_Label_Zoom.set_text(balance.str());
+}
+
 // === mouse event signal handlers ===
 bool Gui::on_button_press_event(GdkEventButton * event){
 	if(event->type == GDK_BUTTON_PRESS){
-		//raw mouse coordinates in the window frame
+		
 		double clicX = event->x ;
 		double clicY = event->y ;
 		
-		//origin of the drawing area
 		double originX = m_Area.get_allocation().get_x();
 		double originY = m_Area.get_allocation().get_y();
 	
-		//get width and height of drawing area
 		double width = m_Area.get_allocation().get_width();
 		double height= m_Area.get_allocation().get_height();
 	
-		//retain only mouse events located within the drawing area
 		if(clicX >= originX && clicX <= originX + width &&
 		   clicY >= originY && clicY <= originY + height) {
 			
@@ -332,7 +329,8 @@ bool Gui::on_button_press_event(GdkEventButton * event){
 			if(event->button == 1){ //left mouse button
 				if (editLink) 
 					clicPressAreaWithEdit(pModel);
-				else clicPressAreaWithoutEdit(pModel);
+				else 
+					clicPressAreaWithoutEdit(pModel);
 				
 			} else if (event->button == 3){ //right mouse button
 				if (selectedNode != nullptr) 

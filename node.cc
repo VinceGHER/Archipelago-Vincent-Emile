@@ -114,7 +114,8 @@ void Node::showNode() const {
 		 << in << " parent: ";
     if(parent != nullptr)
 		cout << parent->UID;
-    else cout << "nullptr";
+    else    
+        cout << "nullptr";
     cout << ")" << endl;
 }
 double Node::dist(Node* node){
@@ -171,7 +172,7 @@ void Node::drawLink(vector<array<Node*,2>>& linkCreated,Node* thisNodePtr,
             
             if (drawing){
                 Point start(nodeCircle.center);
-                Point end  (link->nodeCircle.center);
+                Point end(link->nodeCircle.center);
                 tools::drawSegment(Segment{start,end});
             }
            
@@ -199,8 +200,8 @@ Node* Node::dijkstra(vector<Node*>& nodeGroup, Type type){
         for (size_t lv(0); lv < currentLinks.size(); ++lv){
             if (currentLinks[lv]->in){
                 
-                double alt(nodeGroup[nodeIndex]->access 
-                         + computeAccess(nodeGroup[nodeIndex],currentLinks[lv]));
+                double alt(nodeGroup[nodeIndex]->access +
+                           computeAccess(nodeGroup[nodeIndex],currentLinks[lv]));
             
                 if (currentLinks[lv]->access > alt){
                     currentLinks[lv]->access = alt;
@@ -232,7 +233,8 @@ void Node::sortNodeGroup(vector<Node*>& nodeGroup, ID UIDToUpdate){
             nodeGroup[currentIndex-1]->access){
             swap(nodeGroup[currentIndex],nodeGroup[currentIndex-1]);
             --currentIndex;
-        } else success = true;
+        } else  
+            success = true;
     }		
 }
 size_t Node::findMinAccess(const vector<Node*>& nodeGroup){
@@ -252,7 +254,8 @@ double Node::computeAccess(Node* node1, Node* node2){
     
     if (node1->getType() == TRANSPORT and node2->getType() == TRANSPORT) 
         speed = fast_speed;
-    else speed = default_speed;
+    else    
+        speed = default_speed;
 
     return distBetweenNode/speed;
 }

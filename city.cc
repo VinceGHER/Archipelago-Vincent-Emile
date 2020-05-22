@@ -110,9 +110,10 @@ void City::updateDraw(bool shortestPath, Node* selectedNode){
 	
 	//draw shortestPath to selected node
 	tools::setColor(GREEN);
-	if (   selectedNode != nullptr 
-		&& shortestPath
-		&& selectedNode->getType() == HOUSING){
+	if (selectedNode != nullptr and
+		shortestPath and
+		selectedNode->getType() == HOUSING){
+
 		city.dijkstra(selectedNode->getUID(),TRANSPORT,true);
 		city.dijkstra(selectedNode->getUID(),PRODUCTION,true);
 	}
@@ -150,9 +151,10 @@ bool City::addNode(string line, int type, double distMin){
 		pNode = new NodeProduction(line,type,success,nodeGroup, distMin);
 		break;
 	}
-	if (pNode == nullptr) return false;
-	if (not success or not pNode->checkOneNodeCollisionNodesAndLinks(pNode,
-																	 city.nodeGroup)){
+	if (pNode == nullptr) 
+		return false;
+	if (not success or 
+		not pNode->checkOneNodeCollisionNodesAndLinks(pNode,city.nodeGroup)){
 		delete pNode;
 		return false;
 	}
@@ -162,11 +164,13 @@ bool City::addNode(string line, int type, double distMin){
 bool City::addLink(string line, double distMin){
 	ID UID1,UID2;
 	
-	if (not Node::readLink(line,UID1,UID2)) return false;
+	if (not Node::readLink(line,UID1,UID2)) 
+		return false;
 	
     Node* pNode1(pickNodeByUID(UID1)); 
     Node* pNode2(pickNodeByUID(UID2));
-    if (pNode1 == nullptr or pNode2 == nullptr) return false;
+    if (pNode1 == nullptr or pNode2 == nullptr) 
+		return false;
 	
     if (UID1 == UID2) {
         cout << error::self_link_node(UID1);
@@ -186,11 +190,15 @@ bool City::addLink(string line, double distMin){
 		return false;	
 	}
 	
-    if(pNode1->checkLinksLimit()) return false;
-    if(pNode2->checkLinksLimit()) return false;
+    if(pNode1->checkLinksLimit()) 
+		return false;
+    if(pNode2->checkLinksLimit()) 
+		return false;
 	
-    if(not pNode1->addLink(pNode2)) return false;
-    if(not pNode2->addLink(pNode1)) return false;
+    if(not pNode1->addLink(pNode2)) 
+		return false;
+    if(not pNode2->addLink(pNode1)) 
+		return false;
     return true;
 }
 void City::updateLink(Node* nodeToLink1, Node* nodeToLink2, double distMin){
@@ -219,7 +227,8 @@ void City::deleteNode(Node* nodeToDelete){
 	return;
 }
 void City::moveNode(Point newPos, Node* nodeToMove){
-	if (nodeToMove == nullptr) return;
+	if (nodeToMove == nullptr) 
+		return;
 	
 	//change position to perform tests
 	Point formerPos(nodeToMove->getPos());
@@ -240,7 +249,8 @@ void City::resizeNode(Node* node, Point firstPos, Point lastPos){
 	City::resizeNode(newNbp,node);
 }
 void City::resizeNode(double newNbp, Node* nodeToResize){
-	if (nodeToResize == nullptr) return;
+	if (nodeToResize == nullptr) 
+		return;
 	
 	double formerNbp(nodeToResize->getNbp());
 	nodeToResize->changeNodeNbp(newNbp);
@@ -248,14 +258,14 @@ void City::resizeNode(double newNbp, Node* nodeToResize){
 															 city.nodeGroup))
 		nodeToResize->changeNodeNbp(formerNbp);
 }
+Node* City::getClickedNode(Point pos,Node* selectedNode){
+	return Node::selectNode(pos,selectedNode,city.nodeGroup);
+}
 void City::showNodeGroup() const {
     cout << "--------- nodeGroup -----------" << endl;
     for (auto& node:nodeGroup){
        node->showNode();
 	}
-}
-Node* City::getClickedNode(Point pos,Node* selectedNode){
-	return Node::selectNode(pos,selectedNode,city.nodeGroup);
 }
 ID City::findNewUID(){
 
@@ -285,7 +295,8 @@ string City::criteriaENJ(){
 		dayNbpTotal += currentNbp;
 		if (currentType == HOUSING) 
 			restNbpTotal += currentNbp;
-		else restNbpTotal -= currentNbp;
+		else 
+			restNbpTotal -= currentNbp;
 	}
 	stringstream balance("");
 	balance << setprecision(4) << restNbpTotal/dayNbpTotal;
@@ -308,7 +319,8 @@ string City::criteriaCI(){
 		if (linkCreated[i][0]->getType() == TRANSPORT and
 			linkCreated[i][1]->getType() == TRANSPORT)
 			speed = fast_speed;
-		else speed = default_speed;
+		else 
+			speed = default_speed;
 		
 		cost += (distance*capacity*speed);
 	}
@@ -361,7 +373,7 @@ double City::dijkstra(ID startNodeID, Type type, bool showPath){
 // === tools functions ===
 Node* City::pickNodeByUID(ID UID) const {
     for (size_t i(0); i < nodeGroup.size(); ++i){
-        if ( nodeGroup[i]->getUID() == UID)
+        if (nodeGroup[i]->getUID() == UID)
             return nodeGroup[i];
     }
     cout << error::link_vacuum(UID);
