@@ -20,12 +20,13 @@
 
 using namespace std;
 
-// === Distmin on readfile
-#define distMinWhenReadFile 0. 
-
 namespace {
 	City city;
 }
+
+// === Distmin on readfile
+#define distMinWhenReadFile 0. 
+
 
 // === node gestion ===
 bool City::readFile(string data) {
@@ -36,7 +37,8 @@ bool City::readFile(string data) {
 		int type(-1);
 		int compteur(0);
         while(getline(fichier >> ws,line)){	
-			if(line[0]=='#') continue; 
+			if(line[0]=='#') 
+				continue; 
 
 			if (compteur == 0){
 				compteur = stoi(line);
@@ -69,7 +71,7 @@ bool City::save(string nom){
 
 		vector<vector<Node*>> nodeGroupSorted;
 
-		nodeGroupSorted.push_back( city.getType(HOUSING) );
+		nodeGroupSorted.push_back( city.getType(HOUSING)  );
 		nodeGroupSorted.push_back( city.getType(TRANSPORT) );
 		nodeGroupSorted.push_back( city.getType(PRODUCTION) );
 
@@ -87,7 +89,8 @@ bool City::save(string nom){
 		for (auto& link:linkCreated){
 			fichier << "\t" << link[0]->getUID() << " " << link[1]->getUID() << endl;
 		}
-	} else return false;
+	} else 
+		return false;
 	fichier.close();
 	return true;
 }
@@ -115,7 +118,8 @@ void City::updateDraw(bool shortestPath, Node* selectedNode){
 	}
 	//draw SelectedNode
 	tools::setColor(RED);
-	if (selectedNode != nullptr) selectedNode->drawNode();
+	if (selectedNode != nullptr) 
+		selectedNode->drawNode();
 }
 void City::emptyNodeGroup(){
     for (auto& node:city.nodeGroup){
@@ -172,7 +176,8 @@ bool City::addLink(string line, double distMin){
         if (not (node->checkCollisionNodeLink(pNode1,pNode2,distMin))) 
 			return false;
     }
-    if (pNode1->checkIfNodeIsAlreadyLinked(pNode2)){
+    if (pNode1->checkIfNodeIsAlreadyLinked(pNode2) and
+	 	pNode1->checkIfNodeIsAlreadyLinked(pNode2)){
 		cout << error::multiple_same_link(pNode1->getUID(),pNode2->getUID());
 		return false;
 	}

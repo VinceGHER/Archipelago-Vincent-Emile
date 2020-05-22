@@ -19,7 +19,7 @@ using namespace std;
 // ========== Class MyArea ==========
 
 MyArea::MyArea(Gui& gui):
-	currentZoom(1.),shortestPath(false),ptrSelectedNode(&gui.getSelectedNode()){};
+	currentZoom(1.),shortestPath(false),ptrSelectedNode(&gui.getSelectedNode()){}
 void MyArea::setFrame(Frame x){
 	graphic_gui::setFrame(x);
 }
@@ -98,7 +98,7 @@ Gui::Gui():
 	m_Area(*this),
 	editLink(false),
 	type(HOUSING),
-	selectedNode(nullptr) {	
+	selectedNode(nullptr){	
 		set_title("Drawing Area and Buttons");
 		set_border_width(0);
 		createBoxStruct();
