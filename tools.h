@@ -39,5 +39,4 @@ namespace tools {
     bool drawSegment(Segment segment);
     bool setColor(Color color);
 }
-
 #endif
