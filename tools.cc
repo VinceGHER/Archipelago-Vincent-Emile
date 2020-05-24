@@ -16,16 +16,19 @@ double scalarProduct(Vector v1, Vector v2){
 }
 
 // === public functions ===
-
+#include <iostream>
+using namespace std;
 // === overlap functions ===
-bool tools::overlapBetweenCircles(Circle circle1, Circle circle2, double dist_min){
+bool tools::overlapBetweenCircles(Circle circle1, Circle circle2, double distMin){
     double totalradius( circle1.radius + circle2.radius );
-    if (distance(circle1.center, circle2.center) - totalradius < dist_min)
+   
+    if (distance(circle1.center, circle2.center) - totalradius <= distMin){
         return true;
+    }
     return false;
 }
 bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment, 
-										double dist_min){
+										double distMin){
     Vector segmentToCircle = {circle.center.x - segment.start.x, 
                               circle.center.y - segment.start.y};
     Vector segmentVector = {segment.end.x - segment.start.x,
@@ -41,7 +44,7 @@ bool tools::overlapBetweenCircleSegment(Circle circle, Segment segment,
     
     double distCercleTest (distTest - circle.radius);
   
-    if (distCercleTest >= dist_min) 
+    if (distCercleTest >= distMin) 
 		return false;
 
     return true;

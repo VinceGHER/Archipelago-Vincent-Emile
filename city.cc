@@ -50,6 +50,7 @@ bool City::readFile(string data) {
 					city.emptyNodeGroup(); 
 					return false;
 				}
+
 				if (type < 3 && not city.addNode(line,type,distMinWhenReadFile)){
 					city.emptyNodeGroup(); 
 					return false;
@@ -154,7 +155,7 @@ bool City::addNode(string line, int type, double distMin){
 	if (pNode == nullptr) 
 		return false;
 	if (not success or 
-		not pNode->checkOneNodeCollisionNodesAndLinks(pNode,city.nodeGroup)){
+		not pNode->checkOneNodeCollisionNodesAndLinks(pNode,city.nodeGroup,distMin)){
 		delete pNode;
 		return false;
 	}
@@ -234,7 +235,8 @@ void City::moveNode(Point newPos, Node* nodeToMove){
 	Point formerPos(nodeToMove->getPos());
 	nodeToMove->changeNodeCoordinates(newPos);
 
-	if (not nodeToMove->checkOneNodeCollisionNodesAndLinks(nodeToMove,city.nodeGroup)
+	if (not nodeToMove->checkOneNodeCollisionNodesAndLinks(nodeToMove,city.nodeGroup,
+														   dist_min)
 		or not nodeToMove->checkLinksOfNodeOverlap(nodeToMove, city.nodeGroup))
 		nodeToMove->changeNodeCoordinates(formerPos);
 }
@@ -255,7 +257,8 @@ void City::resizeNode(double newNbp, Node* nodeToResize){
 	double formerNbp(nodeToResize->getNbp());
 	nodeToResize->changeNodeNbp(newNbp);
 	if (not nodeToResize->checkOneNodeCollisionNodesAndLinks(nodeToResize,
-															 city.nodeGroup))
+															 city.nodeGroup,
+															 dist_min))
 		nodeToResize->changeNodeNbp(formerNbp);
 }
 Node* City::getClickedNode(Point pos,Node* selectedNode){

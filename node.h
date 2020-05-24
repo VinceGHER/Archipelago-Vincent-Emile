@@ -69,7 +69,8 @@ public:
     bool checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const;
     virtual bool checkLinksLimit() const = 0;
     bool checkOneNodeCollisionNodesAndLinks(Node* nodeToCheck,
-                                            const std::vector<Node*>& nodeGroup)const;
+                                            const std::vector<Node*>& nodeGroup,
+                                            double distMin) const;
     bool checkLinksOfNodeOverlap(Node* nodeToCheck,
                                  const std::vector<Node*>& nodeGroup) const;
 protected:

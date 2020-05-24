@@ -305,8 +305,10 @@ bool Node::verifyNodeParameter(Circle& circle, unsigned int sizePopulation,
             cout<<error::identical_uid(identifier);
             return false;
         }
+
         if(tools::overlapBetweenCircles(circle, node->nodeCircle, 
                                         distMin)){
+
             cout<< error::node_node_superposition(identifier,node->UID);
             return false;
         }
@@ -342,11 +344,12 @@ bool Node::checkIfNodeIsAlreadyLinked(Node* nodeToCheck) const{
     return false;
 }
 bool Node::checkOneNodeCollisionNodesAndLinks(Node* nodeToCheck,
-											  const vector<Node*>& nodeGroup) const{
+											  const vector<Node*>& nodeGroup,
+                                              double distMin) const{
     for (auto& node:nodeGroup){
         if (node->UID != UID and
 		    tools::overlapBetweenCircles(nodeCircle, node->nodeCircle,
-										 dist_min)){
+										 distMin)){
             cout<< error::node_node_superposition(UID,node->UID);
             return false;
         }
